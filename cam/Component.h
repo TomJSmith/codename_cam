@@ -1,5 +1,4 @@
-#ifndef __COMPONENT_H_
-#define __COMPONENT_H_
+#pragma once
 
 #include "Time.h"
 
@@ -14,6 +13,7 @@ class Component {
 
 	int Id() { return id_; }
 	Entity *entity() { return entity_; }
+
  protected:
 	int id_;
 	Entity *entity_;
@@ -23,5 +23,3 @@ class Component {
  private:
 	static int nextId;
 };
-
-#endif // __COMPONENT_H_

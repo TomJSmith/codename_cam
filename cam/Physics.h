@@ -1,8 +1,11 @@
 #pragma once
 
-#include "Time.h"
 #include <PhysX/PxPhysicsAPI.h>
 
+#include "Time.h"
+
+// This using should be fine because everything in physx:: is prefixed
+// with Px anyways, so there will be no name conflicts with anything
 using namespace physx;
 
 class Physics

@@ -1,8 +1,6 @@
-#ifndef __SCRIPT_COMPONENT_H_
-#define __SCRIPT_COMPONENT_H_
+#pragma once
 
 #define BOOST_PYTHON_STATIC_LIB
-
 #include <boost/python.hpp>
 
 #include <map>
@@ -25,4 +23,3 @@ class ScriptComponent : public Component {
 	static void InitPython();
 };
 
-#endif // __SCRIPT_COMPONENT_H_

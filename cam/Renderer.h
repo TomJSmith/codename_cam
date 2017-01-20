@@ -1,5 +1,4 @@
-#ifndef __RENDERER_H_
-#define __RENDERER_H_
+#pragma once
 
 #include "OpenGL.h"
 
@@ -15,5 +14,3 @@ public:
 private:
 	static GLFWwindow *window_;
 };
-
-#endif // __RENDERER_H_

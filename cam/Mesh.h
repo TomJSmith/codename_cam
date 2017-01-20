@@ -1,5 +1,4 @@
-#ifndef __MESH_H_
-#define __MESH_H_
+#pragma once
 
 #include "OpenGL.h"
 
@@ -11,13 +10,14 @@
 
 class Mesh : public Component {
 public:
+	// Structures holding mesh data necessary for rendering, and
+	// events fired by the renderer to retrieve mesh data from components
 	struct Data { GLuint vao; GLuint shader; mat4 model; };
 	struct GetMeshDataEvent { std::vector<Data> &data; };
 
 	Mesh(Shader &shader, GLuint nvertices, GLfloat **vertices, GLfloat **colours);
-	void GetMeshData(GetMeshDataEvent event);
-	mat4 ModelMatrix();
 
+	void GetMeshData(GetMeshDataEvent event);
 protected:
 	void RegisterHandlers() override;
 
@@ -28,6 +28,6 @@ private:
 	GLuint vao_;
 
 	Shader &shader_;
-};
 
-#endif // __MESH_H_
+	mat4 ModelMatrix();
+};

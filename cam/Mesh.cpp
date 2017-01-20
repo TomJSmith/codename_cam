@@ -43,8 +43,8 @@ mat4 Mesh::ModelMatrix()
 	auto e = entity_;
 
 	while (e) {
-		model = e->transform().Matrix() * model;
-		e = e->Parent();
+		model = e->GetTransform().Matrix() * model;
+		e = e->GetParent();
 	}
 
 	return model;
@@ -52,7 +52,7 @@ mat4 Mesh::ModelMatrix()
 
 void Mesh::RegisterHandlers()
 {
-	entity_->events().RegisterEventHandler(
+	entity_->GetEvents().RegisterEventHandler(
 		[this](GetMeshDataEvent e) {
 			GetMeshData(e);
 		}

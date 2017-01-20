@@ -25,7 +25,6 @@ int main() {
 			{-.5, -.5, .5}, {.5, .5, .5}, {-.5, .5, .5},
 			{-.5, -.5, .5}, {.5, -.5, .5}, {.5, .5, .5},
 
-			{ -.5, .5, -.5 },{ .5, .5, .5 },{ -.5, .5, .5 },
 			{ -.5, .5, -.5 },{ .5, .5, -.5 },{ .5, .5, .5 },
 
 			{ -.5, -.5, -.5 },{ .5, -.5, .5 },{ -.5, -.5, .5 },
@@ -54,13 +53,10 @@ int main() {
 	root.AddComponent(std::move(script));
 	root.AddComponent(std::move(rigidbody));
 
-	//root.transform().position = vec3(0.0f, 0.0f, -2.0f);
-
-	timer::time_point lastTime = timer::now();
+	auto lastTime = timer::now();
 
 	while (true) {
-		timer::time_point currentTime = timer::now();
-		//nanoseconds dt = duration_cast<nanoseconds>(currentTime - lastTime);
+		auto currentTime = timer::now();
 		auto dt = seconds(currentTime - lastTime);
 		lastTime = currentTime;
 

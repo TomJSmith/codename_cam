@@ -1,5 +1,4 @@
-#ifndef __EVENT_SYSTEM_H_
-#define __EVENT_SYSTEM_H_
+#pragma once
 
 #include <functional>
 #include <vector>
@@ -54,5 +53,3 @@ private:
 //
 // To add an event type, add it to the template arguments here.
 using EventSystem = EventSystem_<Mesh::GetMeshDataEvent>;
-
-#endif // __EVENT_SYSTEM_H_

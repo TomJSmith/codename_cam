@@ -6,7 +6,7 @@ using namespace physx;
 
 void RigidBody::RegisterHandlers()
 {
-	body_->userData = &entity_->transform();
+	body_->userData = &entity_->GetTransform();
 }
 
 RigidBody::RigidBody(Physics &physics, PxMaterial &material, PxGeometry &geometry, PxTransform &transform)

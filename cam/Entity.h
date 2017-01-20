@@ -1,25 +1,24 @@
-#ifndef __ENTITY_H_
-#define __ENTITY_H_
+#pragma once
 
-#include "Time.h"
 #include <memory>
 #include <vector>
 
 #include "Component.h"
 #include "EventSystem.h"
+#include "Time.h"
 #include "Transform.h"
 
 class Entity {
  public:
 	Entity(Entity *parent = nullptr);
+
 	void Update(seconds dt);
 	void AddComponent(std::unique_ptr<Component> c);
 	void SetParent(Entity *parent);
 
-	Entity *Parent() { return parent_; }
-	// TODO why are these lower case...
-	EventSystem &events() { return events_; }
-	Transform &transform() { return transform_; }
+	Entity *GetParent() { return parent_; }
+	EventSystem &GetEvents() { return events_; }
+	Transform &GetTransform() { return transform_; }
 
 	template <typename T>
 	void RegisterEventHandler(std::function<void(T)> handler)
@@ -52,5 +51,3 @@ class Entity {
 
 	static unsigned int nextId;
 };
-
-#endif // __ENTITY_H_
