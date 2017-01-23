@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -95,7 +95,7 @@
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>C:\Users\Liam\workspace\cam\cam\Include;C:\Users\Liam\workspace\cam\cam\Include\Python;C:\Users\Liam\workspace\cam\cam\Include\PhysX;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
-      <PreprocessorDefinitions>GLEW_STATIC;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>BOOST_PYTHON_STATIC_LIB;GLEW_STATIC;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <DisableSpecificWarnings>4244;</DisableSpecificWarnings>
       <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
@@ -189,6 +189,11 @@ COPY "$(SolutionDir)cam\*.frag" "$(TargetDir)"</Command>
       <DeploymentContent>true</DeploymentContent>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <ContentWithTargetPath Include="Libraries\Release\python27.dll">
+      <DeploymentContent>true</DeploymentContent>
+      <CopyToOutputDirectory Condition="'$(Configuration)|$(Platform)'=='Release|x64'">PreserveNewest</CopyToOutputDirectory>
+      <TargetPath>python27.dll</TargetPath>
+    </ContentWithTargetPath>
     <ContentWithTargetPath Include="Libraries\Release\glut32.dll">
       <DeploymentContent>true</DeploymentContent>
       <CopyToOutputDirectory Condition="'$(Configuration)|$(Platform)'=='Release|x64'">PreserveNewest</CopyToOutputDirectory>
@@ -218,6 +223,11 @@ COPY "$(SolutionDir)cam\*.frag" "$(TargetDir)"</Command>
       <DeploymentContent>true</DeploymentContent>
       <CopyToOutputDirectory Condition="'$(Configuration)|$(Platform)'=='Release|x64'">PreserveNewest</CopyToOutputDirectory>
       <TargetPath>PhysX3_x64.dll</TargetPath>
+    </ContentWithTargetPath>
+    <ContentWithTargetPath Include="Libraries\Debug\python27.dll">
+      <DeploymentContent>true</DeploymentContent>
+      <CopyToOutputDirectory Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">PreserveNewest</CopyToOutputDirectory>
+      <TargetPath>python27.dll</TargetPath>
     </ContentWithTargetPath>
     <ContentWithTargetPath Include="Libraries\Debug\glut32.dll">
       <DeploymentContent>true</DeploymentContent>

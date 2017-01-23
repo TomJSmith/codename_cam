@@ -16,5 +16,7 @@ Transform::Transform(vec3 p, quaternion r, vec3 s) :
 
 mat4 Transform::Matrix() const
 {
+	// TODO I think this is wrong... should probably be TRS so translation doesn't
+	// depend on how the object is rotated
 	return glm::toMat4(rotation) * glm::translate(position) * glm::scale(scale);
 }
