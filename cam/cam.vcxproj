@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -105,17 +105,14 @@
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
     </Link>
     <CustomBuildStep>
-      <Command>COPY "$(SolutionDir)cam\Libraries\Debug\*.dll" "$(TargetDir)"
-COPY "$(SolutionDir)cam\*.py" "$(TargetDir)"
-COPY "$(SolutionDir)cam\*.vert" "$(TargetDir)"
-COPY "$(SolutionDir)cam\*.frag" "$(TargetDir)"</Command>
-      <Inputs>%(Inputs);$(SolutionDir)cam\Libraries;</Inputs>
+      <Command>
+      </Command>
+      <Inputs>%(Inputs);</Inputs>
       <Outputs>
       </Outputs>
     </CustomBuildStep>
     <PostBuildEvent>
-      <Command>
-      </Command>
+      <Command>xcopy /S /Y /D $(SolutionDir)cam\Python27 $(TargetDir)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -183,6 +180,14 @@ COPY "$(SolutionDir)cam\*.frag" "$(TargetDir)"</Command>
     <ClCompile Include="Transform.cpp" />
     <ClCompile Include="Util.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <AvailableItemName Include="Python27">
+      <Visible>false</Visible>
+    </AvailableItemName>
+  </ItemGroup>
+  <Target Name="AfterBuild">
+    <Copy DestinationFolder="$(OutputPath)/Python27" SourceFiles="@(Python27)" SkipUnchangedFiles="true" />
+  </Target>
   <ItemGroup>
     <None Include="component.py">
       <FileType>Document</FileType>

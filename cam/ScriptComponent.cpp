@@ -28,6 +28,7 @@ void ScriptComponent::InitPython() {
 
 	if (!initialized) {
 		try {
+			Py_SetPythonHome(".");
 			Py_Initialize();
 			initscriptcomponent();
 
