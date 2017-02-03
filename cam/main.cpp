@@ -3,7 +3,7 @@
 #include "Renderer.h"
 #include "RigidBody.h"
 #include "ScriptComponent.h"
-
+#include "Audio.h"
 #include <iostream>
 
 int main() {
@@ -12,6 +12,12 @@ int main() {
 	Physics physics;
 	Entity root;
 
+	Audio audio;
+
+	if (audio.init())
+	{
+		audio.play();
+	}
 	GLfloat vertices[][3] = {
 			{-.5, -.5, -.5}, {-.5, .5, -.5}, {.5, .5, -.5},
 			{-.5, -.5, -.5}, {.5, .5, -.5}, {.5, -.5, -.5},
@@ -63,5 +69,10 @@ int main() {
 		physics.Update(dt);
 		root.Update(dt);
 		renderer.Render(root);
+
+		
 	}
+	//Mix_Quit();
+	//SDL_Quit();
+	return 0;
 }
