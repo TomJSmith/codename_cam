@@ -20,7 +20,7 @@
       <UniqueIdentifier>{d47a5686-1a3c-458c-8552-8908f26116e8}</UniqueIdentifier>
     </Filter>
     <Filter Include="Resource Files\Meshes">
-      <UniqueIdentifier>{0eee05cd-ca8d-4542-957f-de92b065982e}</UniqueIdentifier>
+      <UniqueIdentifier>{60d5ba15-6223-4301-8a06-280251152b76}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -111,13 +111,13 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Object Include="test_map_mesh.obj">
-      <Filter>Resource Files\Meshes</Filter>
-    </Object>
     <Object Include="chaser_mesh.obj">
       <Filter>Resource Files\Meshes</Filter>
     </Object>
     <Object Include="runner_mesh.obj">
+      <Filter>Resource Files\Meshes</Filter>
+    </Object>
+    <Object Include="test_map_mesh.obj">
       <Filter>Resource Files\Meshes</Filter>
     </Object>
   </ItemGroup>
