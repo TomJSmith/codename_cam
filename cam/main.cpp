@@ -1,8 +1,11 @@
 #include "Entity.h"
+#include "Mesh.h"
 #include "Physics.h"
 #include "Renderer.h"
 #include "RigidBody.h"
 #include "ScriptComponent.h"
+#include "Shader.h"
+#include "Vehicle.h"
 
 #include <iostream>
 
@@ -11,6 +14,13 @@ int main() {
 	Renderer renderer;
 	Physics physics;
 	Entity root;
+
+#ifdef DEBUG
+	root.GetEvents().RegisterEventHandler([&physics] (Renderer::GetMeshDataEvent e) {
+		auto d = physics.GetDebugMeshData();
+		e.data.insert(e.data.end(), d.begin(), d.end());
+	});
+#endif
 
 	GLfloat vertices[][3] = {
 			{-.5, -.5, -.5}, {-.5, .5, -.5}, {.5, .5, -.5},
@@ -46,12 +56,35 @@ int main() {
 		{ 0, 0, 1 },{ 0, 0, 1 },{ 0, 0, 1 },
 	};
 
-	std::unique_ptr<Component> script(new ScriptComponent("component"));
-	std::unique_ptr<Component> mesh(new Mesh(Shader::Load("passthrough.vert", "passthrough.frag"), 36, (GLfloat **)vertices, (GLfloat **)colours));
-	std::unique_ptr<Component> rigidbody(new RigidBody(physics, *physics.GetPhysics()->createMaterial(0.5f, 0.5f, 0.5f), PxBoxGeometry(.5f, .5f, .5f), PxTransform(0.0f, 0.0f, -2.0f, PxQuat(0, 0, 1, 0))));
-	root.AddComponent(std::move(mesh));
-	root.AddComponent(std::move(script));
-	root.AddComponent(std::move(rigidbody));
+	GLfloat planeverts[][3] = {
+		{0, -10, -10},
+		{0, 10, -10},
+		{0, -10, 10},
+		{0, -10, 10},
+		{0, 10, -10},
+		{0, 10, 10}
+	};
+
+	GLfloat planecolours[][3] = {
+		{0.5f, 0.5f, 0.5f},
+		{ 0.5f, 0.5f, 0.5f },
+		{ 0.5f, 0.5f, 0.5f },
+		{ 0.5f, 0.5f, 0.5f },
+		{ 0.5f, 0.5f, 0.5f },
+		{ 0.5f, 0.5f, 0.5f },
+	};
+
+	Entity plane(&root);
+	std::shared_ptr<Component> planemesh(new Mesh(Shader::Load("passthrough.vert", "passthrough.frag"), 6, (GLfloat **)planeverts, (GLfloat **)planecolours, GL_TRIANGLES));
+	std::shared_ptr<Component> planebody(new RigidBody(physics, *physics.GetPhysics()->createMaterial(0.5f, 0.5f, 0.5f), PxPlaneGeometry(), PxTransform(0.0f, -1.0f, 0.0f, PxQuat(3.14159f / 2.0f, PxVec3(0.0f, 0.0f, 1.0f))), false));
+	plane.AddComponent(std::move(planemesh));
+	plane.AddComponent(std::move(planebody));
+
+	Entity vehicle(&root);
+	std::shared_ptr<Component> mesh(new Mesh(Shader::Load("passthrough.vert", "passthrough.frag"), 36, (GLfloat **)vertices, (GLfloat **)colours, GL_TRIANGLES));
+	std::shared_ptr<Component> v(new ScriptComponent("vehicle", physics));
+	vehicle.AddComponent(std::move(mesh));
+	vehicle.AddComponent(std::move(v));
 
 	auto lastTime = timer::now();
 

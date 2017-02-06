@@ -9,12 +9,12 @@
 class RigidBody : public Component
 {
 public:
-	RigidBody(Physics &physics, PxMaterial &material, PxGeometry &geometry, PxTransform &transform);
+	RigidBody(Physics &physics, PxMaterial &material, PxGeometry &geometry, PxTransform &transform, bool dynamic = true);
 	~RigidBody();
 
 	void RegisterHandlers() override;
 
 private:
-	PxRigidDynamic *body_;
+	PxRigidActor *body_;
 };
 

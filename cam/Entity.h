@@ -13,7 +13,7 @@ class Entity {
 	Entity(Entity *parent = nullptr);
 
 	void Update(seconds dt);
-	void AddComponent(std::unique_ptr<Component> c);
+	void AddComponent(std::shared_ptr<Component> c);
 	void SetParent(Entity *parent);
 
 	Entity *GetParent() { return parent_; }
@@ -41,7 +41,7 @@ class Entity {
  private:
 	int id_;
 
-	std::vector<std::unique_ptr<Component>> components_;
+	std::vector<std::shared_ptr<Component>> components_;
 	std::vector<std::shared_ptr<Entity>> children_;
 
 	Entity *parent_;

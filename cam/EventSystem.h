@@ -3,7 +3,7 @@
 #include <functional>
 #include <vector>
 
-#include "Mesh.h"
+#include "Renderer.h"
 
 template <class... EventTypes>
 class EventSystem_ {
@@ -52,4 +52,4 @@ private:
 // write EventSystem<Event1, Event2, ...> everywhere).
 //
 // To add an event type, add it to the template arguments here.
-using EventSystem = EventSystem_<Mesh::GetMeshDataEvent>;
+using EventSystem = EventSystem_<Renderer::GetMeshDataEvent>;

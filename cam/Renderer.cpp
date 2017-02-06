@@ -1,8 +1,8 @@
-#include "Renderer.h"
-
 #include <glm/gtc/matrix_transform.hpp>
 
-#include "Mesh.h"
+#include "Renderer.h"
+
+#include "Entity.h"
 
 GLFWwindow *Renderer::window_ = nullptr;
 
@@ -43,8 +43,8 @@ void Renderer::Initialize()
 
 void Renderer::Render(Entity &entity)
 {
-	std::vector<Mesh::Data> data;
-	Mesh::GetMeshDataEvent e{data};
+	std::vector<MeshData> data;
+	GetMeshDataEvent e {data};
 	entity.BroadcastEvent(e);
 
 	glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
@@ -53,14 +53,14 @@ void Renderer::Render(Entity &entity)
 	auto perspective = glm::perspective(45.0f, 1.0f, 0.1f, 100.0f);
 
 	for (auto &d : e.data) {
-		auto mvp =  perspective * d.model;
+		auto mvp =  perspective * d.modelMatrix;
 
 		glUseProgram(d.shader);
 
 		glUniformMatrix4fv(glGetUniformLocation(d.shader, "mvp"), 1, GL_FALSE, &mvp[0][0]);
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 		glBindVertexArray(d.vao);
-		glDrawArrays(GL_TRIANGLES, 0, 36); // TODO store this in mesh data
+		glDrawArrays(d.type, 0, d.count);
 	}
 
 	glfwSwapBuffers(window_);

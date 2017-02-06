@@ -10,11 +10,14 @@ Entity::Entity(Entity *parent) : id_(nextId++)
 }
 
 void Entity::Update(seconds dt) {
-	for (auto &component : components_) component->Update(dt);
-	for (auto &child : children_) child->Update(dt);
+	auto components = components_;
+	auto children = children_;
+
+	for (auto &component : components) component->Update(dt);
+	for (auto &child : children) child->Update(dt);
 }
 
-void Entity::AddComponent(std::unique_ptr<Component> c) {
+void Entity::AddComponent(std::shared_ptr<Component> c) {
 	c->Attach(this);
 	components_.push_back(std::move(c));
 }
@@ -40,4 +43,6 @@ void Entity::SetParent(Entity *parent) {
 			parent->children_.push_back(std::shared_ptr<Entity>(this));
 		}
 	}
+
+	parent_ = parent;
 }

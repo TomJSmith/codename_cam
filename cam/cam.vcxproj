@@ -95,7 +95,7 @@
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>$(ProjectDir)Include;$(ProjectDir)Include\Python;$(ProjectDir)Include\PhysX;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
-      <PreprocessorDefinitions>BOOST_PYTHON_STATIC_LIB;GLEW_STATIC;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>DEBUG;BOOST_PYTHON_STATIC_LIB;GLEW_STATIC;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <DisableSpecificWarnings>4244;</DisableSpecificWarnings>
       <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
@@ -141,7 +141,7 @@
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>$(ProjectDir)Include;$(ProjectDir)Include\Python;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <PreprocessorDefinitions>GLEW_STATIC;NDEBUG;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>BOOST_PYTHON_STATIC_LIB;GLEW_STATIC;NDEBUG;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <DisableSpecificWarnings>4244;</DisableSpecificWarnings>
       <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
@@ -169,6 +169,7 @@
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="ScriptComponent.h" />
     <ClInclude Include="Shader.h" />
+    <ClInclude Include="Vehicle.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Component.cpp" />
@@ -182,6 +183,7 @@
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="Transform.cpp" />
     <ClCompile Include="Util.cpp" />
+    <ClCompile Include="Vehicle.cpp" />
   </ItemGroup>
   <ItemGroup>
     <AvailableItemName Include="Python27">
@@ -193,6 +195,11 @@
   </Target>
   <ItemGroup>
     <None Include="component.py">
+      <FileType>Document</FileType>
+      <DeploymentContent>true</DeploymentContent>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="vehicle.py">
       <FileType>Document</FileType>
       <DeploymentContent>true</DeploymentContent>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

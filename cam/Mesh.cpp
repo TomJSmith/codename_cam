@@ -3,9 +3,16 @@
 #include "Mesh.h"
 
 #include "Entity.h"
+#include "Shader.h"
 
-Mesh::Mesh(Shader &shader, GLuint nvertices, GLfloat **vertices, GLfloat **colours) :
-	shader_(shader)
+Mesh::Mesh(Shader &shader,
+		   GLuint nvertices,
+		   GLfloat **vertices,
+		   GLfloat **colours,
+		   GLuint type) :
+	shader_(shader),
+	type_(type),
+	count_(nvertices)
 {
 	GLuint vertexBuffer = 0;
 	glGenBuffers(1, &vertexBuffer);
@@ -32,9 +39,15 @@ Mesh::Mesh(Shader &shader, GLuint nvertices, GLfloat **vertices, GLfloat **colou
 	glBindVertexArray(0);
 }
 
-void Mesh::GetMeshData(GetMeshDataEvent event)
+void Mesh::GetMeshData(Renderer::GetMeshDataEvent event)
 {
-	event.data.push_back({vao_, shader_.Program(), ModelMatrix()});
+	event.data.push_back({
+		vao_,
+		shader_.Program(),
+		count_,
+		type_,
+		ModelMatrix()
+	});
 }
 
 mat4 Mesh::ModelMatrix()
@@ -52,9 +65,11 @@ mat4 Mesh::ModelMatrix()
 
 void Mesh::RegisterHandlers()
 {
-	entity_->GetEvents().RegisterEventHandler(
-		[this](GetMeshDataEvent e) {
-			GetMeshData(e);
-		}
-	);
+	handler_ = [this](Renderer::GetMeshDataEvent e) {
+		GetMeshData(e);
+	};
+
+	// TODO We really need an UnregisterHandlers for when these things
+	// are being destroyed or moved between entities
+	entity_->GetEvents().RegisterEventHandler(handler_);
 }

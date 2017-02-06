@@ -2,32 +2,35 @@
 
 #include "OpenGL.h"
 
+#include <functional>
 #include <vector>
 
 #include "Component.h"
-#include "Shader.h"
+#include "Renderer.h"
 #include "Transform.h"
+
+class Shader;
 
 class Mesh : public Component {
 public:
-	// Structures holding mesh data necessary for rendering, and
-	// events fired by the renderer to retrieve mesh data from components
-	struct Data { GLuint vao; GLuint shader; mat4 model; };
-	struct GetMeshDataEvent { std::vector<Data> &data; };
+	Mesh(Shader &shader,
+		 GLuint nvertices,
+		 GLfloat **vertices,
+		 GLfloat **colours,
+		 GLuint type);
 
-	Mesh(Shader &shader, GLuint nvertices, GLfloat **vertices, GLfloat **colours);
-
-	void GetMeshData(GetMeshDataEvent event);
+	void GetMeshData(Renderer::GetMeshDataEvent event);
 protected:
 	void RegisterHandlers() override;
 
 private:
-	GLfloat **vertices_;
-	GLfloat **colours_;
-
 	GLuint vao_;
+	GLuint type_;
+	GLuint count_;
 
 	Shader &shader_;
+
+	std::function<void(Renderer::GetMeshDataEvent)> handler_;
 
 	mat4 ModelMatrix();
 };
