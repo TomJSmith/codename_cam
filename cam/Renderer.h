@@ -11,6 +11,7 @@ public:
 	void Render(Entity &entity);
 
 	static void Initialize();
+	GLFWwindow* getWindow();
 private:
 	static GLFWwindow *window_;
 };

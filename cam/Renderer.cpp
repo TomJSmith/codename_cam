@@ -6,6 +6,11 @@
 
 GLFWwindow *Renderer::window_ = nullptr;
 
+
+GLFWwindow* Renderer::getWindow()
+{
+	return window_;
+}
 // Only initialize GLFW once for the whole application.
 // TODO This may need to be called once per thread
 static void InitializeGLFW()

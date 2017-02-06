@@ -7,7 +7,7 @@ bool Audio::init()
 { //Initialize all SDL subsystems 
 	if( SDL_Init( SDL_INIT_EVERYTHING ) == -1 ) { return false; } //Set up the screen 
 
-	if( Mix_OpenAudio( 44100, MIX_DEFAULT_FORMAT, 2, 2048 ) == -1 ) 
+	if( Mix_OpenAudio( 22050, AUDIO_S16SYS, 2, 640 ) == -1 ) 
 	{ 
 		std::cout << "Error: " << Mix_GetError() << std::endl;
 		return false; 
@@ -18,6 +18,7 @@ bool Audio::init()
 void Audio::play()
 {
 	bgm = Mix_LoadMUS("test.wav");
+	Mix_PlayMusic(bgm,1);
 	//soundEffect = Mix_LoadWAV("test2.wav");
 
 }

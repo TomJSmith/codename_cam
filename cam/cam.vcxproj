@@ -208,12 +208,12 @@
       <CopyToOutputDirectory Condition="'$(Configuration)|$(Platform)'=='Release|x64'">PreserveNewest</CopyToOutputDirectory>
       <TargetPath>python27.dll</TargetPath>
     </ContentWithTargetPath>
-	<ContentWithTargetPath Include="Libraries\SDL\SDL2.dll">
+    <ContentWithTargetPath Include="Libraries\SDL\SDL2.dll">
       <DeploymentContent>true</DeploymentContent>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <TargetPath>SDL2.dll</TargetPath>
     </ContentWithTargetPath>
-	<ContentWithTargetPath Include="Libraries\SDL\SDL2_mixer.dll">
+    <ContentWithTargetPath Include="Libraries\SDL\SDL2_mixer.dll">
       <DeploymentContent>true</DeploymentContent>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <TargetPath>SDL2_mixer.dll</TargetPath>
@@ -293,11 +293,6 @@
       <DeploymentContent>true</DeploymentContent>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Object Include="chaser_mesh.obj" />
-    <Object Include="runner_mesh.obj" />
-    <Object Include="test_map_mesh.obj" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

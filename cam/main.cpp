@@ -13,11 +13,10 @@ int main() {
 	Entity root;
 
 	Audio audio;
-
-	if (audio.init())
-	{
-		audio.play();
-	}
+	audio.init();
+	
+		
+	
 	GLfloat vertices[][3] = {
 			{-.5, -.5, -.5}, {-.5, .5, -.5}, {.5, .5, -.5},
 			{-.5, -.5, -.5}, {.5, .5, -.5}, {.5, -.5, -.5},
@@ -61,7 +60,7 @@ int main() {
 
 	auto lastTime = timer::now();
 
-	while (true) {
+	while (!glfwWindowShouldClose(renderer.getWindow())) {
 		auto currentTime = timer::now();
 		auto dt = seconds(currentTime - lastTime);
 		lastTime = currentTime;
@@ -69,8 +68,10 @@ int main() {
 		physics.Update(dt);
 		root.Update(dt);
 		renderer.Render(root);
+		audio.play();
 
-		
+		glfwPollEvents();
+
 	}
 	//Mix_Quit();
 	//SDL_Quit();
