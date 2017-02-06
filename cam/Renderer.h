@@ -27,6 +27,7 @@ public:
 		std::vector<MeshData> &data;
 	};
 
+	GLFWwindow* getWindow();
 private:
 	static GLFWwindow *window_;
 };

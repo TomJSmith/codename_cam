@@ -1,3 +1,7 @@
+#include <Windows.h>
+#include <MMSystem.h>
+#include <iostream>
+
 #include "Entity.h"
 #include "Mesh.h"
 #include "Physics.h"
@@ -6,8 +10,7 @@
 #include "ScriptComponent.h"
 #include "Shader.h"
 #include "Vehicle.h"
-
-#include <iostream>
+#include "Audio.h"
 
 int main() {
 	Renderer::Initialize();
@@ -21,6 +24,11 @@ int main() {
 		e.data.insert(e.data.end(), d.begin(), d.end());
 	});
 #endif
+
+	Audio audio;
+	audio.init();
+
+	PlaySound(TEXT("test.wav"), NULL, SND_SYNC);
 
 	GLfloat vertices[][3] = {
 			{-.5, -.5, -.5}, {-.5, .5, -.5}, {.5, .5, -.5},
@@ -88,7 +96,7 @@ int main() {
 
 	auto lastTime = timer::now();
 
-	while (true) {
+	while (!glfwWindowShouldClose(renderer.getWindow())) {
 		auto currentTime = timer::now();
 		auto dt = seconds(currentTime - lastTime);
 		lastTime = currentTime;
@@ -96,5 +104,12 @@ int main() {
 		physics.Update(dt);
 		root.Update(dt);
 		renderer.Render(root);
+		audio.play();
+
+		glfwPollEvents();
+
 	}
+	//Mix_Quit();
+	//SDL_Quit();
+	return 0;
 }
