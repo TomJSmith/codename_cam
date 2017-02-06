@@ -1,3 +1,5 @@
+#include<Windows.h>
+#include<MMSystem.h>
 #include "Entity.h"
 #include "Physics.h"
 #include "Renderer.h"
@@ -14,8 +16,8 @@ int main() {
 
 	Audio audio;
 	audio.init();
-	
-		
+
+	PlaySound(TEXT("test.wav"), NULL, SND_SYNC);
 	
 	GLfloat vertices[][3] = {
 			{-.5, -.5, -.5}, {-.5, .5, -.5}, {.5, .5, -.5},
