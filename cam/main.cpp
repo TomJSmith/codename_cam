@@ -1,7 +1,7 @@
-#include <Windows.h>
-#include <MMSystem.h>
-#include <iostream>
 
+
+
+#include "Audio.h" //has to be at the top for some reason
 #include "Entity.h"
 #include "Mesh.h"
 #include "Physics.h"
@@ -10,7 +10,8 @@
 #include "ScriptComponent.h"
 #include "Shader.h"
 #include "Vehicle.h"
-#include "Audio.h"
+
+
 
 int main() {
 	Renderer::Initialize();
@@ -26,10 +27,10 @@ int main() {
 #endif
 
 	Audio audio;
-	audio.init();
-
-	PlaySound(TEXT("test.wav"), NULL, SND_SYNC);
-
+	if(audio.init())
+		audio.play();
+	
+	
 	GLfloat vertices[][3] = {
 			{-.5, -.5, -.5}, {-.5, .5, -.5}, {.5, .5, -.5},
 			{-.5, -.5, -.5}, {.5, .5, -.5}, {.5, -.5, -.5},
@@ -96,20 +97,20 @@ int main() {
 
 	auto lastTime = timer::now();
 
+	bool soundT = true;
 	while (!glfwWindowShouldClose(renderer.getWindow())) {
 		auto currentTime = timer::now();
 		auto dt = seconds(currentTime - lastTime);
 		lastTime = currentTime;
-
+	
 		physics.Update(dt);
 		root.Update(dt);
 		renderer.Render(root);
-		audio.play();
-
+	
+		
 		glfwPollEvents();
 
 	}
-	//Mix_Quit();
-	//SDL_Quit();
+	
 	return 0;
 }
