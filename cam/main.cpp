@@ -1,6 +1,3 @@
-
-
-
 #include "Audio.h" //has to be at the top for some reason
 #include "Entity.h"
 #include "Mesh.h"
@@ -20,16 +17,16 @@ int main() {
 	Entity root;
 
 #ifdef DEBUG
-	root.GetEvents().RegisterEventHandler([&physics] (Renderer::GetMeshDataEvent e) {
+	root.GetEvents().RegisterEventHandler([&physics](Renderer::GetMeshDataEvent e) {
 		auto d = physics.GetDebugMeshData();
 		e.data.insert(e.data.end(), d.begin(), d.end());
 	});
 #endif
 
 	Audio audio;
-	if(audio.init())
-		audio.play();
-	
+	audio.initAudio();
+	audio.playAudio(4); //1,2,3,4 for Audio atm can play more than one at a time
+
 	
 	GLfloat vertices[][3] = {
 			{-.5, -.5, -.5}, {-.5, .5, -.5}, {.5, .5, -.5},
@@ -103,11 +100,11 @@ int main() {
 		auto dt = seconds(currentTime - lastTime);
 		lastTime = currentTime;
 	
+		//audio.playAudio(1);
 		physics.Update(dt);
 		root.Update(dt);
 		renderer.Render(root);
 	
-		
 		glfwPollEvents();
 
 	}

@@ -1,19 +1,53 @@
+
 #pragma once
-#include <Windows.h>	
-#include <MMSystem.h>
+#include <Windows.h>
+#include "al.h"
+#include "alc.h"
+#include "efx.h"
+#include "efx-creative.h"
+#include "EFX-Util.h"
+#include "xram.h"
+#include <windows.h>
+#include <cstdlib>
 #include <direct.h>
 #include <cstring>
 #include <iostream>
+using namespace std;
 
+struct wavFile {
 
+	char type[4];
+	DWORD size, chunkSize;
+	short formatType, channels;
+	DWORD sampleRate, avgBytesPerSec;
+	short bytesPerSample, bitsPerSample;
+	DWORD dataSize;
+	ALuint buffer;
+	ALuint source;
+	ALenum format;
+	unsigned char* songBuf;
 
+};
 class Audio
 {
 public:
-	bool init();
-	void play();
+	Audio();
+	~Audio();
+	void initAudio();
+	void playAudio(int choice);
+	void cleanUpAudio(wavFile wav);
+
 private:
-	std::string sound1;
-	std::string sound2;
+	void checkError();
+	char* Audio::findPathToFile();
+	void list_audio_devices(const ALCchar *devices);
+	ALuint sourceSetup(ALuint source);
+	ALenum formatWav(wavFile wav);
+	wavFile openWavFile(string fileName, wavFile toPlay);
+	wavFile wav, wav2, wav3, wav4; //creative names later
+	ALCcontext *context;
+	ALCdevice* Device; // select the "preferred device"
 };
+
+
 
