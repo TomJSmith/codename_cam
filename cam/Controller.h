@@ -6,7 +6,7 @@ class Controller {
 public:
 	Controller();
 	~Controller();
-
-	void Update();
+	XINPUT_STATE getState();
 private:
+	XINPUT_STATE state;
 };

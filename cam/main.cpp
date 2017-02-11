@@ -16,6 +16,7 @@ int main() {
 	Renderer renderer;
 	Physics physics;
 	Entity root;
+	Controller *xbox;
 
 #ifdef DEBUG
 	root.GetEvents().RegisterEventHandler([&physics](Renderer::GetMeshDataEvent e) {
@@ -27,8 +28,7 @@ int main() {
 	Audio audio;
 	audio.initAudio();
 	audio.playAudio(4); //1,2,3,4 for Audio atm can play more than one at a time
-	Controller *xbox = new Controller();
-
+	xbox = new Controller();
 	
 	GLfloat vertices[][3] = {
 			{-.5, -.5, -.5}, {-.5, .5, -.5}, {.5, .5, -.5},
@@ -103,7 +103,6 @@ int main() {
 		lastTime = currentTime;
 	
 		//audio.playAudio(1);
-		//controller.Update();
 		physics.Update(dt);
 		root.Update(dt);
 		renderer.Render(root);

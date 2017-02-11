@@ -1,14 +1,16 @@
 import physics
 import vehicle
 import types
+import controller
 
 initialized = False
 
 def init(self):
     global initialized
 
+	#???
+	_controller = Controller()
     c = vehicle.Configuration()
-
     dims = physics.Vec3(2, 2, 5)
 
     c.position = physics.Vec3(0, 2, -20)
@@ -23,8 +25,8 @@ def init(self):
                                  (dims.x ** 2 + dims.y ** 2) * c.chassis_mass / 12)
 
     c.chassis_offset = physics.Vec3(0, -dims.y * .5 + .65, .25)
-
-    v = vehicle.Vehicle(self.physics(), c)
+	#									???
+    v = vehicle.Vehicle(self.physics(),_controller, c)
     self.entity().add_component(v)
 
     initialized = True

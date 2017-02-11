@@ -7,6 +7,7 @@
 #include "Physics.h"
 #include "ScriptComponent.h"
 #include "Vehicle.h"
+#include "Controller.h"
 
 using namespace boost;
 
@@ -18,6 +19,11 @@ BOOST_PYTHON_MODULE(physics) {
 		.def_readwrite("z", &PxVec3::z);
 
 	python::class_<Physics>("Physics");
+}
+
+BOOST_PYTHON_MODULE(controller) {
+	// ???
+	python::class_<Controller>("Controller");
 }
 
 // boost::python won't let us use shared_ptr<Component> for subclasses of Component by
@@ -48,7 +54,8 @@ BOOST_PYTHON_MODULE(component) {
 }
 
 BOOST_PYTHON_MODULE(vehicle) {
-	python::class_<Vehicle, std::shared_ptr<Vehicle>, python::bases<Component>>("Vehicle", python::init<Physics &, Vehicle::Configuration &>());
+	//??? -------------------------------------------------------------------------------------------------------------V
+	python::class_<Vehicle, std::shared_ptr<Vehicle>, python::bases<Component>>("Vehicle", python::init<Physics &, Controller &, Vehicle::Configuration &>());
 
 	python::class_<Vehicle::Configuration>("Configuration")
 		.def_readwrite("position", &Vehicle::Configuration::position)

@@ -4,8 +4,12 @@
 
 #include <PhysX/PxBatchQueryDesc.h>
 
+#include "windows.h"
+#include "Xinput.h"
+
 #include "Component.h"
 #include "Physics.h"
+#include "Controller.h"
 
 class Vehicle : public Component
 {
@@ -62,7 +66,7 @@ public:
 		std::vector<PxVec3> wheelOffsets;
 	};
 
-	Vehicle(Physics &physics, Configuration &config = Configuration());
+	Vehicle(Physics &physics, Controller &controller, Configuration &config = Configuration());
 	~Vehicle();
 
 	void Update(seconds dt);
@@ -72,6 +76,7 @@ protected:
 
 private:
 	Physics &physics_;
+	Controller controller;
 
 	PxBatchQuery *batchquery_;
 
