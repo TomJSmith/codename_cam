@@ -1,4 +1,5 @@
 #include "Audio.h" //has to be at the top for some reason
+#include "Controller.h"
 #include "Entity.h"
 #include "Mesh.h"
 #include "Physics.h"
@@ -26,6 +27,7 @@ int main() {
 	Audio audio;
 	audio.initAudio();
 	audio.playAudio(4); //1,2,3,4 for Audio atm can play more than one at a time
+	Controller *xbox = new Controller();
 
 	
 	GLfloat vertices[][3] = {
@@ -101,6 +103,7 @@ int main() {
 		lastTime = currentTime;
 	
 		//audio.playAudio(1);
+		//controller.Update();
 		physics.Update(dt);
 		root.Update(dt);
 		renderer.Render(root);
