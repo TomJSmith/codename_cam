@@ -376,13 +376,33 @@ void Vehicle::Update(seconds dt)
 
 	// TODO expose this input to scripts and player controllers
 	// Attempted to get conrtoller stuff here ???
-	if (controller_->getState().Gamepad.wButtons & XINPUT_GAMEPAD_A) 
+	XINPUT_STATE currentState = controller_->getState();
+	if (currentState.Gamepad.sThumbLY > 10000)
 	{
 		input_.setDigitalAccel(true);
 	}
 	else {
 		input_.setDigitalAccel(false);
 	}
+	if (currentState.Gamepad.wButtons & XINPUT_GAMEPAD_B)
+	{
+		input_.setDigitalBrake(true);
+	}
+	else {
+		input_.setDigitalBrake(false);
+	}
+
+	if (currentState.Gamepad.sThumbLX < -10000) {
+		input_.setDigitalSteerLeft(true);
+	}
+	else if(currentState.Gamepad.sThumbLX > 10000) {
+		input_.setDigitalSteerRight(true);
+	}
+	else {
+		input_.setDigitalSteerRight(false);
+		input_.setDigitalSteerLeft(false);
+	}
+
 	//input_.setAnalogAccel(1.0f);
 
 	PxVehicleSuspensionRaycasts(

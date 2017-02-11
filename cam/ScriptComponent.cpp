@@ -22,7 +22,6 @@ BOOST_PYTHON_MODULE(physics) {
 }
 
 BOOST_PYTHON_MODULE(controller) {
-	// ???
 	python::class_<Controller, std::shared_ptr<Controller>>("Controller", python::init<>());
 }
 
@@ -54,7 +53,6 @@ BOOST_PYTHON_MODULE(component) {
 }
 
 BOOST_PYTHON_MODULE(vehicle) {
-	//??? -------------------------------------------------------------------------------------------------------------V
 	python::class_<Vehicle, std::shared_ptr<Vehicle>, python::bases<Component>>("Vehicle", python::init<Physics &, std::shared_ptr<Controller>, Vehicle::Configuration &>());
 
 	python::class_<Vehicle::Configuration>("Configuration")
