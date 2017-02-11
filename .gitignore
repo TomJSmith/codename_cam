@@ -29,6 +29,11 @@
 x64/
 \.vs/
 cam.VC.*
+*.sdf
+*.opensdf
+*.suo
+*.vcxproj.user
+
 
 # Emacs temp files
 *~
