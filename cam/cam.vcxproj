@@ -254,6 +254,11 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <TargetPath>OpenAL32.dll</TargetPath>
     </ContentWithTargetPath>
+	  <ContentWithTargetPath Include="Libraries\openAL\wrap_oal.dll">
+      <DeploymentContent>true</DeploymentContent>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <TargetPath>wrap_oal.dll</TargetPath>
+    </ContentWithTargetPath>
     <ContentWithTargetPath Include="Libraries\Release\glut32.dll">
       <DeploymentContent>true</DeploymentContent>
       <CopyToOutputDirectory Condition="'$(Configuration)|$(Platform)'=='Release|x64'">PreserveNewest</CopyToOutputDirectory>
