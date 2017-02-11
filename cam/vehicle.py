@@ -8,8 +8,8 @@ initialized = False
 def init(self):
     global initialized
 
-	#???
-	_controller = Controller()
+    #???
+    _controller = controller.Controller()
     c = vehicle.Configuration()
     dims = physics.Vec3(2, 2, 5)
 

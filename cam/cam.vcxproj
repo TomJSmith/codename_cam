@@ -169,6 +169,7 @@
     <ClInclude Include="EventSystem.h" />
     <ClInclude Include="Physics.h" />
     <ClInclude Include="RigidBody.h" />
+    <ClInclude Include="System.h" />
     <ClInclude Include="Time.h" />
     <ClInclude Include="Transform.h" />
     <ClInclude Include="Util.h" />

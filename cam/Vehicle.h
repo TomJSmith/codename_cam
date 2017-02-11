@@ -66,7 +66,7 @@ public:
 		std::vector<PxVec3> wheelOffsets;
 	};
 
-	Vehicle(Physics &physics, Controller &controller, Configuration &config = Configuration());
+	Vehicle(Physics &physics, std::shared_ptr<Controller> controller, Configuration &config = Configuration());
 	~Vehicle();
 
 	void Update(seconds dt);
@@ -76,7 +76,7 @@ protected:
 
 private:
 	Physics &physics_;
-	Controller controller;
+	std::shared_ptr<Controller> controller_;
 
 	PxBatchQuery *batchquery_;
 

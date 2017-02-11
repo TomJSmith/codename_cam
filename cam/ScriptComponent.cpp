@@ -23,7 +23,7 @@ BOOST_PYTHON_MODULE(physics) {
 
 BOOST_PYTHON_MODULE(controller) {
 	// ???
-	python::class_<Controller>("Controller");
+	python::class_<Controller, std::shared_ptr<Controller>>("Controller", python::init<>());
 }
 
 // boost::python won't let us use shared_ptr<Component> for subclasses of Component by
@@ -55,7 +55,7 @@ BOOST_PYTHON_MODULE(component) {
 
 BOOST_PYTHON_MODULE(vehicle) {
 	//??? -------------------------------------------------------------------------------------------------------------V
-	python::class_<Vehicle, std::shared_ptr<Vehicle>, python::bases<Component>>("Vehicle", python::init<Physics &, Controller &, Vehicle::Configuration &>());
+	python::class_<Vehicle, std::shared_ptr<Vehicle>, python::bases<Component>>("Vehicle", python::init<Physics &, std::shared_ptr<Controller>, Vehicle::Configuration &>());
 
 	python::class_<Vehicle::Configuration>("Configuration")
 		.def_readwrite("position", &Vehicle::Configuration::position)
@@ -104,10 +104,12 @@ void ScriptComponent::InitPython() {
 		try {
 			Py_SetPythonHome(".");
 			Py_Initialize();
+
 			initcomponent();
 			initentity();
 			initphysics();
 			initvehicle();
+			initcontroller();
 
 			initialized = true;
 		} catch (const python::error_already_set &) {

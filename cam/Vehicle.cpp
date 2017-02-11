@@ -292,8 +292,9 @@ static PxVehicleDrivableSurfaceToTireFrictionPairs *CreateFrictionPairs(PxPhysic
 	return ret;
 }
 
-Vehicle::Vehicle(Physics &physics, Controller &controller, Configuration &config) :
+Vehicle::Vehicle(Physics &physics, std::shared_ptr<Controller> controller, Configuration &config) :
 	physics_(physics),
+	controller_(controller),
 	querybuffer_(4),
 	hitbuffer_(4)
 {
@@ -375,14 +376,14 @@ void Vehicle::Update(seconds dt)
 
 	// TODO expose this input to scripts and player controllers
 	// Attempted to get conrtoller stuff here ???
-	if (controller.getState().Gamepad.wButtons & XINPUT_GAMEPAD_A) 
+	if (controller_->getState().Gamepad.wButtons & XINPUT_GAMEPAD_A) 
 	{
 		input_.setDigitalAccel(true);
 	}
 	else {
 		input_.setDigitalAccel(false);
 	}
-	input_.setAnalogAccel(1.0f);
+	//input_.setAnalogAccel(1.0f);
 
 	PxVehicleSuspensionRaycasts(
 		batchquery_,

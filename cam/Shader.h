@@ -1,11 +1,12 @@
 #pragma once
 
+#include "System.h"
+
 #include <map>
 #include <memory>
 #include <string>
 #include <tuple>
 
-#include "OpenGL.h"
 #include "Util.h"
 
 class Shader

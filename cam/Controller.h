@@ -1,6 +1,6 @@
 #pragma once
-#include "windows.h"
-#include "Xinput.h"
+
+#include "System.h"
 
 class Controller {
 public:
