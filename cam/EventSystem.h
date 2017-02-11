@@ -52,4 +52,4 @@ private:
 // write EventSystem<Event1, Event2, ...> everywhere).
 //
 // To add an event type, add it to the template arguments here.
-using EventSystem = EventSystem_<Renderer::GetMeshDataEvent>;
+using EventSystem = EventSystem_<Renderer::RenderEvent>;

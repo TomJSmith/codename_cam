@@ -20,6 +20,8 @@ class Entity {
 	EventSystem &GetEvents() { return events_; }
 	Transform &GetTransform() { return transform_; }
 
+	mat4 GetGlobalTransform() const;
+
 	template <typename T>
 	void RegisterEventHandler(std::function<void(T)> handler)
 	{

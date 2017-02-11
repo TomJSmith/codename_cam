@@ -19,7 +19,8 @@ public:
 		 GLfloat **colours,
 		 GLuint type);
 
-	void GetMeshData(Renderer::GetMeshDataEvent event);
+	void GetMeshData(Renderer::RenderEvent event);
+
 protected:
 	void RegisterHandlers() override;
 
@@ -30,7 +31,5 @@ private:
 
 	Shader &shader_;
 
-	std::function<void(Renderer::GetMeshDataEvent)> handler_;
-
-	mat4 ModelMatrix();
+	std::function<void(Renderer::RenderEvent)> handler_;
 };

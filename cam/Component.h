@@ -7,6 +7,7 @@ class Entity;
 class Component {
  public:
 	Component();
+	virtual ~Component();
 
 	void Attach(Entity *entity);
 	virtual void Update(seconds dt) {};

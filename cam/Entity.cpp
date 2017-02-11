@@ -46,3 +46,16 @@ void Entity::SetParent(Entity *parent) {
 
 	parent_ = parent;
 }
+
+mat4 Entity::GetGlobalTransform() const
+{
+	mat4 ret(1.0f);
+	auto e = this;
+
+	while (e) {
+		ret = e->transform_.Matrix() * ret;
+		e = e->parent_;
+	}
+
+	return ret;
+}

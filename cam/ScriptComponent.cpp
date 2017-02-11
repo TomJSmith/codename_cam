@@ -11,11 +11,25 @@
 using namespace boost;
 
 BOOST_PYTHON_MODULE(physics) {
-	python::class_<PxVec3>("Vec3")
+	python::class_<PxVec3>("PxVec3")
 		.def(python::init<float, float, float>())
 		.def_readwrite("x", &PxVec3::x)
 		.def_readwrite("y", &PxVec3::y)
 		.def_readwrite("z", &PxVec3::z);
+
+	python::class_<vec3>("Vec3")
+		.def(python::init<float, float, float>())
+		.def_readwrite("x", &vec3::x)
+		.def_readwrite("y", &vec3::y)
+		.def_readwrite("z", &vec3::z);
+
+	python::class_<quaternion>("Quaternion")
+		.def("axis_angle", &glm::angleAxis<float, glm::defaultp>)
+		.staticmethod("axis_angle");
+
+	python::class_<Transform>("Transform")
+		.def_readwrite("position", &Transform::position)
+		.def_readwrite("rotation", &Transform::rotation);
 
 	python::class_<Physics>("Physics");
 }
@@ -35,7 +49,8 @@ BOOST_PYTHON_MODULE(entity) {
 	python::class_<Entity>("Entity", python::init<Entity *>())
 		// For every type of component we want to create in scripts, we need to
 		// add an overload here
-		.def("add_component", AddComponent<Vehicle>);
+		.def("add_component", AddComponent<Vehicle>)
+		.def("transform", &Entity::GetTransform, python::return_internal_reference<>());
 }
 
 BOOST_PYTHON_MODULE(component) {
