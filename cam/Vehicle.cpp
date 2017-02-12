@@ -287,7 +287,7 @@ static PxVehicleDrivableSurfaceToTireFrictionPairs *CreateFrictionPairs(PxPhysic
 	const PxMaterial *surfaces[1] = { physics->createMaterial(0.5f, 0.5f, 0.6f) };
 	PxVehicleDrivableSurfaceType types[1] = { 0 };
 	ret->setup(1, 1, surfaces, types);
-	ret->setTypePairFriction(0, 0, 0.50f);
+	ret->setTypePairFriction(0, 0, 1.00f);
 
 	return ret;
 }
