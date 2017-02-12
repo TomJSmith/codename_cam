@@ -7,8 +7,6 @@
 #include "Xinput.h"
 
 
-
-
 Controller::Controller() {
 	XINPUT_STATE state;
 	ZeroMemory(&state, sizeof(XINPUT_STATE));
@@ -26,5 +24,8 @@ Controller::Controller() {
 Controller::~Controller() {
 }
 
-void Controller::Update() {
+XINPUT_STATE Controller::getState() {
+	ZeroMemory(&state, sizeof(XINPUT_STATE));
+	XInputGetState(0, &state);
+	return state;
 }

@@ -1,12 +1,12 @@
 #pragma once
-#include "windows.h"
-#include "Xinput.h"
+
+#include "System.h"
 
 class Controller {
 public:
 	Controller();
 	~Controller();
-
-	void Update();
+	XINPUT_STATE getState();
 private:
+	XINPUT_STATE state;
 };

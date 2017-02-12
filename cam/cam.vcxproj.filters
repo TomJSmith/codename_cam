@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="Source Files">
@@ -74,8 +74,9 @@
     </ClInclude>
     <ClInclude Include="Camera.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
-  </ItemGroup>
+    </ClInclude>    <ClInclude Include="System.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>  </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Component.cpp">
       <Filter>Source Files</Filter>

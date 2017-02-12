@@ -7,9 +7,11 @@
 #include <PhysX/vehicle/PxVehicleSDK.h>
 #include <PhysX/vehicle/PxVehicleUtil.h>
 #include <PhysX/PxScene.h>
+#include "windows.h"
+#include "Xinput.h"
 
 #include "Vehicle.h"
-
+#include "Controller.h"
 #include "Entity.h"
 
 using namespace physx;
@@ -290,8 +292,9 @@ static PxVehicleDrivableSurfaceToTireFrictionPairs *CreateFrictionPairs(PxPhysic
 	return ret;
 }
 
-Vehicle::Vehicle(Physics &physics, Configuration &config) :
+Vehicle::Vehicle(Physics &physics, std::shared_ptr<Controller> controller, Configuration &config) :
 	physics_(physics),
+	controller_(controller),
 	querybuffer_(4),
 	hitbuffer_(4)
 {
@@ -332,6 +335,8 @@ void Vehicle::RegisterHandlers()
 	actor_->userData = &entity_->GetTransform();
 }
 
+
+
 void Vehicle::Update(seconds dt)
 {
 	// TODO do we want to configure these per-vehicle?
@@ -370,8 +375,35 @@ void Vehicle::Update(seconds dt)
 	PxVehicleWheels *vehicles[1] = { vehicle_ };
 
 	// TODO expose this input to scripts and player controllers
-	input_.setDigitalAccel(true);
-	input_.setAnalogAccel(1.0f);
+	// Attempted to get conrtoller stuff here ???
+	XINPUT_STATE currentState = controller_->getState();
+	if (currentState.Gamepad.sThumbLY > 10000)
+	{
+		input_.setDigitalAccel(true);
+	}
+	else {
+		input_.setDigitalAccel(false);
+	}
+	if (currentState.Gamepad.wButtons & XINPUT_GAMEPAD_B)
+	{
+		input_.setDigitalBrake(true);
+	}
+	else {
+		input_.setDigitalBrake(false);
+	}
+
+	if (currentState.Gamepad.sThumbLX < -10000) {
+		input_.setDigitalSteerLeft(true);
+	}
+	else if(currentState.Gamepad.sThumbLX > 10000) {
+		input_.setDigitalSteerRight(true);
+	}
+	else {
+		input_.setDigitalSteerRight(false);
+		input_.setDigitalSteerLeft(false);
+	}
+
+	//input_.setAnalogAccel(1.0f);
 
 	PxVehicleSuspensionRaycasts(
 		batchquery_,

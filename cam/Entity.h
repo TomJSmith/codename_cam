@@ -7,6 +7,8 @@
 #include "EventSystem.h"
 #include "Time.h"
 #include "Transform.h"
+#include "windows.h"
+#include "Xinput.h"
 
 class Entity {
  public:

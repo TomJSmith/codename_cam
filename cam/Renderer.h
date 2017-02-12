@@ -1,8 +1,8 @@
 #pragma once
 
-#include <vector>
+#include "System.h"
 
-#include "OpenGL.h"
+#include <vector>
 
 #include "Transform.h"
 
