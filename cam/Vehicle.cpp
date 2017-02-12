@@ -384,14 +384,12 @@ void Vehicle::Update(seconds dt)
 	{
 	case C_FAST:
 		{
-			std::cout << "!!!";
 			input_.setAnalogAccel(1.0f);
 			input_.setDigitalAccel(true);
 			break;
 		}
 	case C_SLOW:
 		{
-			std::cout << "...";
 			input_.setAnalogAccel(0.2f);
 			input_.setDigitalAccel(true);
 			break;

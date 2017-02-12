@@ -38,11 +38,9 @@ void Controller::UpdateState() {
 int Controller::getAccelleration() {
 	float y = state.Gamepad.sThumbLY;
 	if ((y > 7000) & (y < 20000)) {
-		std::cout << "SLOW";
 		return C_SLOW;
 	}
 	else if (y >= 20000) {
-		std::cout << "FAST";
 		return C_FAST;
 	}
 	else {
@@ -62,11 +60,9 @@ bool Controller::getBrake() {
 
 int Controller::getDirectional() {
 	if (state.Gamepad.sThumbLX < -10000) {
-		std::cout << "RIGHT";
 		return C_RIGHT;
 	}
 	else if (state.Gamepad.sThumbLX > 10000) {
-		std::cout << "LEFT";
 		return C_LEFT;
 	}
 	else {
