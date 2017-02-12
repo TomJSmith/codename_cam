@@ -383,32 +383,56 @@ void Vehicle::Update(seconds dt)
 	switch(controller_->getAccelleration())
 	{
 	case C_FAST:
-		std::cout << "!!!";
-		input_.setAnalogAccel(1.0f);
-		input_.setDigitalAccel(true);
+		{
+			std::cout << "!!!";
+			input_.setAnalogAccel(1.0f);
+			input_.setDigitalAccel(true);
+			break;
+		}
 	case C_SLOW:
-		std::cout << "...";
-		input_.setAnalogAccel(0.2f);
-		input_.setDigitalAccel(true);
+		{
+			std::cout << "...";
+			input_.setAnalogAccel(0.2f);
+			input_.setDigitalAccel(true);
+			break;
+		}
 	case C_NEUTRAL:
-		input_.setDigitalAccel(false);
+		{
+			input_.setDigitalAccel(false);
+			break;
+		}
 	}
 
 	switch(controller_->getBrake()){
 	case true:
-		input_.setDigitalBrake(true);
+		{
+			input_.setDigitalBrake(true);
+			break;
+		}
 	case false:
-		input_.setDigitalBrake(false);
+		{
+			input_.setDigitalBrake(false);
+			break;
+		}
 	}
 
 	switch (controller_->getDirectional()) {
 	case C_LEFT:
+	{
 		input_.setDigitalSteerLeft(true);
+		break;
+	}
 	case C_RIGHT:
+	{
 		input_.setDigitalSteerRight(true);
+		break;
+	}
 	case C_NO_DIRECTION:
-		input_.setDigitalSteerRight(false);
-		input_.setDigitalSteerLeft(false);
+		{
+			input_.setDigitalSteerRight(false);
+			input_.setDigitalSteerLeft(false);
+			break;
+		}
 	}
 
 	//input_.setAnalogAccel(1.0f);
