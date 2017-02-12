@@ -49,16 +49,20 @@ void Renderer::Initialize()
 void Renderer::Render(Entity &entity)
 {
 	std::vector<MeshData> data;
-	GetMeshDataEvent e {data};
+	mat4 cam(1.0f);
+	RenderEvent e {data, cam};
+
 	entity.BroadcastEvent(e);
 
 	glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+	auto view = glm::inverse(cam);
 	auto perspective = glm::perspective(45.0f, 1.0f, 0.1f, 100.0f);
+	auto vp = perspective * view;
 
 	for (auto &d : e.data) {
-		auto mvp =  perspective * d.modelMatrix;
+		auto mvp =  vp * d.modelMatrix;
 
 		glUseProgram(d.shader);
 

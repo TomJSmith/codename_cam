@@ -1,17 +1,13 @@
 
 #pragma once
-#include <Windows.h>
-#include "al.h"
-#include "alc.h"
-#include "efx.h"
-#include "efx-creative.h"
-#include "EFX-Util.h"
-#include "xram.h"
-#include <windows.h>
+
+#include "System.h"
+
 #include <cstdlib>
 #include <direct.h>
 #include <cstring>
 #include <iostream>
+
 using namespace std;
 
 struct wavFile {

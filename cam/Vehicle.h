@@ -4,8 +4,12 @@
 
 #include <PhysX/PxBatchQueryDesc.h>
 
+#include "windows.h"
+#include "Xinput.h"
+
 #include "Component.h"
 #include "Physics.h"
+#include "Controller.h"
 
 class Vehicle : public Component
 {
@@ -22,7 +26,7 @@ public:
 
 		// Not certain we really want to be setting this tbh, we might want to just
 		// derive it from the wheel mass and radius?...
-		PxF32 wheelMOI = 0.5f * 20.0f * 5.0f * 5.0f;
+		PxF32 wheelMOI = 0.5f * 20.0f * 5.0f * 5.0f; //Wheel mass was 20f
 
 		// Chassis parameters
 		PxVec3 chassisOffset = PxVec3(0.0f, -1.0f + 0.65f, 0.25f);
@@ -48,8 +52,8 @@ public:
 		// Has something to do with the angle of the wheels at different suspension travel
 		// distances?
 		PxF32 camberAtRest = 0.0f;
-		PxF32 camberAtMaxDroop = 0.01f;
-		PxF32 camberAtMaxCompression = -0.01f;
+		PxF32 camberAtMaxDroop = 0.1f;
+		PxF32 camberAtMaxCompression = -0.1f;
 
 		// Engine parameters
 		PxF32 torque = 500.0f;
@@ -62,7 +66,7 @@ public:
 		std::vector<PxVec3> wheelOffsets;
 	};
 
-	Vehicle(Physics &physics, Configuration &config = Configuration());
+	Vehicle(Physics &physics, std::shared_ptr<Controller> controller, Configuration &config = Configuration());
 	~Vehicle();
 
 	void Update(seconds dt);
@@ -72,6 +76,7 @@ protected:
 
 private:
 	Physics &physics_;
+	std::shared_ptr<Controller> controller_;
 
 	PxBatchQuery *batchquery_;
 

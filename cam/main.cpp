@@ -1,4 +1,11 @@
 #include "Audio.h" //has to be at the top for some reason
+#include "Controller.h"
+
+#include <Windows.h>
+#include <MMSystem.h>
+#include <iostream>
+
+#include "Camera.h"
 #include "Entity.h"
 #include "Mesh.h"
 #include "Physics.h"
@@ -41,7 +48,7 @@ int main() {
 	Entity root;
 
 #ifdef DEBUG
-	root.GetEvents().RegisterEventHandler([&physics](Renderer::GetMeshDataEvent e) {
+	root.GetEvents().RegisterEventHandler([&physics] (Renderer::RenderEvent e) {
 		auto d = physics.GetDebugMeshData();
 		e.data.insert(e.data.end(), d.begin(), d.end());
 	});
@@ -50,8 +57,8 @@ int main() {
 	Audio audio;
 	audio.initAudio();
 	audio.playAudio(4); //1,2,3,4 for Audio atm can play more than one at a time
-
 	
+
 	GLfloat vertices[][3] = {
 			{-.5, -.5, -.5}, {-.5, .5, -.5}, {.5, .5, -.5},
 			{-.5, -.5, -.5}, {.5, .5, -.5}, {.5, -.5, -.5},
@@ -133,6 +140,12 @@ int main() {
 	std::shared_ptr<Component> v(new ScriptComponent("vehicle", physics));
 	vehicle.AddComponent(std::move(mesh));
 	vehicle.AddComponent(std::move(v));
+
+	Entity camera(&vehicle);
+	std::shared_ptr<Component> cam(new Camera);
+	std::shared_ptr<Component> ctrl(new ScriptComponent("camera_control", physics));
+	camera.AddComponent(std::move(cam));
+	camera.AddComponent(std::move(ctrl));
 
 	auto lastTime = timer::now();
 

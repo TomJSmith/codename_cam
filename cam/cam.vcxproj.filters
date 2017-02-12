@@ -69,7 +69,14 @@
     <ClInclude Include="Audio.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-  </ItemGroup>
+    <ClInclude Include="Controller.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>    <ClInclude Include="System.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>  </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Component.cpp">
       <Filter>Source Files</Filter>
@@ -110,6 +117,12 @@
     <ClCompile Include="Audio.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Controller.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="passthrough.frag">
@@ -121,7 +134,6 @@
     <None Include="component.py">
       <Filter>Resource Files\Scripts</Filter>
     </None>
-    <None Include="vehicle.py" />
     <None Include="test.wav">
       <Filter>Resource Files</Filter>
     </None>
@@ -134,16 +146,8 @@
     <None Include="Inferno.wav">
       <Filter>Resource Files</Filter>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Object Include="chaser_mesh.obj">
-      <Filter>Resource Files\Meshes</Filter>
-    </Object>
-    <Object Include="runner_mesh.obj">
-      <Filter>Resource Files\Meshes</Filter>
-    </Object>
-    <Object Include="test_map_mesh.obj">
-      <Filter>Resource Files\Meshes</Filter>
-    </Object>
+    <None Include="vehicle.py">
+      <Filter>Resource Files\Scripts</Filter>
+    </None>
   </ItemGroup>
 </Project>

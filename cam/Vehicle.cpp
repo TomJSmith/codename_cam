@@ -7,9 +7,11 @@
 #include <PhysX/vehicle/PxVehicleSDK.h>
 #include <PhysX/vehicle/PxVehicleUtil.h>
 #include <PhysX/PxScene.h>
+#include "windows.h"
+#include "Xinput.h"
 
 #include "Vehicle.h"
-
+#include "Controller.h"
 #include "Entity.h"
 
 using namespace physx;
@@ -290,8 +292,9 @@ static PxVehicleDrivableSurfaceToTireFrictionPairs *CreateFrictionPairs(PxPhysic
 	return ret;
 }
 
-Vehicle::Vehicle(Physics &physics, Configuration &config) :
+Vehicle::Vehicle(Physics &physics, std::shared_ptr<Controller> controller, Configuration &config) :
 	physics_(physics),
+	controller_(controller),
 	querybuffer_(4),
 	hitbuffer_(4)
 {
@@ -332,6 +335,8 @@ void Vehicle::RegisterHandlers()
 	actor_->userData = &entity_->GetTransform();
 }
 
+
+
 void Vehicle::Update(seconds dt)
 {
 	// TODO do we want to configure these per-vehicle?
@@ -370,8 +375,50 @@ void Vehicle::Update(seconds dt)
 	PxVehicleWheels *vehicles[1] = { vehicle_ };
 
 	// TODO expose this input to scripts and player controllers
-	input_.setDigitalAccel(true);
-	input_.setAnalogAccel(1.0f);
+	/* Comments about the controller:
+	currenly left is right and right is left, dunno why but hey it works.
+	I made it only start moving at about a third of the way because it was moving on its own without me touching it at 0,(ex. the Y value of the left thumb only starts at 10000)
+	Dimensions of analog stick goes from -32767 to 32767 (neutral pos is 0x 0y)
+	Triggers go from 0 - 255 depending on how hard you press
+
+	*/
+	XINPUT_STATE currentState = controller_->getState();
+	if (currentState.Gamepad.sThumbLY > 8000)
+	{
+		
+		if (currentState.Gamepad.sThumbLY > 25000)
+		{
+			input_.setAnalogAccel(1.0f);
+		}
+		else
+		{
+			input_.setAnalogAccel(0.2f);
+		}
+		input_.setDigitalAccel(true);
+	}
+	else {
+		input_.setDigitalAccel(false);
+	}
+	if (currentState.Gamepad.wButtons & XINPUT_GAMEPAD_B)
+	{
+		input_.setDigitalBrake(true);
+	}
+	else {
+		input_.setDigitalBrake(false);
+	}
+
+	if (currentState.Gamepad.sThumbLX < -10000) {
+		input_.setDigitalSteerRight(true);
+	}
+	else if(currentState.Gamepad.sThumbLX > 10000) {
+		input_.setDigitalSteerLeft(true);
+	}
+	else {
+		input_.setDigitalSteerRight(false);
+		input_.setDigitalSteerLeft(false);
+	}
+
+	//input_.setAnalogAccel(1.0f);
 
 	PxVehicleSuspensionRaycasts(
 		batchquery_,

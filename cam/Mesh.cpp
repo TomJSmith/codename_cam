@@ -1,4 +1,4 @@
-#include "OpenGL.h"
+#include "System.h"
 
 #include "Mesh.h"
 
@@ -40,33 +40,20 @@ Mesh::Mesh(Shader &shader,
 	glBindVertexArray(0);
 }
 
-void Mesh::GetMeshData(Renderer::GetMeshDataEvent event)
+void Mesh::GetMeshData(Renderer::RenderEvent event)
 {
 	event.data.push_back({
 		vao_,
 		shader_.Program(),
 		count_,
 		type_,
-		ModelMatrix()
+		entity_->GetGlobalTransform()
 	});
-}
-
-mat4 Mesh::ModelMatrix()
-{
-	auto model = mat4(1.0f);
-	auto e = entity_;
-
-	while (e) {
-		model = e->GetTransform().Matrix() * model;
-		e = e->GetParent();
-	}
-
-	return model;
 }
 
 void Mesh::RegisterHandlers()
 {
-	handler_ = [this](Renderer::GetMeshDataEvent e) {
+	handler_ = [this] (Renderer::RenderEvent e) {
 		GetMeshData(e);
 	};
 

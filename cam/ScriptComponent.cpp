@@ -7,17 +7,36 @@
 #include "Physics.h"
 #include "ScriptComponent.h"
 #include "Vehicle.h"
+#include "Controller.h"
 
 using namespace boost;
 
 BOOST_PYTHON_MODULE(physics) {
-	python::class_<PxVec3>("Vec3")
+	python::class_<PxVec3>("PxVec3")
 		.def(python::init<float, float, float>())
 		.def_readwrite("x", &PxVec3::x)
 		.def_readwrite("y", &PxVec3::y)
 		.def_readwrite("z", &PxVec3::z);
 
+	python::class_<vec3>("Vec3")
+		.def(python::init<float, float, float>())
+		.def_readwrite("x", &vec3::x)
+		.def_readwrite("y", &vec3::y)
+		.def_readwrite("z", &vec3::z);
+
+	python::class_<quaternion>("Quaternion")
+		.def("axis_angle", &glm::angleAxis<float, glm::defaultp>)
+		.staticmethod("axis_angle");
+
+	python::class_<Transform>("Transform")
+		.def_readwrite("position", &Transform::position)
+		.def_readwrite("rotation", &Transform::rotation);
+
 	python::class_<Physics>("Physics");
+}
+
+BOOST_PYTHON_MODULE(controller) {
+	python::class_<Controller, std::shared_ptr<Controller>>("Controller", python::init<>());
 }
 
 // boost::python won't let us use shared_ptr<Component> for subclasses of Component by
@@ -35,7 +54,8 @@ BOOST_PYTHON_MODULE(entity) {
 	python::class_<Entity>("Entity", python::init<Entity *>())
 		// For every type of component we want to create in scripts, we need to
 		// add an overload here
-		.def("add_component", AddComponent<Vehicle>);
+		.def("add_component", AddComponent<Vehicle>)
+		.def("transform", &Entity::GetTransform, python::return_internal_reference<>());
 }
 
 BOOST_PYTHON_MODULE(component) {
@@ -48,7 +68,7 @@ BOOST_PYTHON_MODULE(component) {
 }
 
 BOOST_PYTHON_MODULE(vehicle) {
-	python::class_<Vehicle, std::shared_ptr<Vehicle>, python::bases<Component>>("Vehicle", python::init<Physics &, Vehicle::Configuration &>());
+	python::class_<Vehicle, std::shared_ptr<Vehicle>, python::bases<Component>>("Vehicle", python::init<Physics &, std::shared_ptr<Controller>, Vehicle::Configuration &>());
 
 	python::class_<Vehicle::Configuration>("Configuration")
 		.def_readwrite("position", &Vehicle::Configuration::position)
@@ -97,10 +117,12 @@ void ScriptComponent::InitPython() {
 		try {
 			Py_SetPythonHome(".");
 			Py_Initialize();
+
 			initcomponent();
 			initentity();
 			initphysics();
 			initvehicle();
+			initcontroller();
 
 			initialized = true;
 		} catch (const python::error_already_set &) {

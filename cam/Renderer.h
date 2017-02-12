@@ -1,8 +1,8 @@
 #pragma once
 
-#include <vector>
+#include "System.h"
 
-#include "OpenGL.h"
+#include <vector>
 
 #include "Transform.h"
 
@@ -23,8 +23,9 @@ public:
 		mat4 modelMatrix;
 	};
 
-	struct GetMeshDataEvent {
+	struct RenderEvent {
 		std::vector<MeshData> &data;
+		mat4 &cameraTransform;
 	};
 
 	GLFWwindow* getWindow();

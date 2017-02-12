@@ -7,6 +7,8 @@
 #include "EventSystem.h"
 #include "Time.h"
 #include "Transform.h"
+#include "windows.h"
+#include "Xinput.h"
 
 class Entity {
  public:
@@ -19,6 +21,8 @@ class Entity {
 	Entity *GetParent() { return parent_; }
 	EventSystem &GetEvents() { return events_; }
 	Transform &GetTransform() { return transform_; }
+
+	mat4 GetGlobalTransform() const;
 
 	template <typename T>
 	void RegisterEventHandler(std::function<void(T)> handler)
