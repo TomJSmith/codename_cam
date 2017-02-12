@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -217,6 +217,11 @@
       <DeploymentContent>true</DeploymentContent>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="chaser_ai.py">
+      <FileType>Document</FileType>
+      <DeploymentContent>true</DeploymentContent>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="test.wav">
       <FileType>Document</FileType>
       <DeploymentContent>true</DeploymentContent>
@@ -246,6 +251,16 @@
       <DeploymentContent>true</DeploymentContent>
       <CopyToOutputDirectory Condition="'$(Configuration)|$(Platform)'=='Release|x64'">PreserveNewest</CopyToOutputDirectory>
       <TargetPath>python27.dll</TargetPath>
+    </ContentWithTargetPath>
+    <ContentWithTargetPath Include="Libraries\assimp\64\assimp.dll">
+      <DeploymentContent>true</DeploymentContent>
+      <CopyToOutputDirectory Condition="'$(Platform)'=='x64'">PreserveNewest</CopyToOutputDirectory>
+      <TargetPath>assimp.dll</TargetPath>
+    </ContentWithTargetPath>
+    <ContentWithTargetPath Include="Libraries\assimp\32\assimp.dll">
+      <DeploymentContent>true</DeploymentContent>
+      <CopyToOutputDirectory Condition="'$(Platform)'=='x86'">PreserveNewest</CopyToOutputDirectory>
+      <TargetPath>assimp.dll</TargetPath>
     </ContentWithTargetPath>
     <ContentWithTargetPath Include="Libraries\SDL\SDL2.dll">
       <DeploymentContent>true</DeploymentContent>
@@ -338,6 +353,21 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="passthrough.vert">
+      <FileType>Document</FileType>
+      <DeploymentContent>true</DeploymentContent>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="chaser_mesh.obj">
+      <FileType>Document</FileType>
+      <DeploymentContent>true</DeploymentContent>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="runner_mesh.obj">
+      <FileType>Document</FileType>
+      <DeploymentContent>true</DeploymentContent>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="test_map_mesh.obj">
       <FileType>Document</FileType>
       <DeploymentContent>true</DeploymentContent>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
