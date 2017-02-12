@@ -135,4 +135,15 @@
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>
+  <ItemGroup>
+    <Object Include="chaser_mesh.obj">
+      <Filter>Resource Files\Meshes</Filter>
+    </Object>
+    <Object Include="runner_mesh.obj">
+      <Filter>Resource Files\Meshes</Filter>
+    </Object>
+    <Object Include="test_map_mesh.obj">
+      <Filter>Resource Files\Meshes</Filter>
+    </Object>
+  </ItemGroup>
 </Project>

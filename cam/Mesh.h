@@ -15,8 +15,9 @@ class Mesh : public Component {
 public:
 	Mesh(Shader &shader,
 		 GLuint nvertices,
-		 GLfloat **vertices,
-		 GLfloat **colours,
+		 std::vector<glm::vec3> vertices,
+		 std::vector<glm::vec3> normals,
+		 std::vector<glm::vec3> colours,
 		 GLuint type);
 
 	void GetMeshData(Renderer::GetMeshDataEvent event);

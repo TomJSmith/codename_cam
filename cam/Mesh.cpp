@@ -7,8 +7,9 @@
 
 Mesh::Mesh(Shader &shader,
 		   GLuint nvertices,
-		   GLfloat **vertices,
-		   GLfloat **colours,
+		   std::vector<glm::vec3> vertices,
+		   std::vector<glm::vec3> normals,
+		   std::vector<glm::vec3> colours,
 		   GLuint type) :
 	shader_(shader),
 	type_(type),
@@ -17,12 +18,12 @@ Mesh::Mesh(Shader &shader,
 	GLuint vertexBuffer = 0;
 	glGenBuffers(1, &vertexBuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
-	glBufferData(GL_ARRAY_BUFFER, nvertices * sizeof(GLfloat) * 3, vertices, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, nvertices * sizeof(glm::vec3), vertices.data(), GL_STATIC_DRAW);
 
 	GLuint colourBuffer = 0;
 	glGenBuffers(1, &colourBuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, colourBuffer);
-	glBufferData(GL_ARRAY_BUFFER, nvertices * sizeof(GLfloat) * 3, colours, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, nvertices * sizeof(glm::vec3), colours.data(), GL_STATIC_DRAW);
 
 	glGenVertexArrays(1, &vao_);
 	glBindVertexArray(vao_);
