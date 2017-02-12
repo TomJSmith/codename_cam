@@ -16,6 +16,10 @@ public:
 	Transform(vec3 p, quaternion r, vec3 s);
 
 	mat4 Matrix() const;
+	vec3 Forward() const;
+	vec3 Up() const;
+	vec3 Right() const;
+	vec3 GlobalPosition() const;
 
 	vec3 position;
 	quaternion rotation;

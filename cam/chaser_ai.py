@@ -26,7 +26,7 @@ def init(self):
                                 (dims.x ** 2 + dims.z ** 2) * .8 * config.chassis_mass / 12,
                                 (dims.x ** 2 + dims.y ** 2) * config.chassis_mass / 12)
 
-    config.chassis_offset = PxVec3(0, -dims.y * .5 + .65, .25)
+    config.chassis_offset = PxVec3(0, -dims.y, .25)
 
     v = vehicle.Vehicle(self.physics(), _controller, config)
     self.entity().add_component(v)

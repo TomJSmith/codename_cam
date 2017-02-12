@@ -102,7 +102,7 @@
       <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>assimp.lib;EFX-Util.lib;OpenAL32.lib;winmm.lib;SDL2.lib;SDL2main.lib;SDL2test.lib;SDL2_mixer.lib;PhysX3CommonDEBUG_x64.lib;PhysX3CookingDEBUG_x64.lib;LowLevelClothDEBUG.lib;LowLevelDEBUG.lib;PhysX3CharacterKinematicDEBUG_x64.lib;PhysX3ExtensionsDEBUG.lib;PhysX3VehicleDEBUG.lib;PhysXProfileSDKDEBUG.lib;PhysXVisualDebuggerSDKDEBUG.lib;PvdRuntimeDEBUG.lib;PxTaskDEBUG.lib;SceneQueryDEBUG.lib;SimulationControllerDEBUG.lib;PhysX3DEBUG_x64.lib;opengl32.lib;glfw3.lib;glew32sd.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;Xinput9_1_0.lib</AdditionalDependencies>
+      <AdditionalDependencies>assimp.lib;EFX-Util.lib;OpenAL32.lib;winmm.lib;PhysX3CommonDEBUG_x64.lib;PhysX3CookingDEBUG_x64.lib;LowLevelClothDEBUG.lib;LowLevelDEBUG.lib;PhysX3CharacterKinematicDEBUG_x64.lib;PhysX3ExtensionsDEBUG.lib;PhysX3VehicleDEBUG.lib;PhysXProfileSDKDEBUG.lib;PhysXVisualDebuggerSDKDEBUG.lib;PvdRuntimeDEBUG.lib;PxTaskDEBUG.lib;SceneQueryDEBUG.lib;SimulationControllerDEBUG.lib;PhysX3DEBUG_x64.lib;opengl32.lib;glfw3.lib;glew32sd.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;Xinput9_1_0.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(ProjectDir)Libraries\openAL;$(ProjectDir)Libraries\SDL;$(ProjectDir)Libraries\Debug;%(AdditionalLibraryDirectories);$(ProjectDir)Libraries\assimp\64</AdditionalLibraryDirectories>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <EntryPointSymbol>
@@ -115,9 +115,6 @@
       <Outputs>
       </Outputs>
     </CustomBuildStep>
-    <PostBuildEvent>
-      <Command>xcopy /S /Y /D "$(SolutionDir)cam\Python27" "$(TargetDir)"</Command>
-    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -153,7 +150,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalLibraryDirectories>$(ProjectDir)Libraries\openAL;$(ProjectDir)Libraries\SDL;$(ProjectDir)Libraries\Release;%(AdditionalLibraryDirectories);$(ProjectDir)Libraries\assimp\64</AdditionalLibraryDirectories>
-      <AdditionalDependencies>assimp.lib;EFX-Util.lib;OpenAL32.lib;winmm.lib;SDL2.lib;SDL2main.lib;SDL2test.lib;SDL2_mixer.lib;LowLevel.lib;LowLevelCLoth.lib;PhysX3_x64.lib;PhysX3CharacterKinematic_x64.lib;PhysX3Common_x64.lib;PhysX3Cooking_x64.lib;PhysX3Extensions.lib;PhysX3Vehicle.lib;PhysXProfileSDK.lib;PhysXVisualDebuggerSDK.lib;PvdRuntime.lib;PxTask.lib;SceneQuery.lib;SimulationController.lib;glfw3.lib;opengl32.lib;glew32s.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>assimp.lib;EFX-Util.lib;OpenAL32.lib;winmm.lib;LowLevel.lib;LowLevelCLoth.lib;PhysX3_x64.lib;PhysX3CharacterKinematic_x64.lib;PhysX3Common_x64.lib;PhysX3Cooking_x64.lib;PhysX3Extensions.lib;PhysX3Vehicle.lib;PhysXProfileSDK.lib;PhysXVisualDebuggerSDK.lib;PvdRuntime.lib;PxTask.lib;SceneQuery.lib;SimulationController.lib;glfw3.lib;opengl32.lib;glew32s.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <EntryPointSymbol>
       </EntryPointSymbol>
     </Link>
@@ -261,16 +258,6 @@
       <DeploymentContent>true</DeploymentContent>
       <CopyToOutputDirectory Condition="'$(Platform)'=='x86'">PreserveNewest</CopyToOutputDirectory>
       <TargetPath>assimp.dll</TargetPath>
-    </ContentWithTargetPath>
-    <ContentWithTargetPath Include="Libraries\SDL\SDL2.dll">
-      <DeploymentContent>true</DeploymentContent>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <TargetPath>SDL2.dll</TargetPath>
-    </ContentWithTargetPath>
-    <ContentWithTargetPath Include="Libraries\SDL\SDL2_mixer.dll">
-      <DeploymentContent>true</DeploymentContent>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <TargetPath>SDL2_mixer.dll</TargetPath>
     </ContentWithTargetPath>
     <ContentWithTargetPath Include="Libraries\openAL\OpenAL32.dll">
       <DeploymentContent>true</DeploymentContent>

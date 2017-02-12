@@ -150,5 +150,9 @@
       <Filter>Resource Files</Filter>
     </None>
     <None Include="camera_control.py" />
+    <None Include="chaser_ai.py" />
+    <None Include="chaser_mesh.obj" />
+    <None Include="runner_mesh.obj" />
+    <None Include="test_map_mesh.obj" />
   </ItemGroup>
 </Project>

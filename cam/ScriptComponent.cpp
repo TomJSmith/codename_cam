@@ -11,6 +11,14 @@
 
 using namespace boost;
 
+float dot(const vec3 &a, const vec3 &b) {
+	return glm::dot(a, b);
+}
+
+float length(const vec3 &v) {
+	return glm::length(v);
+}
+
 BOOST_PYTHON_MODULE(physics) {
 	python::class_<PxVec3>("PxVec3")
 		.def(python::init<float, float, float>())
@@ -22,7 +30,14 @@ BOOST_PYTHON_MODULE(physics) {
 		.def(python::init<float, float, float>())
 		.def_readwrite("x", &vec3::x)
 		.def_readwrite("y", &vec3::y)
-		.def_readwrite("z", &vec3::z);
+		.def_readwrite("z", &vec3::z)
+		.def("length", &length)
+		.def(python::self + python::self)
+		.def(python::self - python::self)
+		.def(python::self += python::self)
+		.def(python::self -= python::self)
+		.def("dot", &dot)
+		.staticmethod("dot");
 
 	python::class_<quaternion>("Quaternion")
 		.def("axis_angle", &glm::angleAxis<float, glm::defaultp>)
@@ -30,7 +45,11 @@ BOOST_PYTHON_MODULE(physics) {
 
 	python::class_<Transform>("Transform")
 		.def_readwrite("position", &Transform::position)
-		.def_readwrite("rotation", &Transform::rotation);
+		.def_readwrite("rotation", &Transform::rotation)
+		.def("forward", &Transform::Forward)
+		.def("up", &Transform::Up)
+		.def("right", &Transform::Right)
+		.def("global_position", &Transform::GlobalPosition);
 
 	python::class_<Physics>("Physics");
 }
@@ -68,7 +87,14 @@ BOOST_PYTHON_MODULE(component) {
 }
 
 BOOST_PYTHON_MODULE(vehicle) {
-	python::class_<Vehicle, std::shared_ptr<Vehicle>, python::bases<Component>>("Vehicle", python::init<Physics &, std::shared_ptr<Controller>, Vehicle::Configuration &>());
+	python::class_<PxVehicleDrive4WRawInputData>("Input")
+		.def("set_acceleration", &PxVehicleDrive4WRawInputData::setDigitalAccel)
+		.def("set_steer_left", &PxVehicleDrive4WRawInputData::setDigitalSteerLeft)
+		.def("set_steer_right", &PxVehicleDrive4WRawInputData::setDigitalSteerRight)
+		.def("set_brake", &PxVehicleDrive4WRawInputData::setDigitalBrake);
+
+	python::class_<Vehicle, std::shared_ptr<Vehicle>, python::bases<Component>>
+		("Vehicle", python::init<Physics &, std::shared_ptr<Controller>, Vehicle::Configuration &>());
 
 	python::class_<Vehicle::Configuration>("Configuration")
 		.def_readwrite("position", &Vehicle::Configuration::position)
@@ -99,18 +125,26 @@ ScriptComponent::ScriptComponent(const std::string &type, Physics &physics) :
 	physics_(physics)
 {
 	InitPython();
+}
+
+void ScriptComponent::RegisterHandlers()
+{
 	InitScript(type_);
 }
 
-void ScriptComponent::Update(seconds dt) {
+void ScriptComponent::Update(seconds dt)
+{
 	try {
-		locals_["update"](python::ptr(this), dt.count());
+		if (locals_.has_key("update")) {
+			locals_["update"](python::ptr(this), dt.count());
+		}
 	} catch (const python::error_already_set &) {
 		PyErr_Print();
 	}
 }
 
-void ScriptComponent::InitPython() {
+void ScriptComponent::InitPython()
+{
 	static bool initialized = false;
 
 	if (!initialized) {
@@ -131,7 +165,8 @@ void ScriptComponent::InitPython() {
 	}
 }
 
-void ScriptComponent::InitScript(const std::string &type) {
+void ScriptComponent::InitScript(const std::string &type)
+{
 	try {
 		std::string filename = type + ".py";
 
@@ -141,6 +176,10 @@ void ScriptComponent::InitScript(const std::string &type) {
 		locals_ = python::dict(main_.attr("__dict__"));
 
 		python::exec_file(filename.c_str(), locals_, locals_);
+
+		if (locals_.has_key("init")) {
+			locals_["init"](python::ptr(this));
+		}
 	} catch (const python::error_already_set &) {
 		PyErr_Print();
 	}
@@ -165,6 +204,13 @@ namespace boost {
 	template <>
 	Vehicle const volatile * get_pointer<class Vehicle const volatile>(
 		class Vehicle const volatile *c
+		) {
+		return c;
+	}
+
+	template <>
+	PxVehicleDrive4WRawInputData const volatile * get_pointer<class PxVehicleDrive4WRawInputData const volatile>(
+		class PxVehicleDrive4WRawInputData const volatile *c
 		) {
 		return c;
 	}

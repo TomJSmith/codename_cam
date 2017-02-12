@@ -3,11 +3,7 @@ import vehicle
 import types
 import controller
 
-initialized = False
-
 def init(self):
-    global initialized
-
     _controller = controller.Controller()
     c = vehicle.Configuration()
 
@@ -31,11 +27,3 @@ def init(self):
 
     v = vehicle.Vehicle(self.physics(),_controller, c)
     self.entity().add_component(v)
-
-    initialized = True
-
-def update(self, dt):
-    global initialized
-
-    if not initialized:
-        init(self)

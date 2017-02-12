@@ -11,19 +11,20 @@ class Physics;
 class ScriptComponent : public Component {
  public:
 	ScriptComponent(const std::string &filename, Physics &physics);
-	void Update(seconds dt) override;
+
+	virtual void Update(seconds dt) override;
 
 	Physics &GetPhysics() const { return physics_; }
 
  private:
-	boost::python::object locals_;
-	boost::python::object globals_;
+	boost::python::dict locals_;
 	boost::python::object main_;
 
 	std::string type_;
 
 	Physics &physics_;
 
+	virtual void RegisterHandlers() override;
 	void InitScript(const std::string &filename);
 	static void InitPython();
 };

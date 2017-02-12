@@ -124,6 +124,10 @@ int main() {
 	camera.AddComponent(std::move(cam));
 	camera.AddComponent(std::move(ctrl));
 
+	Entity chaser(&root);
+	std::shared_ptr<Component> ai(new ScriptComponent("chaser_ai", physics));
+	chaser.AddComponent(std::move(ai));
+
 	auto lastTime = timer::now();
 
 	bool soundT = true;

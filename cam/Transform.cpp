@@ -20,3 +20,27 @@ mat4 Transform::Matrix() const
 	// depend on how the object is rotated
 	return glm::translate(position) * glm::toMat4(rotation) * glm::scale(scale);
 }
+
+vec3 Transform::Forward() const
+{
+	vec3 ret = Matrix() * vec4(0.0f, 0.0f, 1.0f, 1.0f);
+	return glm::normalize(ret);
+}
+
+vec3 Transform::Up() const
+{
+	vec3 ret = Matrix() * vec4(0.0f, 1.0f, 0.0f, 1.0f);
+	return glm::normalize(ret);
+}
+
+vec3 Transform::Right() const
+{
+	vec3 ret = Matrix() * vec4(1.0f, 0.0f, 0.0f, 1.0f);
+	return glm::normalize(ret);
+}
+
+vec3 Transform::GlobalPosition() const
+{
+	vec3 ret = Matrix() * vec4(0.0f, 0.0f, 0.0f, 0.0f);
+	return ret;
+}
