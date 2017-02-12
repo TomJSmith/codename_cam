@@ -14,10 +14,8 @@ class Shader;
 class Mesh : public Component {
 public:
 	Mesh(Shader &shader,
-		 GLuint nvertices,
-		 std::vector<glm::vec3> vertices,
-		 std::vector<glm::vec3> normals,
-		 std::vector<glm::vec3> colours,
+		 const char* objFileName,
+		 glm::vec3 colour,
 		 GLuint type);
 
 	void GetMeshData(Renderer::RenderEvent event);

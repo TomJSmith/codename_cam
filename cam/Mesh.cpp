@@ -4,26 +4,48 @@
 
 #include "Entity.h"
 #include "Shader.h"
+#include <IOStream>
+
+#include <assimp\scene.h>
+#include <assimp\postprocess.h>
+#include <assimp\material.h>
+#include <assimp\cimport.h>
 
 Mesh::Mesh(Shader &shader,
-		   GLuint nvertices,
-		   std::vector<glm::vec3> vertices,
-		   std::vector<glm::vec3> normals,
-		   std::vector<glm::vec3> colours,
+		   const char* objFileName,	
+		   glm::vec3 colour,
 		   GLuint type) :
 	shader_(shader),
-	type_(type),
-	count_(nvertices)
+	type_(type)
 {
+	const aiScene* objFile = aiImportFile(objFileName, aiProcessPreset_TargetRealtime_MaxQuality);
+	if (!objFile)
+	{
+		std::cerr << "could not load file " << objFile << ": " << aiGetErrorString() << std::endl;
+	}
+	aiMesh* objMesh = objFile->mMeshes[0];
+	std::vector<glm::vec3> vertices;
+	std::vector<glm::vec3> normals;
+	std::vector<glm::vec3> colours;
+	for (std::uint32_t i = 0u; i < objMesh->mNumVertices; i++)
+	{
+		aiVector3D vert = objMesh->mVertices[i];
+		aiVector3D norm = objMesh->mNormals[i];
+		vertices.push_back(vec3(vert.x, vert.y, vert.z));
+		normals.push_back(vec3(norm.x, norm.y, norm.z));
+		colours.push_back(colour);
+	}
+	count_ = objMesh->mNumVertices;
+
 	GLuint vertexBuffer = 0;
 	glGenBuffers(1, &vertexBuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
-	glBufferData(GL_ARRAY_BUFFER, nvertices * sizeof(glm::vec3), vertices.data(), GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, count_ * sizeof(glm::vec3), vertices.data(), GL_STATIC_DRAW);
 
 	GLuint colourBuffer = 0;
 	glGenBuffers(1, &colourBuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, colourBuffer);
-	glBufferData(GL_ARRAY_BUFFER, nvertices * sizeof(glm::vec3), colours.data(), GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, count_ * sizeof(glm::vec3), colours.data(), GL_STATIC_DRAW);
 
 	glGenVertexArrays(1, &vao_);
 	glBindVertexArray(vao_);

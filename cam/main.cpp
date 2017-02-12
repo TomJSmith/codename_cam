@@ -14,33 +14,10 @@
 #include "ScriptComponent.h"
 #include "Shader.h"
 #include "Vehicle.h"
-#include <assimp\cimport.h>
-#include <assimp\scene.h>
-#include <assimp\postprocess.h>
-#include <assimp\material.h>
+
 
 
 int main() {
-
-	const char* objFile = "runner_mesh.obj";
-	const aiScene* runnerCar = aiImportFile(objFile, aiProcessPreset_TargetRealtime_MaxQuality);
-	if (!runnerCar)
-	{
-		std::cerr << "could not load file " << objFile << ": " << aiGetErrorString() << std::endl;
-	}
-	aiMesh* runnerCarMesh = runnerCar->mMeshes[0];
-	std::vector<glm::vec3> verts;
-	std::vector<glm::vec3> normals;
-	std::vector<glm::vec3> colors;
-	for (std::uint32_t i = 0u; i < runnerCarMesh->mNumVertices; i++)
-	{
-		aiVector3D vert = runnerCarMesh->mVertices[i];
-		aiVector3D norm = runnerCarMesh->mNormals[i];
-		verts.push_back(vec3(vert.x, vert.y - 0.5, vert.z - 0.5));
-		normals.push_back(vec3(norm.x, norm.y, norm.z));
-		colors.push_back(vec3(0, 0, 1));
-	}
-
 
 	Renderer::Initialize();
 	Renderer renderer;
@@ -130,13 +107,13 @@ int main() {
 
 	Entity plane(&root);
 	std::vector<glm::vec3> planeNormals;
-	std::shared_ptr<Component> planemesh(new Mesh(Shader::Load("passthrough.vert", "passthrough.frag"), 6, planeverts, planeNormals, planecolours, GL_TRIANGLES));
+	std::shared_ptr<Component> planemesh(new Mesh(Shader::Load("passthrough.vert", "passthrough.frag"), "test_map_mesh.obj", vec3(0.5, 0.5, 0.5), GL_TRIANGLES));
 	std::shared_ptr<Component> planebody(new RigidBody(physics, *physics.GetPhysics()->createMaterial(0.5f, 0.5f, 0.5f), PxPlaneGeometry(), PxTransform(0.0f, -1.0f, 0.0f, PxQuat(3.14159f / 2.0f, PxVec3(0.0f, 0.0f, 1.0f))), false));
 	plane.AddComponent(std::move(planemesh));
 	plane.AddComponent(std::move(planebody));
 
 	Entity vehicle(&root);
-	std::shared_ptr<Component> mesh(new Mesh(Shader::Load("passthrough.vert", "passthrough.frag"), runnerCarMesh->mNumVertices, verts, normals, colors, GL_TRIANGLES));
+	std::shared_ptr<Component> mesh(new Mesh(Shader::Load("passthrough.vert", "passthrough.frag"), "runner_mesh.obj", vec3(0, 0, 1), GL_TRIANGLES));
 	std::shared_ptr<Component> v(new ScriptComponent("vehicle", physics));
 	vehicle.AddComponent(std::move(mesh));
 	vehicle.AddComponent(std::move(v));
