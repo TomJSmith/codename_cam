@@ -6,7 +6,7 @@ initialized = False
 def init(self):
     global initialized
 
-    self.entity().transform().position = physics.Vec3(0, 2, -5)
+    self.entity().transform().position = physics.Vec3(0, 2, -10)
     self.entity().transform().rotation = physics.Quaternion.axis_angle(math.pi, physics.Vec3(0, 1, 0))
 
     initialized = True

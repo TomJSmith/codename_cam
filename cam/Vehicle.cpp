@@ -287,7 +287,7 @@ static PxVehicleDrivableSurfaceToTireFrictionPairs *CreateFrictionPairs(PxPhysic
 	const PxMaterial *surfaces[1] = { physics->createMaterial(0.5f, 0.5f, 0.6f) };
 	PxVehicleDrivableSurfaceType types[1] = { 0 };
 	ret->setup(1, 1, surfaces, types);
-	ret->setTypePairFriction(0, 0, 1.00f);
+	ret->setTypePairFriction(0, 0, 0.50f);
 
 	return ret;
 }
@@ -375,10 +375,25 @@ void Vehicle::Update(seconds dt)
 	PxVehicleWheels *vehicles[1] = { vehicle_ };
 
 	// TODO expose this input to scripts and player controllers
-	// Attempted to get conrtoller stuff here ???
+	/* Comments about the controller:
+	currenly left is right and right is left, dunno why but hey it works.
+	I made it only start moving at about a third of the way because it was moving on its own without me touching it at 0,(ex. the Y value of the left thumb only starts at 10000)
+	Dimensions of analog stick goes from -32767 to 32767 (neutral pos is 0x 0y)
+	Triggers go from 0 - 255 depending on how hard you press
+
+	*/
 	XINPUT_STATE currentState = controller_->getState();
-	if (currentState.Gamepad.sThumbLY > 10000)
+	if (currentState.Gamepad.sThumbLY > 8000)
 	{
+		
+		if (currentState.Gamepad.sThumbLY > 25000)
+		{
+			input_.setAnalogAccel(1.0f);
+		}
+		else
+		{
+			input_.setAnalogAccel(0.2f);
+		}
 		input_.setDigitalAccel(true);
 	}
 	else {
@@ -393,10 +408,10 @@ void Vehicle::Update(seconds dt)
 	}
 
 	if (currentState.Gamepad.sThumbLX < -10000) {
-		input_.setDigitalSteerLeft(true);
+		input_.setDigitalSteerRight(true);
 	}
 	else if(currentState.Gamepad.sThumbLX > 10000) {
-		input_.setDigitalSteerRight(true);
+		input_.setDigitalSteerLeft(true);
 	}
 	else {
 		input_.setDigitalSteerRight(false);

@@ -19,14 +19,14 @@ public:
 		PxVec3 position = PxVec3(0.0f, 2.0f, -10.0f);
 
 		// Wheel parameters
-		PxF32 wheelMass = 20.0f;
+		PxF32 wheelMass = 50.0f;
 		PxF32 wheelRadius = 0.5f;
 		PxF32 wheelWidth = 0.4f;
 		PxU32 nWheels = 4;
 
 		// Not certain we really want to be setting this tbh, we might want to just
 		// derive it from the wheel mass and radius?...
-		PxF32 wheelMOI = 0.5f * 20.0f * 5.0f * 5.0f;
+		PxF32 wheelMOI = 0.5f * 50.0f * 5.0f * 5.0f; //Wheel mass was 20f
 
 		// Chassis parameters
 		PxVec3 chassisOffset = PxVec3(0.0f, -1.0f + 0.65f, 0.25f);
