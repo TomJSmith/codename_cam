@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -95,15 +95,15 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(ProjectDir)Include\openAL;$(ProjectDir)Include;$(ProjectDir)Include\Python;$(ProjectDir)Include\SDL;$(ProjectDir)Include\PhysX;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Include\assimp;$(ProjectDir)Include\openAL;$(ProjectDir)Include;$(ProjectDir)Include\Python;$(ProjectDir)Include\SDL;$(ProjectDir)Include\PhysX;%(AdditionalIncludeDirectories);$(ProjectDir)Include\assimp</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <PreprocessorDefinitions>SDL_MAIN_HANDLED;DEBUG;BOOST_PYTHON_STATIC_LIB;GLEW_STATIC;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <DisableSpecificWarnings>4244;</DisableSpecificWarnings>
       <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>EFX-Util.lib;OpenAL32.lib;winmm.lib;SDL2.lib;SDL2main.lib;SDL2test.lib;SDL2_mixer.lib;PhysX3CommonDEBUG_x64.lib;PhysX3CookingDEBUG_x64.lib;LowLevelClothDEBUG.lib;LowLevelDEBUG.lib;PhysX3CharacterKinematicDEBUG_x64.lib;PhysX3ExtensionsDEBUG.lib;PhysX3VehicleDEBUG.lib;PhysXProfileSDKDEBUG.lib;PhysXVisualDebuggerSDKDEBUG.lib;PvdRuntimeDEBUG.lib;PxTaskDEBUG.lib;SceneQueryDEBUG.lib;SimulationControllerDEBUG.lib;PhysX3DEBUG_x64.lib;opengl32.lib;glfw3.lib;glew32sd.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;Xinput9_1_0.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(ProjectDir)Libraries\openAL;$(ProjectDir)Libraries\SDL;$(ProjectDir)Libraries\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>assimp.lib;EFX-Util.lib;OpenAL32.lib;winmm.lib;SDL2.lib;SDL2main.lib;SDL2test.lib;SDL2_mixer.lib;PhysX3CommonDEBUG_x64.lib;PhysX3CookingDEBUG_x64.lib;LowLevelClothDEBUG.lib;LowLevelDEBUG.lib;PhysX3CharacterKinematicDEBUG_x64.lib;PhysX3ExtensionsDEBUG.lib;PhysX3VehicleDEBUG.lib;PhysXProfileSDKDEBUG.lib;PhysXVisualDebuggerSDKDEBUG.lib;PvdRuntimeDEBUG.lib;PxTaskDEBUG.lib;SceneQueryDEBUG.lib;SimulationControllerDEBUG.lib;PhysX3DEBUG_x64.lib;opengl32.lib;glfw3.lib;glew32sd.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;Xinput9_1_0.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(ProjectDir)Libraries\openAL;$(ProjectDir)Libraries\SDL;$(ProjectDir)Libraries\Debug;%(AdditionalLibraryDirectories);$(ProjectDir)Libraries\assimp\64</AdditionalLibraryDirectories>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <EntryPointSymbol>
       </EntryPointSymbol>
@@ -143,7 +143,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(ProjectDir)Include\openAL;$(ProjectDir)Include;$(ProjectDir)Include\Python;$(ProjectDir)Include\SDL;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Include\assimp;$(ProjectDir)Include\openAL;$(ProjectDir)Include;$(ProjectDir)Include\Python;$(ProjectDir)Include\SDL;%(AdditionalIncludeDirectories);$(ProjectDir)Include\assimp</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <PreprocessorDefinitions>SDL_MAIN_HANDLED;BOOST_PYTHON_STATIC_LIB;GLEW_STATIC;NDEBUG;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <DisableSpecificWarnings>4244;</DisableSpecificWarnings>
@@ -152,8 +152,8 @@
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>$(ProjectDir)Libraries\openAL;$(ProjectDir)Libraries\SDL;$(ProjectDir)Libraries\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>EFX-Util.lib;OpenAL32.lib;winmm.lib;SDL2.lib;SDL2main.lib;SDL2test.lib;SDL2_mixer.lib;LowLevel.lib;LowLevelCLoth.lib;PhysX3_x64.lib;PhysX3CharacterKinematic_x64.lib;PhysX3Common_x64.lib;PhysX3Cooking_x64.lib;PhysX3Extensions.lib;PhysX3Vehicle.lib;PhysXProfileSDK.lib;PhysXVisualDebuggerSDK.lib;PvdRuntime.lib;PxTask.lib;SceneQuery.lib;SimulationController.lib;glfw3.lib;opengl32.lib;glew32s.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(ProjectDir)Libraries\openAL;$(ProjectDir)Libraries\SDL;$(ProjectDir)Libraries\Release;%(AdditionalLibraryDirectories);$(ProjectDir)Libraries\assimp\64</AdditionalLibraryDirectories>
+      <AdditionalDependencies>assimp.lib;EFX-Util.lib;OpenAL32.lib;winmm.lib;SDL2.lib;SDL2main.lib;SDL2test.lib;SDL2_mixer.lib;LowLevel.lib;LowLevelCLoth.lib;PhysX3_x64.lib;PhysX3CharacterKinematic_x64.lib;PhysX3Common_x64.lib;PhysX3Cooking_x64.lib;PhysX3Extensions.lib;PhysX3Vehicle.lib;PhysXProfileSDK.lib;PhysXVisualDebuggerSDK.lib;PvdRuntime.lib;PxTask.lib;SceneQuery.lib;SimulationController.lib;glfw3.lib;opengl32.lib;glew32s.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <EntryPointSymbol>
       </EntryPointSymbol>
     </Link>
@@ -262,7 +262,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <TargetPath>OpenAL32.dll</TargetPath>
     </ContentWithTargetPath>
-	  <ContentWithTargetPath Include="Libraries\openAL\wrap_oal.dll">
+    <ContentWithTargetPath Include="Libraries\openAL\wrap_oal.dll">
       <DeploymentContent>true</DeploymentContent>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <TargetPath>wrap_oal.dll</TargetPath>

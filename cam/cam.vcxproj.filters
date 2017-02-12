@@ -69,14 +69,16 @@
     <ClInclude Include="Audio.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="Controller.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Camera.h">
+    <ClInclude Include="System.h">
       <Filter>Header Files</Filter>
-    </ClInclude>    <ClInclude Include="System.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>  </ItemGroup>
+    </ClInclude>
+  </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Component.cpp">
       <Filter>Source Files</Filter>
@@ -117,10 +119,10 @@
     <ClCompile Include="Audio.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Controller.cpp">
+    <ClCompile Include="Camera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Camera.cpp">
+    <ClCompile Include="Controller.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -134,6 +136,7 @@
     <None Include="component.py">
       <Filter>Resource Files\Scripts</Filter>
     </None>
+    <None Include="vehicle.py" />
     <None Include="test.wav">
       <Filter>Resource Files</Filter>
     </None>
@@ -146,8 +149,6 @@
     <None Include="Inferno.wav">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="vehicle.py">
-      <Filter>Resource Files\Scripts</Filter>
-    </None>
+    <None Include="camera_control.py" />
   </ItemGroup>
 </Project>
