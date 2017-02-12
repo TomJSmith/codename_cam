@@ -29,3 +29,47 @@ XINPUT_STATE Controller::getState() {
 	XInputGetState(0, &state);
 	return state;
 }
+
+void Controller::UpdateState() {
+	ZeroMemory(&state, sizeof(XINPUT_STATE));
+	XInputGetState(0, &state);
+}
+
+int Controller::getAccelleration() {
+	float y = state.Gamepad.sThumbLY;
+	if ((y > 7000) & (y < 20000)) {
+		std::cout << "SLOW";
+		return C_SLOW;
+	}
+	else if (y >= 20000) {
+		std::cout << "FAST";
+		return C_FAST;
+	}
+	else {
+		return C_NEUTRAL;
+	}
+}
+
+bool Controller::getBrake() {
+	if (state.Gamepad.wButtons & XINPUT_GAMEPAD_B) {
+		std::cout << "BRAKING";
+		return true;
+	}
+	else {
+		return false;
+	}
+}
+
+int Controller::getDirectional() {
+	if (state.Gamepad.sThumbLX < -10000) {
+		std::cout << "RIGHT";
+		return C_RIGHT;
+	}
+	else if (state.Gamepad.sThumbLX > 10000) {
+		std::cout << "LEFT";
+		return C_LEFT;
+	}
+	else {
+		return C_NO_DIRECTION;
+	}
+}

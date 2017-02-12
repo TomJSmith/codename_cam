@@ -376,44 +376,37 @@ void Vehicle::Update(seconds dt)
 
 	// TODO expose this input to scripts and player controllers
 	/* Comments about the controller:
-	currenly left is right and right is left, dunno why but hey it works.
-	I made it only start moving at about a third of the way because it was moving on its own without me touching it at 0,(ex. the Y value of the left thumb only starts at 10000)
-	Dimensions of analog stick goes from -32767 to 32767 (neutral pos is 0x 0y)
-	Triggers go from 0 - 255 depending on how hard you press
+	use UpdateState() to have the controller use the latest state before trying to get a controller input
 
 	*/
-	XINPUT_STATE currentState = controller_->getState();
-	if (currentState.Gamepad.sThumbLY > 8000)
+	controller_->UpdateState();
+	switch(controller_->getAccelleration())
 	{
-		
-		if (currentState.Gamepad.sThumbLY > 25000)
-		{
-			input_.setAnalogAccel(1.0f);
-		}
-		else
-		{
-			input_.setAnalogAccel(0.2f);
-		}
+	case C_FAST:
+		std::cout << "!!!";
+		input_.setAnalogAccel(1.0f);
 		input_.setDigitalAccel(true);
-	}
-	else {
+	case C_SLOW:
+		std::cout << "...";
+		input_.setAnalogAccel(0.2f);
+		input_.setDigitalAccel(true);
+	case C_NEUTRAL:
 		input_.setDigitalAccel(false);
 	}
-	if (currentState.Gamepad.wButtons & XINPUT_GAMEPAD_B)
-	{
+
+	switch(controller_->getBrake()){
+	case true:
 		input_.setDigitalBrake(true);
-	}
-	else {
+	case false:
 		input_.setDigitalBrake(false);
 	}
 
-	if (currentState.Gamepad.sThumbLX < -10000) {
-		input_.setDigitalSteerRight(true);
-	}
-	else if(currentState.Gamepad.sThumbLX > 10000) {
+	switch (controller_->getDirectional()) {
+	case C_LEFT:
 		input_.setDigitalSteerLeft(true);
-	}
-	else {
+	case C_RIGHT:
+		input_.setDigitalSteerRight(true);
+	case C_NO_DIRECTION:
 		input_.setDigitalSteerRight(false);
 		input_.setDigitalSteerLeft(false);
 	}
