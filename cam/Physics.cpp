@@ -64,7 +64,7 @@ Physics::~Physics()
 {
 	// We have to free in the opposite order of creation
 #ifdef DEBUG
-//	pvd_->release();
+	pvd_->release();
 #endif
 
 	PxCloseVehicleSDK();
