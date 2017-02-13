@@ -38,7 +38,7 @@ void Renderer::Initialize()
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
 
-	window_ = glfwCreateWindow(1920, 900, "Title", nullptr, nullptr);
+	window_ = glfwCreateWindow(1024, 1024, "Title", nullptr, nullptr);
 
 	if (!window_) throw std::runtime_error("unable to create OpenGL window"); // TODO specific exception here?
 	glfwMakeContextCurrent(window_);

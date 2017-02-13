@@ -25,10 +25,13 @@ int main() {
 		auto root = Entity::Create(nullptr);
 
 #ifdef DEBUG
+		//Check and uncomment the ifdef in the physics deconstructor if you uncomment this
+		/*
 		root.GetEvents().RegisterEventHandler([&physics](Renderer::RenderEvent e) {
 			auto d = physics.GetDebugMeshData();
 			e.data.insert(e.data.end(), d.begin(), d.end());
 		});
+		*/
 #endif
 
 		Audio audio;
@@ -67,7 +70,7 @@ int main() {
 			auto dt = seconds(currentTime - lastTime);
 			lastTime = currentTime;
 
-			//audio.playAudio(1);
+			audio.playAudio(3);
 			physics.Update(dt);
 			root->Update(dt);
 			renderer.Render(*root);
