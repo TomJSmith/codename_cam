@@ -63,6 +63,11 @@ Mesh::Mesh(Shader &shader,
 	glBindBuffer(GL_ARRAY_BUFFER, colourBuffer);
 	glBufferData(GL_ARRAY_BUFFER, count_ * sizeof(glm::vec3), colours.data(), GL_STATIC_DRAW);
 
+	GLuint normalBuffer = 0;
+	glGenBuffers(1, &normalBuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, normalBuffer);
+	glBufferData(GL_ARRAY_BUFFER, count_ * sizeof(glm::vec3), normals.data(), GL_STATIC_DRAW);
+
 	glGenVertexArrays(1, &vao_);
 	glBindVertexArray(vao_);
 
@@ -73,6 +78,10 @@ Mesh::Mesh(Shader &shader,
 	glBindBuffer(GL_ARRAY_BUFFER, colourBuffer);
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, 0);
 	glEnableVertexAttribArray(1);
+
+	glBindBuffer(GL_ARRAY_BUFFER, normalBuffer);
+	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, 0);
+	glEnableVertexAttribArray(2);
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
