@@ -63,12 +63,13 @@ Physics::Physics()
 Physics::~Physics()
 {
 	// We have to free in the opposite order of creation
-	PxCloseVehicleSDK();
-
 #ifdef DEBUG
 	pvd_->release();
 #endif
 
+	PxCloseVehicleSDK();
+
+	cooking_->release();
 	scene_->release();
 	physics_->release();
 	foundation_->release();
