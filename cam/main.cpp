@@ -38,9 +38,9 @@ int main() {
 	Entity plane(&root);
 	std::vector<glm::vec3> planeNormals;
 	std::shared_ptr<Component> planemesh(new Mesh(Shader::Load("passthrough.vert", "passthrough.frag"), "test_map_mesh.obj", vec3(0.5, 0.5, 0.5), 2.5, GL_TRIANGLES));
-	std::shared_ptr<Component> planebody(new RigidBody(physics, *physics.GetPhysics()->createMaterial(0.5f, 0.5f, 0.5f), PxPlaneGeometry(), PxTransform(0.0f, -1.0f, 0.0f, PxQuat(3.14159f / 2.0f, PxVec3(0.0f, 0.0f, 1.0f))), false));
+	//std::shared_ptr<Component> planebody(new RigidBody(physics, *physics.GetPhysics()->createMaterial(0.5f, 0.5f, 0.5f), PxPlaneGeometry(), PxTransform(0.0f, -1.0f, 0.0f, PxQuat(3.14159f / 2.0f, PxVec3(0.0f, 0.0f, 1.0f))), false));
 	plane.AddComponent(std::move(planemesh));
-	plane.AddComponent(std::move(planebody));
+	//plane.AddComponent(std::move(planebody));
 
 	Entity vehicle(&root);
 	std::shared_ptr<Component> mesh(new Mesh(Shader::Load("passthrough.vert", "passthrough.frag"), "runner_mesh.fbx", vec3(0, 0, 1), 2.5, GL_TRIANGLES));
