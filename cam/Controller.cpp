@@ -43,6 +43,9 @@ int Controller::getAccelleration() {
 	else if (y >= 20000) {
 		return C_FAST;
 	}
+	else if (y < -5000) {
+		return C_REVERSE;
+	}
 	else {
 		return C_NEUTRAL;
 	}

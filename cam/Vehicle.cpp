@@ -384,20 +384,30 @@ void Vehicle::Update(seconds dt)
 	{
 	case C_FAST:
 		{
-			input_.setAnalogAccel(1.0f);
-			input_.setDigitalAccel(true);
-			break;
+		vehicle_->mDriveDynData.forceGearChange(PxVehicleGearsData::eFOURTH);
+		input_.setAnalogAccel(1.0f);
+		input_.setDigitalAccel(true);
+		break;
 		}
 	case C_SLOW:
 		{
-			input_.setAnalogAccel(0.2f);
-			input_.setDigitalAccel(true);
-			break;
+		vehicle_->mDriveDynData.forceGearChange(PxVehicleGearsData::eSECOND);
+		input_.setAnalogAccel(1.0f);
+		input_.setDigitalAccel(true);
+		break;
 		}
 	case C_NEUTRAL:
 		{
-			input_.setDigitalAccel(false);
-			break;
+		vehicle_->mDriveDynData.forceGearChange(PxVehicleGearsData::eNEUTRAL);
+		input_.setDigitalAccel(false);
+		break;
+		}
+	case C_REVERSE:
+		{
+		vehicle_->mDriveDynData.forceGearChange(PxVehicleGearsData::eREVERSE);
+		input_.setAnalogAccel(1.0f);
+		input_.setDigitalAccel(true);
+
 		}
 	}
 
