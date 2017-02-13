@@ -418,11 +418,13 @@ void Vehicle::Update(seconds dt)
 	case C_LEFT:
 	{
 		input_.setDigitalSteerLeft(true);
+		input_.setDigitalSteerRight(false);
 		break;
 	}
 	case C_RIGHT:
 	{
 		input_.setDigitalSteerRight(true);
+		input_.setDigitalSteerLeft(false);
 		break;
 	}
 	case C_NO_DIRECTION:
