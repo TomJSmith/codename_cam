@@ -66,7 +66,7 @@ static PxTriangleMesh *CreateMesh(const std::vector<vec3> &verts, PxPhysics *phy
 	return nullptr;
 }
 
-static PxTriangleMeshGeometry CreateGeometry(const char *objfile, Physics &physics)
+static PxTriangleMeshGeometry CreateGeometry(const char *objfile, Physics &physics, float scale)
 {
 	// TODO stolen from Mesh.cpp make this not duplicated
 	Assimp::Importer importer;
@@ -94,7 +94,7 @@ static PxTriangleMeshGeometry CreateGeometry(const char *objfile, Physics &physi
 			{
 				std::cout << vert.x << " " << vert.y << " " << vert.z << std::endl;
 			}
-			vec3 vertice(vert.x, vert.y, vert.z);
+			vec3 vertice(vert.x * scale, vert.y * scale, vert.z * scale);
 			//vec3 normal(norm.x, norm.y, norm.z);
 			vertices.push_back(vertice);
 			//normals.push_back(normal);
@@ -111,8 +111,8 @@ static PxTriangleMeshGeometry CreateGeometry(const char *objfile, Physics &physi
 	return geom;
 }
 
-RigidBody::RigidBody(Physics &physics, PxMaterial &material, const char *objfile) :
-	RigidBody(physics, material, CreateGeometry(objfile, physics), PxTransform(PxIdentity), false)
+RigidBody::RigidBody(Physics &physics, PxMaterial &material, const char *objfile, float scale) :
+	RigidBody(physics, material, CreateGeometry(objfile, physics, scale), PxTransform(PxIdentity), false)
 {}
 
 RigidBody::~RigidBody()

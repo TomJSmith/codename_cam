@@ -378,7 +378,7 @@ void Vehicle::Update(seconds dt)
 	/* Comments about the controller:
 	use UpdateState() to have the controller use the latest state before trying to get a controller input
 
-	*/
+	*//*
 	controller_->UpdateState();
 	switch(controller_->getAccelleration())
 	{
@@ -434,7 +434,8 @@ void Vehicle::Update(seconds dt)
 			break;
 		}
 	}
-
+	*/
+	input_.setDigitalAccel(true);
 	//input_.setAnalogAccel(1.0f);
 
 	PxVehicleSuspensionRaycasts(
