@@ -154,5 +154,8 @@
     <None Include="chaser_mesh.obj" />
     <None Include="runner_mesh.obj" />
     <None Include="test_map_mesh.obj" />
+    <None Include="chaser_mesh.fbx" />
+    <None Include="runner_mesh.fbx" />
+    <None Include="test_map_mesh.fbx" />
   </ItemGroup>
 </Project>
