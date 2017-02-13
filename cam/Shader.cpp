@@ -12,7 +12,7 @@ static GLuint CompileShader(GLenum type, std::string &source)
 	glShaderSource(shader, 1, &src, 0);
 	glCompileShader(shader);
 
-	GLint status;
+	GLint status = GL_FALSE;
 	glGetShaderiv(shader, GL_COMPILE_STATUS, &status);
 	if (status == GL_FALSE) throw std::runtime_error("failed to compile shader"); // TODO real error here
 
@@ -28,9 +28,9 @@ static GLuint LinkProgram(GLuint vertex, GLuint fragment)
 
 	glLinkProgram(program);
 
-	GLint status;
-	glGetShaderiv(program, GL_LINK_STATUS, &status);
-	if (status == GL_FALSE) throw std::runtime_error("failed to compile shader"); // TODO real error here
+	GLint status = GL_FALSE;
+	glGetProgramiv(program, GL_LINK_STATUS, &status);
+	if (status == GL_FALSE) throw std::runtime_error("failed to link shader"); // TODO real error here
 
 	return program;
 }

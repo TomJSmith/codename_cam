@@ -22,7 +22,7 @@ int main() {
 		Renderer::Initialize();
 		Renderer renderer;
 		Physics physics;
-		Entity root;
+		auto root = Entity::Create(nullptr);
 
 #ifdef DEBUG
 		root.GetEvents().RegisterEventHandler([&physics](Renderer::RenderEvent e) {
@@ -35,24 +35,23 @@ int main() {
 		audio.initAudio();
 		//audio.playAudio(4); //1,2,3,4 for Audio atm can play more than one at a time
 
-		Entity plane(&root);
-		std::vector<glm::vec3> planeNormals;
+		auto plane = Entity::Create(root.get());
 		std::shared_ptr<Component> planemesh(new Mesh(Shader::Load("passthrough.vert", "passthrough.frag"), "test_map_mesh.obj", vec3(0.5, 0.5, 0.5), 2.5, GL_TRIANGLES));
 		std::shared_ptr<Component> planebody(new RigidBody(physics, *physics.GetPhysics()->createMaterial(0.5f, 0.5f, 0.5f), "test_map_mesh.obj", 2.5f));
-		plane.AddComponent(std::move(planemesh));
-		plane.AddComponent(std::move(planebody));
+		plane->AddComponent(std::move(planemesh));
+		plane->AddComponent(std::move(planebody));
 
-		Entity vehicle(&root);
+		auto vehicle = Entity::Create(root.get());
 		std::shared_ptr<Component> mesh(new Mesh(Shader::Load("passthrough.vert", "passthrough.frag"), "runner_mesh.fbx", vec3(0, 0, 1), 2.5, GL_TRIANGLES));
 		std::shared_ptr<Component> v(new ScriptComponent("vehicle", physics));
-		vehicle.AddComponent(std::move(mesh));
-		vehicle.AddComponent(std::move(v));
+		vehicle->AddComponent(std::move(mesh));
+		vehicle->AddComponent(std::move(v));
 
-		Entity camera(&vehicle);
+		auto camera = Entity::Create(vehicle.get());
 		std::shared_ptr<Component> cam(new Camera);
 		std::shared_ptr<Component> ctrl(new ScriptComponent("camera_control", physics));
-		camera.AddComponent(std::move(cam));
-		camera.AddComponent(std::move(ctrl));
+		camera->AddComponent(std::move(cam));
+		camera->AddComponent(std::move(ctrl));
 
 		/*
 		Entity chaser(&root);
@@ -69,8 +68,8 @@ int main() {
 
 			//audio.playAudio(1);
 			physics.Update(dt);
-			root.Update(dt);
-			renderer.Render(root);
+			root->Update(dt);
+			renderer.Render(*root);
 
 			glfwPollEvents();
 

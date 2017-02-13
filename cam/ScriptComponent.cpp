@@ -70,7 +70,7 @@ void AddComponent(Entity &e, std::shared_ptr<T> c) {
 }
 
 BOOST_PYTHON_MODULE(entity) {
-	python::class_<Entity>("Entity", python::init<Entity *>())
+	python::class_<Entity>("Entity")
 		// For every type of component we want to create in scripts, we need to
 		// add an overload here
 		.def("add_component", AddComponent<Vehicle>)

@@ -12,9 +12,11 @@
 
 class Entity {
  public:
-	Entity(Entity *parent = nullptr);
+	Entity();
+	static std::shared_ptr<Entity> Create(Entity *parent);
 
 	void Update(seconds dt);
+	void AddChild(std::shared_ptr<Entity> c);
 	void AddComponent(std::shared_ptr<Component> c);
 	void SetParent(Entity *parent);
 
@@ -43,6 +45,7 @@ class Entity {
 		events_.FireEvent(event);
 	}
  private:
+	
 	int id_;
 
 	std::vector<std::shared_ptr<Component>> components_;

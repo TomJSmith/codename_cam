@@ -4,9 +4,17 @@
 
 unsigned int Entity::nextId = 0;
 
-Entity::Entity(Entity *parent) : id_(nextId++)
+Entity::Entity() : id_(nextId++), parent_(nullptr) {}
+
+std::shared_ptr<Entity> Entity::Create(Entity *parent)
 {
-	SetParent(parent);
+	auto ret = std::make_shared<Entity>();
+
+	if (parent) {
+		parent->AddChild(ret);
+	}
+
+	return ret;
 }
 
 void Entity::Update(seconds dt) {
@@ -17,34 +25,36 @@ void Entity::Update(seconds dt) {
 	for (auto &child : children) child->Update(dt);
 }
 
-void Entity::AddComponent(std::shared_ptr<Component> c) {
+void Entity::AddComponent(std::shared_ptr<Component> c)
+{
 	c->Attach(this);
 	components_.push_back(std::move(c));
 }
 
+void Entity::AddChild(std::shared_ptr<Entity> c)
+{
+	c->parent_ = this;
+	children_.push_back(std::move(c));
+}
+
 void Entity::SetParent(Entity *parent) {
-	if (parent_) {
-		auto it = std::find_if(
-			std::begin(parent_->children_),
-			std::end(parent_->children_),
-			[=](const auto &p) {return p.get() == this;}
-		);
+	if (!parent_) throw std::runtime_error("unable to change the root entity after creation!");
 
-		if (it == std::end(parent_->children_)) throw std::runtime_error("unable to find entity in parent's children!");
+	auto it = std::find_if(
+		std::begin(parent_->children_),
+		std::end(parent_->children_),
+		[=](const auto &p) {return p.get() == this;}
+	);
 
-		if (parent) {
-			parent->children_.push_back(*it);
-		}
+	if (it == std::end(parent_->children_)) throw std::runtime_error("unable to find entity in parent's children!");
 
-		parent_->children_.erase(it);
-	}
-	else {
-		if (parent) {
-			parent->children_.push_back(std::shared_ptr<Entity>(this));
-		}
-	}
-
+	auto ptr = *it;
+	parent_->children_.erase(it);
 	parent_ = parent;
+
+	if (parent_) {
+		parent_->children_.push_back(ptr);
+	}
 }
 
 mat4 Entity::GetGlobalTransform() const
