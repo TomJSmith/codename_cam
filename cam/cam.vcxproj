@@ -347,17 +347,17 @@
       <DeploymentContent>true</DeploymentContent>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="chaser_mesh.obj">
+    <None Include="chaser_mesh.fbx">
       <FileType>Document</FileType>
       <DeploymentContent>true</DeploymentContent>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="runner_mesh.obj">
+    <None Include="runner_mesh.fbx">
       <FileType>Document</FileType>
       <DeploymentContent>true</DeploymentContent>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="test_map_mesh.obj">
+    <None Include="test_map_mesh.fbx">
       <FileType>Document</FileType>
       <DeploymentContent>true</DeploymentContent>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
