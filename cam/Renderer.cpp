@@ -58,7 +58,7 @@ void Renderer::Render(Entity &entity)
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	auto view = glm::inverse(cam);
-	auto perspective = glm::perspective(45.0f, 1.0f, 0.1f, 200.0f);
+	auto perspective = glm::perspective(45.0f, 1.0f, 0.1f, 400.0f);
 	auto vp = perspective * view;
 
 	for (auto &d : e.data) {
