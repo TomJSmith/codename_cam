@@ -16,6 +16,7 @@ public:
 	Mesh(Shader &shader,
 		 const char* objFileName,
 		 glm::vec3 colour,
+		 float scale,
 		 GLuint type);
 
 	void GetMeshData(Renderer::RenderEvent event);

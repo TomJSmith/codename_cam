@@ -9,33 +9,49 @@
 #include <assimp\scene.h>
 #include <assimp\postprocess.h>
 #include <assimp\material.h>
-#include <assimp\cimport.h>
+#include <assimp\Importer.hpp>
 
 Mesh::Mesh(Shader &shader,
 		   const char* objFileName,	
 		   glm::vec3 colour,
+		   float scale,
 		   GLuint type) :
 	shader_(shader),
 	type_(type)
 {
-	const aiScene* objFile = aiImportFile(objFileName, aiProcessPreset_TargetRealtime_MaxQuality);
+	Assimp::Importer importer;
+	const aiScene* objFile = importer.ReadFile(objFileName, aiProcess_Triangulate | aiProcess_JoinIdenticalVertices);
 	if (!objFile)
 	{
-		std::cerr << "could not load file " << objFile << ": " << aiGetErrorString() << std::endl;
+		std::cerr << "could not load file " << objFile << ": " << importer.GetErrorString() << std::endl;
 	}
-	aiMesh* objMesh = objFile->mMeshes[0];
+	std::cout << objFileName << std::endl;
+	std::cout << "num of meshes: " << objFile->mNumMeshes << std::endl;
 	std::vector<glm::vec3> vertices;
 	std::vector<glm::vec3> normals;
 	std::vector<glm::vec3> colours;
-	for (std::uint32_t i = 0u; i < objMesh->mNumVertices; i++)
+	aiMesh* objMesh = objFile->mMeshes[0];
+	std::cout << "num of faces: " << objMesh->mNumFaces << std::endl;
+	std::cout << "num of verts: " << objMesh->mNumVertices << std::endl;
+	for (std::uint32_t i = 0u; i < objMesh->mNumFaces; i++)
 	{
-		aiVector3D vert = objMesh->mVertices[i];
-		aiVector3D norm = objMesh->mNormals[i];
-		vertices.push_back(vec3(vert.x, vert.y, vert.z));
-		normals.push_back(vec3(norm.x, norm.y, norm.z));
-		colours.push_back(colour);
+		const aiFace& face = objMesh->mFaces[i];
+		for (int j = 0; j < 3; j++)
+		{
+			aiVector3D norm = objMesh->mNormals[face.mIndices[j]];
+			aiVector3D vert = objMesh->mVertices[face.mIndices[j]];
+			if (objFileName == "test_map_mesh.fbx")
+			{
+				std::cout << vert.x << " " << vert.y << " " << vert.z << std::endl;
+			}
+			vec3 vertice(vert.x * scale, vert.y * scale, vert.z * scale);
+			vec3 normal(norm.x, norm.y, norm.z);
+			vertices.push_back(vertice);
+			normals.push_back(normal);
+			colours.push_back(colour);
+		}
 	}
-	count_ = objMesh->mNumVertices;
+	count_ = objMesh->mNumFaces * 3;
 
 	GLuint vertexBuffer = 0;
 	glGenBuffers(1, &vertexBuffer);

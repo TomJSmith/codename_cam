@@ -33,87 +33,17 @@ int main() {
 
 	Audio audio;
 	audio.initAudio();
-	audio.playAudio(4); //1,2,3,4 for Audio atm can play more than one at a time
-	
-
-	GLfloat vertices[][3] = {
-			{-.5, -.5, -.5}, {-.5, .5, -.5}, {.5, .5, -.5},
-			{-.5, -.5, -.5}, {.5, .5, -.5}, {.5, -.5, -.5},
-
-			{-.5, -.5, -.5}, {-.5, .5, .5}, {-.5, .5, -.5},
-			{-.5, -.5, -.5}, {-.5, -.5, .5}, {-.5, .5, .5},
-
-			{.5, -.5, -.5}, {.5, .5, .5}, {.5, .5, -.5},
-			{.5, -.5, -.5}, {.5, -.5, .5}, {.5, .5, .5},
-
-			{-.5, -.5, .5}, {.5, .5, .5}, {-.5, .5, .5},
-			{-.5, -.5, .5}, {.5, -.5, .5}, {.5, .5, .5},
-
-			{ -.5, .5, -.5 },{ .5, .5, -.5 },{ .5, .5, .5 },
-
-			{ -.5, -.5, -.5 },{ .5, -.5, .5 },{ -.5, -.5, .5 },
-			{ -.5, -.5, -.5 },{ .5, -.5, -.5 },{ .5, -.5, .5 },
-	};
-
-	GLfloat colours[][3] = {
-		{0, 0, 1}, {0, 0, 1}, {0, 0, 1},
-		{ 0, 0, 1}, {0, 0, 1}, {0, 0, 1},
-		{ 0, 0, 1}, {0, 0, 1}, {0, 0, 1},
-		{ 0, 0, 1}, {0, 0, 1}, {0, 0, 1},
-		{ 0, 0, 1}, {0, 0, 1}, {0, 0, 1},
-		{ 0, 0, 1}, {0, 0, 1}, {0, 0, 1},
-		{ 0, 0, 1}, {0, 0, 1}, {0, 0, 1},
-		{ 0, 0, 1}, {0, 0, 1}, {0, 0, 1},
-		{ 0, 0, 1 },{ 0, 0, 1 },{ 0, 0, 1 },
-		{ 0, 0, 1 },{ 0, 0, 1 },{ 0, 0, 1 },
-		{ 0, 0, 1 },{ 0, 0, 1 },{ 0, 0, 1 },
-		{ 0, 0, 1 },{ 0, 0, 1 },{ 0, 0, 1 },
-	};
-
-	std::vector<glm::vec3> planeverts;
-	planeverts.push_back(vec3(0, -10, -10));
-	planeverts.push_back(vec3(0, 10, -10));
-	planeverts.push_back(vec3(0, -10, 10));
-	planeverts.push_back(vec3(0, -10, 10));
-	planeverts.push_back(vec3(0, 10, -10));
-	planeverts.push_back(vec3(0, 10, 10));
-
-	//GLfloat planeverts[][3] = {
-	//	{0, -10, -10},
-	//	{0, 10, -10},
-	//	{0, -10, 10},
-	//	{0, -10, 10},
-	//	{0, 10, -10},
-	//	{0, 10, 10}
-	//};
-
-
-	std::vector<glm::vec3> planecolours;
-	planecolours.push_back(vec3(0.5f, 0.5f, 0.5f));
-	planecolours.push_back(vec3(0.5f, 0.5f, 0.5f));
-	planecolours.push_back(vec3(0.5f, 0.5f, 0.5f));
-	planecolours.push_back(vec3(0.5f, 0.5f, 0.5f));
-	planecolours.push_back(vec3(0.5f, 0.5f, 0.5f));
-	planecolours.push_back(vec3(0.5f, 0.5f, 0.5f));
-
-	//GLfloat planecolours[][3] = {
-	//	{0.5f, 0.5f, 0.5f},
-	//	{ 0.5f, 0.5f, 0.5f },
-	//	{ 0.5f, 0.5f, 0.5f },
-	//	{ 0.5f, 0.5f, 0.5f },
-	//	{ 0.5f, 0.5f, 0.5f },
-	//	{ 0.5f, 0.5f, 0.5f },
-	//};
+	//audio.playAudio(4); //1,2,3,4 for Audio atm can play more than one at a time
 
 	Entity plane(&root);
 	std::vector<glm::vec3> planeNormals;
-	//std::shared_ptr<Component> planemesh(new Mesh(Shader::Load("passthrough.vert", "passthrough.frag"), "test_map_mesh.obj", vec3(0.5, 0.5, 0.5), GL_TRIANGLES));
+	std::shared_ptr<Component> planemesh(new Mesh(Shader::Load("passthrough.vert", "passthrough.frag"), "test_map_mesh.fbx", vec3(0.5, 0.5, 0.5), 1, GL_TRIANGLES));
 	std::shared_ptr<Component> planebody(new RigidBody(physics, *physics.GetPhysics()->createMaterial(0.5f, 0.5f, 0.5f), PxPlaneGeometry(), PxTransform(0.0f, -1.0f, 0.0f, PxQuat(3.14159f / 2.0f, PxVec3(0.0f, 0.0f, 1.0f))), false));
 	//plane.AddComponent(std::move(planemesh));
 	plane.AddComponent(std::move(planebody));
 
 	Entity vehicle(&root);
-	std::shared_ptr<Component> mesh(new Mesh(Shader::Load("passthrough.vert", "passthrough.frag"), "runner_mesh.obj", vec3(0, 0, 1), GL_TRIANGLES));
+	std::shared_ptr<Component> mesh(new Mesh(Shader::Load("passthrough.vert", "passthrough.frag"), "runner_mesh.fbx", vec3(0, 0, 1), 2.5, GL_TRIANGLES));
 	std::shared_ptr<Component> v(new ScriptComponent("vehicle", physics));
 	vehicle.AddComponent(std::move(mesh));
 	vehicle.AddComponent(std::move(v));

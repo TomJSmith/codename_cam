@@ -67,7 +67,7 @@ void Renderer::Render(Entity &entity)
 		glUseProgram(d.shader);
 
 		glUniformMatrix4fv(glGetUniformLocation(d.shader, "mvp"), 1, GL_FALSE, &mvp[0][0]);
-		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 		glBindVertexArray(d.vao);
 		glDrawArrays(d.type, 0, d.count);
 	}
