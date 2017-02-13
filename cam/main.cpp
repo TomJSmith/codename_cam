@@ -25,13 +25,13 @@ int main() {
 		auto root = Entity::Create(nullptr);
 
 #ifdef DEBUG
-		//Check and uncomment the ifdef in the physics deconstructor if you uncomment this
 		/*
-		root.GetEvents().RegisterEventHandler([&physics](Renderer::RenderEvent e) {
+		root->GetEvents().RegisterEventHandler([&physics](Renderer::RenderEvent e) {
 			auto d = physics.GetDebugMeshData();
 			e.data.insert(e.data.end(), d.begin(), d.end());
 		});
 		*/
+		
 #endif
 
 		Audio audio;

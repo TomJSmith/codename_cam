@@ -64,7 +64,6 @@ Physics::~Physics()
 {
 	// We have to free in the opposite order of creation
 #ifdef DEBUG
-	//Caueses errors without the debug in main working
 //	pvd_->release();
 #endif
 
