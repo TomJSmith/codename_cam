@@ -332,7 +332,7 @@ void Vehicle::RegisterHandlers()
 	auto t = actor_->getGlobalPose();
 	entity_->GetTransform().position = vec3(t.p.x, t.p.y, t.p.z);
 	entity_->GetTransform().rotation = quaternion(t.q.w, t.q.x, t.q.y, t.q.z);
-	actor_->userData = &entity_->GetTransform();
+	actor_->userData = entity_;
 }
 
 

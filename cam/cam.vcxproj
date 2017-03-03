@@ -213,6 +213,11 @@
       <DeploymentContent>true</DeploymentContent>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="collision.py">
+      <FileType>Document</FileType>
+      <DeploymentContent>true</DeploymentContent>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="vehicle.py">
       <FileType>Document</FileType>
       <DeploymentContent>true</DeploymentContent>
