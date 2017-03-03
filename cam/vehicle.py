@@ -2,6 +2,7 @@ import physics
 import vehicle
 import types
 import controller
+import math
 
 def init(self):
     _controller = controller.Controller()
@@ -11,8 +12,9 @@ def init(self):
 
 
     c.position = physics.PxVec3(0, 2, -20)
-    c.torque = 2000
+    c.torque = 3000
     c.chassis_dimensions = dims
+    c.steer_angle = math.pi*.05
 
     # straight from the physx examples
     # I don't know why these values are chosen or even really what the moment of inertia is

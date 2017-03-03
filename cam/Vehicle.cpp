@@ -335,7 +335,53 @@ void Vehicle::RegisterHandlers()
 	actor_->userData = &entity_->GetTransform();
 }
 
+void Vehicle::Drive()
+{
+	controller_->UpdateState();
+	switch (controller_->getAccelleration())
+	{
+	case C_FAST:
+		input_.setDigitalAccel(true);
+		input_.setDigitalBrake(false);
+		break;
+	case C_NEUTRAL:
+		vehicle_->mDriveDynData.startGearChange(PxVehicleGearsData::eFIRST);
+		input_.setDigitalAccel(false);
+		input_.setDigitalBrake(true);
+		break;
+	case C_REVERSE:
+		vehicle_->mDriveDynData.startGearChange(PxVehicleGearsData::eREVERSE);
+		input_.setDigitalAccel(true);
+		break;
+	}
 
+	switch (controller_->getBrake()) {
+	case true:
+		vehicle_->mDriveDynData.startGearChange(PxVehicleGearsData::eFIRST);
+		input_.setDigitalAccel(false);
+		input_.setDigitalHandbrake(true);
+		break;
+	case false:
+		vehicle_->mDriveDynData.startGearChange(PxVehicleGearsData::eFIRST);
+		input_.setDigitalHandbrake(false);
+		break;
+	}
+
+	switch (controller_->getDirectional()) {
+	case C_LEFT:
+		input_.setDigitalSteerLeft(true);
+		input_.setDigitalSteerRight(false);
+		break;
+	case C_RIGHT:
+		input_.setDigitalSteerRight(true);
+		input_.setDigitalSteerLeft(false);
+		break;
+	case C_NO_DIRECTION:
+		input_.setDigitalSteerRight(false);
+		input_.setDigitalSteerLeft(false);
+		break;
+	}
+}
 
 void Vehicle::Update(seconds dt)
 {
@@ -379,71 +425,7 @@ void Vehicle::Update(seconds dt)
 	use UpdateState() to have the controller use the latest state before trying to get a controller input
 
 	*/
-	controller_->UpdateState();
-	switch(controller_->getAccelleration())
-	{
-	case C_FAST:
-		{
-		vehicle_->mDriveDynData.forceGearChange(PxVehicleGearsData::eFOURTH);
-		input_.setAnalogAccel(1.0f);
-		input_.setDigitalAccel(true);
-		break;
-		}
-	case C_SLOW:
-		{
-		vehicle_->mDriveDynData.forceGearChange(PxVehicleGearsData::eSECOND);
-		input_.setAnalogAccel(1.0f);
-		input_.setDigitalAccel(true);
-		break;
-		}
-	case C_NEUTRAL:
-		{
-		vehicle_->mDriveDynData.forceGearChange(PxVehicleGearsData::eNEUTRAL);
-		input_.setDigitalAccel(false);
-		break;
-		}
-	case C_REVERSE:
-		{
-		vehicle_->mDriveDynData.forceGearChange(PxVehicleGearsData::eREVERSE);
-		input_.setAnalogAccel(1.0f);
-		input_.setDigitalAccel(true);
-
-		}
-	}
-
-	switch(controller_->getBrake()){
-	case true:
-		{
-			input_.setDigitalBrake(true);
-			break;
-		}
-	case false:
-		{
-			input_.setDigitalBrake(false);
-			break;
-		}
-	}
-
-	switch (controller_->getDirectional()) {
-	case C_LEFT:
-	{
-		input_.setDigitalSteerLeft(true);
-		input_.setDigitalSteerRight(false);
-		break;
-	}
-	case C_RIGHT:
-	{
-		input_.setDigitalSteerRight(true);
-		input_.setDigitalSteerLeft(false);
-		break;
-	}
-	case C_NO_DIRECTION:
-		{
-			input_.setDigitalSteerRight(false);
-			input_.setDigitalSteerLeft(false);
-			break;
-		}
-	}
+	Drive();
 
 	//input_.setAnalogAccel(1.0f);
 

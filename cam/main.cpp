@@ -35,7 +35,7 @@ int main() {
 #endif
 
 		Audio audio;
-		audio.initAudio();
+		//audio.initAudio();
 		//audio.playAudio(4); //1,2,3,4 for Audio atm can play more than one at a time
 
 		auto plane = Entity::Create(root.get());
@@ -70,7 +70,7 @@ int main() {
 			auto dt = seconds(currentTime - lastTime);
 			lastTime = currentTime;
 
-			audio.playAudio(3);
+			//audio.playAudio(3);
 			physics.Update(dt);
 			root->Update(dt);
 			renderer.Render(*root);
