@@ -362,7 +362,6 @@ void Vehicle::Drive()
 		input_.setDigitalHandbrake(true);
 		break;
 	case false:
-		vehicle_->mDriveDynData.startGearChange(PxVehicleGearsData::eFIRST);
 		input_.setDigitalHandbrake(false);
 		break;
 	}
