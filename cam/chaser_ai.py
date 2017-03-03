@@ -1,5 +1,6 @@
 from physics import *
 import controller
+import aicontroller
 import vehicle
 import math
 
@@ -43,25 +44,26 @@ def drive_at(self, target):
     direction = Vec3(-direction.z, 0, direction.x)
     dot = Vec3.dot(forward, direction)
 
-    if dot > 0.01:
-        v.input().set_steer_right(1)
-    else:
-        v.input().set_steer_right(0)
+	
+ #   if dot > 0.01:
+       # v.input().set_steer_right(1)
+ #   else:
+       # v.input().set_steer_right(0)
 
-    if dot < -0.01:
-        v.input().set_steer_left(1)
-    else:
-        v.input().set_steer_left(0)
+  #  if dot < -0.01:
+       # v.input().set_steer_left(1)
+   # else:
+       # v.input().set_steer_left(0)
 
-    if direction.length() < 0.5:
-        print "We're there!"
-        v.input().set_brake(True)
-        v.input().set_acceleration(False)
-    else:
-        print "Not there yet, accelerating..."
-        v.input().set_acceleration(True)
-        v.input().set_brake(False)
-
+    #if direction.length() < 0.5:
+       # print "We're there!"
+       # v.input().set_brake(True)
+       # v.input().set_acceleration(False)
+    #else:
+       # print "Not there yet, accelerating..."
+       # v.input().set_acceleration(True)
+       # v.input().set_brake(False)
+	
     # cosine = Vec3.dot(direction, forward) / (direction.length() + forward.length())
     # angle = math.acos(cosine)
 

@@ -318,6 +318,32 @@ Vehicle::Vehicle(Physics &physics, std::shared_ptr<Controller> controller, Confi
 
 	wheels->free();
 }
+Vehicle::Vehicle(Physics &physics, std::shared_ptr<aiController> aicontroller, Configuration &config) :
+	physics_(physics),
+	controller_(aicontroller),
+	querybuffer_(4),
+	hitbuffer_(4)
+{
+	auto desc = CreateQueryDescription(querybuffer_.data(), hitbuffer_.data());
+	batchquery_ = physics.GetScene()->createBatchQuery(desc);
+
+	auto wheels = SetupWheels(config);
+	auto drive = SetupDrive(config);
+
+	actor_ = CreateVehicleActor(config, physics.GetPhysics(), physics.GetCooking());
+	vehicle_ = PxVehicleDrive4W::allocate(config.nWheels);
+	vehicle_->setup(physics.GetPhysics(), actor_, *wheels, drive, config.nWheels - 4);
+
+	physics.GetScene()->addActor(*actor_);
+
+	vehicle_->setToRestState();
+	vehicle_->mDriveDynData.forceGearChange(PxVehicleGearsData::eFIRST);
+	vehicle_->mDriveDynData.setUseAutoGears(true);
+
+	frictionpairs_ = CreateFrictionPairs(physics_.GetPhysics());
+
+	wheels->free();
+}
 
 Vehicle::~Vehicle()
 {

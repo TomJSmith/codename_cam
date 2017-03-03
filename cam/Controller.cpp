@@ -8,7 +8,6 @@
 
 
 Controller::Controller() {
-	XINPUT_STATE state;
 	ZeroMemory(&state, sizeof(XINPUT_STATE));
 
 	if (XInputGetState(0, &state) == ERROR_SUCCESS){

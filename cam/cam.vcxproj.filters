@@ -78,6 +78,9 @@
     <ClInclude Include="System.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="aiController.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Component.cpp">
@@ -125,6 +128,9 @@
     <ClCompile Include="Controller.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="aiController.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="passthrough.frag">
@@ -151,11 +157,9 @@
     </None>
     <None Include="camera_control.py" />
     <None Include="chaser_ai.py" />
-    <None Include="chaser_mesh.obj" />
-    <None Include="runner_mesh.obj" />
     <None Include="test_map_mesh.obj" />
     <None Include="chaser_mesh.fbx" />
     <None Include="runner_mesh.fbx" />
-    <None Include="test_map_mesh.fbx" />
+    <None Include="car_ai.py" />
   </ItemGroup>
 </Project>

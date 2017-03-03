@@ -58,6 +58,10 @@ BOOST_PYTHON_MODULE(controller) {
 	python::class_<Controller, std::shared_ptr<Controller>>("Controller", python::init<>());
 }
 
+BOOST_PYTHON_MODULE(aicontroller) {
+	python::class_<aiController, std::shared_ptr<aiController>>("aiController", python::init<>());
+}
+
 // boost::python won't let us use shared_ptr<Component> for subclasses of Component by
 // default. This means when a script creates a Vehicle, and calls AddComponent, it
 // passes a shared_ptr<Vehicle> instead of a shared_ptr<Component>.
@@ -157,6 +161,7 @@ void ScriptComponent::InitPython()
 			initphysics();
 			initvehicle();
 			initcontroller();
+			initaicontroller();
 
 			initialized = true;
 		} catch (const python::error_already_set &) {

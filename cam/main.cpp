@@ -46,7 +46,7 @@ int main() {
 
 
 		auto vehicle = Entity::Create(root.get());
-		std::shared_ptr<Component> mesh(new Mesh(Shader::Load("passthrough.vert", "passthrough.frag"), "runner_mesh.fbx", vec3(0.1, 0.1, 0.6), 2.5, GL_TRIANGLES));
+		std::shared_ptr<Component> mesh(new Mesh(Shader::Load("passthrough.vert", "passthrough.frag"), "runner_mesh.fbx", vec3(0.1, 0.1, 0.6), 1.5, GL_TRIANGLES));//debug seems to work better was 2.5
 		std::shared_ptr<Component> v(new ScriptComponent("vehicle", physics));
 		vehicle->AddComponent(std::move(mesh));
 		vehicle->AddComponent(std::move(v));
@@ -56,6 +56,12 @@ int main() {
 		std::shared_ptr<Component> ctrl(new ScriptComponent("camera_control", physics));
 		camera->AddComponent(std::move(cam));
 		camera->AddComponent(std::move(ctrl));
+
+		auto aiVehicle = Entity::Create(root.get());
+		std::shared_ptr<Component> aiMesh(new Mesh(Shader::Load("passthrough.vert", "passthrough.frag"), "runner_mesh.fbx", vec3(1.0, 0.84, 0.0), 1.5, GL_TRIANGLES));//debug seems to work better was 2.5
+		std::shared_ptr<Component> aiV(new ScriptComponent("chaser_ai", physics));
+		aiVehicle->AddComponent(std::move(aiMesh));
+		aiVehicle->AddComponent(std::move(aiV));
 
 		/*
 		Entity chaser(&root);
