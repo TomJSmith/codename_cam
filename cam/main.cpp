@@ -24,15 +24,14 @@ int main() {
 		Physics physics;
 		auto root = Entity::Create(nullptr);
 
-#ifdef DEBUG
 		root->GetEvents().RegisterEventHandler([&physics](Renderer::RenderEvent e) {
 			auto d = physics.GetDebugMeshData();
 			e.data.insert(e.data.end(), d.begin(), d.end());
 		});
-#endif
+
 
 		Audio audio;
-		audio.initAudio();
+		//audio.initAudio();
 		//audio.playAudio(4); //1,2,3,4 for Audio atm can play more than one at a time
 
 		auto plane = Entity::Create(root.get());
@@ -75,7 +74,7 @@ int main() {
 			auto dt = seconds(currentTime - lastTime);
 			lastTime = currentTime;
 
-			//audio.playAudio(1);
+			//audio.playAudio(3);
 			physics.Update(dt);
 			root->Update(dt);
 			renderer.Render(*root);

@@ -8,6 +8,7 @@
 #define C_FAST 2
 #define C_SLOW 1
 #define C_NEUTRAL 0
+#define C_REVERSE -1
 
 
 class Controller {

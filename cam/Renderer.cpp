@@ -38,7 +38,7 @@ void Renderer::Initialize()
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
 
-	window_ = glfwCreateWindow(1920, 900, "Title", nullptr, nullptr);
+	window_ = glfwCreateWindow(1024, 1024, "Title", nullptr, nullptr);
 
 	if (!window_) throw std::runtime_error("unable to create OpenGL window"); // TODO specific exception here?
 	glfwMakeContextCurrent(window_);
@@ -58,13 +58,13 @@ void Renderer::Render(Entity &entity)
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	auto view = glm::inverse(cam);
-	auto perspective = glm::perspective(45.0f, 1.0f, 0.1f, 200.0f);
+	auto perspective = glm::perspective(45.0f, 1.0f, 0.1f, 400.0f);
 	auto vp = perspective * view;
-
+	glEnable(GL_DEPTH_TEST);
 	for (auto &d : e.data) {
 		auto mvp =  vp * d.modelMatrix;
 		auto modelMatrix = d.modelMatrix;
-
+		
 		glUseProgram(d.shader);
 
 		glUniformMatrix4fv(glGetUniformLocation(d.shader, "mvp"), 1, GL_FALSE, &mvp[0][0]);
@@ -76,7 +76,8 @@ void Renderer::Render(Entity &entity)
 
 		glBindVertexArray(0);
 		glUseProgram(0);
+		
 	}
-	
+	glEnable(0);
 	glfwSwapBuffers(window_);
 }

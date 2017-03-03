@@ -12,7 +12,7 @@ void main() {
 	float diff = max(0.0, dot(N,L));
 	vec3 R = reflect(-L, N);
 
-	float e = 100.0;
+	float e = 10.0;
 	float spec = pow(max(dot(R, V), 0.0), e);
 
 

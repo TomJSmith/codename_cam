@@ -36,12 +36,11 @@ void Controller::UpdateState() {
 }
 
 int Controller::getAccelleration() {
-	float y = state.Gamepad.sThumbLY;
-	if ((y > 7000) & (y < 20000)) {
-		return C_SLOW;
-	}
-	else if (y >= 20000) {
+	if (state.Gamepad.wButtons & XINPUT_GAMEPAD_A) {
 		return C_FAST;
+	}
+	else if (state.Gamepad.wButtons & XINPUT_GAMEPAD_Y) {
+		return C_REVERSE;
 	}
 	else {
 		return C_NEUTRAL;
@@ -50,7 +49,6 @@ int Controller::getAccelleration() {
 
 bool Controller::getBrake() {
 	if (state.Gamepad.wButtons & XINPUT_GAMEPAD_B) {
-		std::cout << "BRAKING";
 		return true;
 	}
 	else {

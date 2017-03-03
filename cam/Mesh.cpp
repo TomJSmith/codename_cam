@@ -20,15 +20,15 @@ Mesh::Mesh(Shader &shader,
 	type_(type)
 {
 	Assimp::Importer importer;
-	const aiScene* objFile = importer.ReadFile(objFileName, aiProcess_Triangulate | aiProcess_JoinIdenticalVertices);
+	const aiScene* objFile = importer.ReadFile(objFileName, aiProcessPreset_TargetRealtime_MaxQuality);
 	if (!objFile)
 	{
-		std::cerr << "could not load file " << objFile << ": " << importer.GetErrorString() << std::endl;
+		std::cerr << "could not load file " << objFileName << ": " << importer.GetErrorString() << std::endl;
 	}
 	std::cout << objFileName << std::endl;
 	std::cout << "num of meshes: " << objFile->mNumMeshes << std::endl;
-	std::vector<glm::vec3> vertices;
-	std::vector<glm::vec3> normals;
+	std::vector<aiVector3D> vertices;
+	std::vector<aiVector3D> normals;
 	std::vector<glm::vec3> colours;
 	aiMesh* objMesh = objFile->mMeshes[0];
 	std::cout << "num of faces: " << objMesh->mNumFaces << std::endl;
@@ -38,16 +38,14 @@ Mesh::Mesh(Shader &shader,
 		const aiFace& face = objMesh->mFaces[i];
 		for (int j = 0; j < 3; j++)
 		{
-			aiVector3D norm = objMesh->mNormals[face.mIndices[j]];
 			aiVector3D vert = objMesh->mVertices[face.mIndices[j]];
-			if (objFileName == "test_map_mesh.fbx")
-			{
-				std::cout << vert.x << " " << vert.y << " " << vert.z << std::endl;
-			}
-			vec3 vertice(vert.x * scale, vert.y * scale, vert.z * scale);
-			vec3 normal(norm.x, norm.y, norm.z);
-			vertices.push_back(vertice);
-			normals.push_back(normal);
+			aiVector3D faceVert(vert.x * scale, vert.y * scale, vert.z * scale);
+			vertices.push_back(faceVert);
+
+			aiVector3D norm = objMesh->mNormals[face.mIndices[j]];
+			aiVector3D faceNormal(norm.x * scale, norm.y * scale, norm.z * scale);
+			normals.push_back(faceNormal);
+
 			colours.push_back(colour);
 		}
 	}
@@ -56,7 +54,7 @@ Mesh::Mesh(Shader &shader,
 	GLuint vertexBuffer = 0;
 	glGenBuffers(1, &vertexBuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
-	glBufferData(GL_ARRAY_BUFFER, count_ * sizeof(glm::vec3), vertices.data(), GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, count_ * sizeof(aiVector3D), vertices.data(), GL_STATIC_DRAW);
 
 	GLuint colourBuffer = 0;
 	glGenBuffers(1, &colourBuffer);
@@ -66,7 +64,7 @@ Mesh::Mesh(Shader &shader,
 	GLuint normalBuffer = 0;
 	glGenBuffers(1, &normalBuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, normalBuffer);
-	glBufferData(GL_ARRAY_BUFFER, count_ * sizeof(glm::vec3), normals.data(), GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, count_ * sizeof(aiVector3D), normals.data(), GL_STATIC_DRAW);
 
 	glGenVertexArrays(1, &vao_);
 	glBindVertexArray(vao_);
