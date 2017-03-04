@@ -16,7 +16,7 @@ class Vehicle : public Component
 public:
 	struct Configuration {
 		// Starting position of the vehicle
-		PxVec3 position = PxVec3(0.0f, 2.0f, -10.0f);
+		PxVec3 position = PxVec3(0.0f, 10.0f, -10.0f);
 
 		// Wheel parameters
 		PxF32 wheelMass = 20.0f;

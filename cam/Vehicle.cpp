@@ -351,6 +351,7 @@ void Vehicle::Drive()
 		break;
 	case C_REVERSE:
 		vehicle_->mDriveDynData.startGearChange(PxVehicleGearsData::eREVERSE);
+		input_.setDigitalBrake(false);
 		input_.setDigitalAccel(true);
 		break;
 	}
@@ -362,7 +363,6 @@ void Vehicle::Drive()
 		input_.setDigitalHandbrake(true);
 		break;
 	case false:
-		vehicle_->mDriveDynData.startGearChange(PxVehicleGearsData::eFIRST);
 		input_.setDigitalHandbrake(false);
 		break;
 	}

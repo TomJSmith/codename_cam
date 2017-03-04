@@ -29,21 +29,21 @@ int main() {
 			auto d = physics.GetDebugMeshData();
 			e.data.insert(e.data.end(), d.begin(), d.end());
 		});
-#endif
+#endif // #ifdef DEBUG
 
 		Audio audio;
 		//audio.initAudio();
 		//audio.playAudio(4); //1,2,3,4 for Audio atm can play more than one at a time
 
 		auto plane = Entity::Create(root.get());
-		std::shared_ptr<Component> planemesh(new Mesh(Shader::Load("passthrough.vert", "passthrough.frag"), "test_map_mesh.obj", vec3(0.2, 0.4, 0.2), 2.5, GL_TRIANGLES));
-		std::shared_ptr<Component> planebody(new RigidBody(physics, *physics.GetPhysics()->createMaterial(0.5f, 0.5f, 0.5f), "test_map_mesh.obj", 2.5f));
+		std::shared_ptr<Component> planemesh(new Mesh(Shader::Load("passthrough.vert", "passthrough.frag"), "map_mesh.fbx", vec3(0.2, 0.4, 0.2), 1.0f, GL_TRIANGLES));
+		std::shared_ptr<Component> planebody(new RigidBody(physics, *physics.GetPhysics()->createMaterial(0.5f, 0.5f, 0.5f), "map_mesh.fbx", 1.0f));
 		plane->AddComponent(std::move(planemesh));
 		plane->AddComponent(std::move(planebody));
 
 
 		auto vehicle = Entity::Create(root.get());
-		std::shared_ptr<Component> mesh(new Mesh(Shader::Load("passthrough.vert", "passthrough.frag"), "runner_mesh.fbx", vec3(0.1, 0.1, 0.6), 2.5, GL_TRIANGLES));
+		std::shared_ptr<Component> mesh(new Mesh(Shader::Load("passthrough.vert", "passthrough.frag"), "chaser_mesh.obj", vec3(0.1, 0.1, 0.6), 1.0f, GL_TRIANGLES));
 		std::shared_ptr<Component> v(new ScriptComponent("vehicle", physics));
 		std::shared_ptr<Component> c(new ScriptComponent("collision", physics));
 		vehicle->AddComponent(std::move(mesh));
@@ -56,12 +56,12 @@ int main() {
 		camera->AddComponent(std::move(cam));
 		camera->AddComponent(std::move(ctrl));
 
-		auto other = Entity::Create(root.get());
+		/*auto other = Entity::Create(root.get());
 		std::shared_ptr<Component> othermesh(new Mesh(Shader::Load("passthrough.vert", "passthrough.frag"), "runner_mesh.fbx", vec3(0.1, 0.1, 0.6), 2.5, GL_TRIANGLES));
 		std::shared_ptr<Component> rb(new RigidBody(physics, *physics.GetPhysics()->createMaterial(0.5f, 0.5f, 0.5f), "runner_mesh.fbx", 2.5f));
 		other->GetTransform().position = vec3(10.0f, 2.0f, 10.0f);
 		other->AddComponent(std::move(othermesh));
-		other->AddComponent(std::move(rb));
+		other->AddComponent(std::move(rb));*/
 		/*
 		Entity chaser(&root);
 		std::shared_ptr<Component> ai(new ScriptComponent("chaser_ai", physics));
