@@ -55,11 +55,11 @@ BOOST_PYTHON_MODULE(physics) {
 }
 
 BOOST_PYTHON_MODULE(controller) {
-	python::class_<Controller, std::shared_ptr<Controller>>("Controller", python::init<>());
+	python::class_<Controller, std::shared_ptr<Controller>>("Controller", python::init<int>());
 }
 
 BOOST_PYTHON_MODULE(aicontroller) {
-	python::class_<aiController, std::shared_ptr<aiController>>("aiController", python::init<>());
+	python::class_<aiController, std::shared_ptr<aiController>>("aiController", python::init<int>());
 }
 
 // boost::python won't let us use shared_ptr<Component> for subclasses of Component by
@@ -98,7 +98,8 @@ BOOST_PYTHON_MODULE(vehicle) {
 		.def("set_brake", &PxVehicleDrive4WRawInputData::setDigitalBrake);
 
 	python::class_<Vehicle, std::shared_ptr<Vehicle>, python::bases<Component>>
-		("Vehicle", python::init<Physics &, std::shared_ptr<Controller>, Vehicle::Configuration &>());
+		("Vehicle", python::init<Physics &, std::shared_ptr<Controller>, Vehicle::Configuration &>())
+		.def(python::init<Physics &, std::shared_ptr<aiController>, Vehicle::Configuration &>());
 
 	python::class_<Vehicle::Configuration>("Configuration")
 		.def_readwrite("position", &Vehicle::Configuration::position)

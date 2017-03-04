@@ -7,16 +7,16 @@ import math
 v = None
 
 time = 0
+# controller_ = None
 
 targets = [Vec3(10, 0, 10), Vec3(10, 0, -10), Vec3(-10, 0, -10), Vec3(-10, 0, 10)]
 target = 0
 
 def init(self):
+
     global v
-
-    _controller = controller.Controller()
+    _controller = aicontroller.aiController(4)
     config = vehicle.Configuration()
-
     dims = PxVec3(2, 2, 5)
 
     config.position = PxVec3(5, 2, 10)
@@ -29,30 +29,34 @@ def init(self):
 
     config.chassis_offset = PxVec3(0, -dims.y, .25)
 
+	
     v = vehicle.Vehicle(self.physics(), _controller, config)
     self.entity().add_component(v)
 
 def drive_at(self, target):
-    global v
+	global v
+	# global _controller
 
-    direction = target - self.entity().transform().global_position()
-    forward = self.entity().transform().forward()
 
-    direction.y = 0
-    forward.y = 0
+	direction = target - self.entity().transform().global_position()
+	forward = self.entity().transform().forward()
 
-    direction = Vec3(-direction.z, 0, direction.x)
-    dot = Vec3.dot(forward, direction)
+	direction.y = 0
+	forward.y = 0
 
-	
- #   if dot > 0.01:
-       # v.input().set_steer_right(1)
- #   else:
+	direction = Vec3(-direction.z, 0, direction.x)
+	dot = Vec3.dot(forward, direction)
+
+	if dot > 0.01:
+		v.aiController_.setRight(1)
+	   # v.input().set_steer_right(1)
+	else:
+		v.aiController_.setRight(0)
        # v.input().set_steer_right(0)
 
-  #  if dot < -0.01:
+	#if dot < -0.01:
        # v.input().set_steer_left(1)
-   # else:
+	#else:
        # v.input().set_steer_left(0)
 
     #if direction.length() < 0.5:
@@ -67,7 +71,7 @@ def drive_at(self, target):
     # cosine = Vec3.dot(direction, forward) / (direction.length() + forward.length())
     # angle = math.acos(cosine)
 
-def update(self, dt):
+def update(self, dt): 
     global time
     global target
     global v

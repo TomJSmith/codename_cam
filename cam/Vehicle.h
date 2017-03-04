@@ -77,9 +77,10 @@ protected:
 	void RegisterHandlers() override;
 
 private:
-	void Drive();
+	void Drive(int i);
 	Physics &physics_;
 	std::shared_ptr<Controller> controller_;
+	std::shared_ptr<aiController> aiController_;
 
 	PxBatchQuery *batchquery_;
 

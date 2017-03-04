@@ -320,7 +320,7 @@ Vehicle::Vehicle(Physics &physics, std::shared_ptr<Controller> controller, Confi
 }
 Vehicle::Vehicle(Physics &physics, std::shared_ptr<aiController> aicontroller, Configuration &config) :
 	physics_(physics),
-	controller_(aicontroller),
+	aiController_(aicontroller),
 	querybuffer_(4),
 	hitbuffer_(4)
 {
@@ -361,51 +361,70 @@ void Vehicle::RegisterHandlers()
 	actor_->userData = &entity_->GetTransform();
 }
 
-void Vehicle::Drive()
+void Vehicle::Drive(int i)
 {
-	controller_->UpdateState();
-	switch (controller_->getAccelleration())
+
+	std::cout << "VEHICLE DRIVE I: " << i  << std::endl;
+	if (i >= 0 && i < 4) //checks to see if its a viable controller slot only 0 to 3 are potential controllers
 	{
-	case C_FAST:
+		controller_->UpdateState(i);
+		switch (controller_->getAccelleration(i))
+		{
+		case C_FAST:
+			input_.setDigitalAccel(true);
+			input_.setDigitalBrake(false);
+			break;
+		case C_NEUTRAL:
+			vehicle_->mDriveDynData.startGearChange(PxVehicleGearsData::eFIRST);
+			input_.setDigitalAccel(false);
+			input_.setDigitalBrake(true);
+			break;
+		case C_REVERSE:
+			vehicle_->mDriveDynData.startGearChange(PxVehicleGearsData::eREVERSE);
+			input_.setDigitalAccel(true);
+			break;
+		}
+
+		switch (controller_->getBrake(i)) {
+		case true:
+			vehicle_->mDriveDynData.startGearChange(PxVehicleGearsData::eFIRST);
+			input_.setDigitalAccel(false);
+			input_.setDigitalHandbrake(true);
+			break;
+		case false:
+			vehicle_->mDriveDynData.startGearChange(PxVehicleGearsData::eFIRST);
+			input_.setDigitalHandbrake(false);
+			break;
+		}
+
+		switch (controller_->getDirectional(i)) {
+		case C_LEFT:
+			input_.setDigitalSteerLeft(true);
+			input_.setDigitalSteerRight(false);
+			break;
+		case C_RIGHT:
+			input_.setDigitalSteerRight(true);
+			input_.setDigitalSteerLeft(false);
+			break;
+		case C_NO_DIRECTION:
+			input_.setDigitalSteerRight(false);
+			input_.setDigitalSteerLeft(false);
+			break;
+		}
+	}
+	else
+	{
+		
 		input_.setDigitalAccel(true);
 		input_.setDigitalBrake(false);
-		break;
-	case C_NEUTRAL:
-		vehicle_->mDriveDynData.startGearChange(PxVehicleGearsData::eFIRST);
-		input_.setDigitalAccel(false);
-		input_.setDigitalBrake(true);
-		break;
-	case C_REVERSE:
-		vehicle_->mDriveDynData.startGearChange(PxVehicleGearsData::eREVERSE);
-		input_.setDigitalAccel(true);
-		break;
-	}
-
-	switch (controller_->getBrake()) {
-	case true:
-		vehicle_->mDriveDynData.startGearChange(PxVehicleGearsData::eFIRST);
-		input_.setDigitalAccel(false);
-		input_.setDigitalHandbrake(true);
-		break;
-	case false:
-		vehicle_->mDriveDynData.startGearChange(PxVehicleGearsData::eFIRST);
-		input_.setDigitalHandbrake(false);
-		break;
-	}
-
-	switch (controller_->getDirectional()) {
-	case C_LEFT:
-		input_.setDigitalSteerLeft(true);
-		input_.setDigitalSteerRight(false);
-		break;
-	case C_RIGHT:
-		input_.setDigitalSteerRight(true);
-		input_.setDigitalSteerLeft(false);
-		break;
-	case C_NO_DIRECTION:
-		input_.setDigitalSteerRight(false);
-		input_.setDigitalSteerLeft(false);
-		break;
+		if (aiController_ != nullptr)
+		{
+			if (aiController_->getRight())
+			{
+				input_.setDigitalSteerRight(true);
+				input_.setDigitalSteerLeft(false);
+			}
+		}
 	}
 }
 
@@ -451,7 +470,10 @@ void Vehicle::Update(seconds dt)
 	use UpdateState() to have the controller use the latest state before trying to get a controller input
 
 	*/
-	Drive();
+	if (controller_ != nullptr)
+		Drive(controller_->i);
+	else
+		Drive(aiController_->i);
 
 	//input_.setAnalogAccel(1.0f);
 

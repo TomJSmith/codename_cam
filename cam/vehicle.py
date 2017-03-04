@@ -5,7 +5,7 @@ import controller
 import math
 
 def init(self):
-    _controller = controller.Controller()
+    _controller = controller.Controller(0)
     c = vehicle.Configuration()
 
     dims = physics.PxVec3(2, 2, 5)

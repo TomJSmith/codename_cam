@@ -7,34 +7,47 @@
 #include "Xinput.h"
 
 
-Controller::Controller() {
-	ZeroMemory(&state, sizeof(XINPUT_STATE));
-
-	if (XInputGetState(0, &state) == ERROR_SUCCESS){
-		std::cout << "Controller is connected";
-	}
-	else
+Controller::Controller(int currContIndex) {
+	//ZeroMemory(&state, sizeof(XINPUT_STATE));
+	for (int i = 0; i < MAX_NUM_CONTROL; i++)
 	{
-		std::cout << "Controller is not connected";
+		if (XInputGetState(i, &state) == ERROR_SUCCESS) {
+			std::cout << "Controller is connected" << std::endl;
+		}
+		else
+		{
+			std::cout << "Controller is not connected" << std::endl;
+		}
 	}
+	i = currContIndex;
 }
 
 
 Controller::~Controller() {
 }
 
-XINPUT_STATE Controller::getState() {
-	ZeroMemory(&state, sizeof(XINPUT_STATE));
-	XInputGetState(0, &state);
+XINPUT_STATE Controller::getState(int i) {
+//	ZeroMemory(&state, sizeof(XINPUT_STATE));
+	
+	XInputGetState(i, &state);
 	return state;
 }
+void Controller::setState(int i, int stateSet) {
+	//	ZeroMemory(&state, sizeof(XINPUT_STATE));
 
-void Controller::UpdateState() {
-	ZeroMemory(&state, sizeof(XINPUT_STATE));
-	XInputGetState(0, &state);
+	XInputGetState(i, &state);
+
+	
+	//return state;
 }
 
-int Controller::getAccelleration() {
+void Controller::UpdateState(int i) {
+	//ZeroMemory(&state, sizeof(XINPUT_STATE));
+	XInputGetState(i, &state);
+}
+
+int Controller::getAccelleration(int i) {
+	XInputGetState(i, &state);
 	if (state.Gamepad.wButtons & XINPUT_GAMEPAD_A) {
 		return C_FAST;
 	}
@@ -46,7 +59,8 @@ int Controller::getAccelleration() {
 	}
 }
 
-bool Controller::getBrake() {
+bool Controller::getBrake(int i) {
+	XInputGetState(i, &state);
 	if (state.Gamepad.wButtons & XINPUT_GAMEPAD_B) {
 		return true;
 	}
@@ -55,7 +69,8 @@ bool Controller::getBrake() {
 	}
 }
 
-int Controller::getDirectional() {
+int Controller::getDirectional(int i) {
+	XInputGetState(i, &state);
 	if (state.Gamepad.sThumbLX < -10000) {
 		return C_RIGHT;
 	}
