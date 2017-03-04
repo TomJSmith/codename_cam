@@ -37,7 +37,7 @@ int main() {
 
 		auto plane = Entity::Create(root.get());
 		std::shared_ptr<Component> planemesh(new Mesh(Shader::Load("passthrough.vert", "passthrough.frag"), "map_mesh.fbx", vec3(0.2, 0.4, 0.2), 1.0f, GL_TRIANGLES));
-		std::shared_ptr<Component> planebody(new RigidBody(physics, *physics.GetPhysics()->createMaterial(0.5f, 0.5f, 0.5f), "map_mesh.fbx", 1.0f));
+		std::shared_ptr<Component> planebody(new RigidBody(physics, *physics.GetPhysics()->createMaterial(1.0f, 1.0f, 1.0f), "map_mesh.fbx", 1.0f));
 		plane->AddComponent(std::move(planemesh));
 		plane->AddComponent(std::move(planebody));
 

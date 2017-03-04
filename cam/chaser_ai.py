@@ -42,9 +42,9 @@ def drive_at(self, target):
 	forward = self.entity().transform().forward()
 	right = self.entity().transform().right()
 	test = self.entity().transform().position
-	print test.x
-	print test.y
-	print test.z
+	#print test.x
+	#print test.y
+	#print test.z
 	direction.y = 0
 	forward.y = 0
 
@@ -82,12 +82,12 @@ def drive_at(self, target):
        # v.input().set_steer_left(0)
 
 	if direction.length() < 0.5:
-		print "We're there!"
+		#print "We're there!"
 		_controller.setBrake(1)
        # v.input().set_brake(True)
        # v.input().set_acceleration(False)
 	else:
-		print "Not there yet, accelerating..."
+		#print "Not there yet, accelerating..."
 		_controller.setBrake(0)
        # v.input().set_acceleration(True)
        # v.input().set_brake(False)

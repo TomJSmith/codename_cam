@@ -57,10 +57,10 @@ public:
 		PxF32 camberAtMaxCompression = -0.1f;
 
 		// Engine parameters
-		PxF32 torque = 500.0f;
+		PxF32 torque = 3000.0f;
 
 		// Also not certain what this is, something engine-related
-		PxF32 maxOmega = 600.0f;
+		PxF32 maxOmega = 1000.0f; //INCREASE THIS TO INCREASE OUR SPEED I BELIEVE
 
 		// Not meant to be set externally - just something that needs to be passed around
 		// internally within Vehicle()
