@@ -36,8 +36,9 @@ Mesh::Mesh(Shader &shader,
 	for (std::uint32_t i = 0u; i < objMesh->mNumFaces; i++)
 	{
 		const aiFace& face = objMesh->mFaces[i];
-		for (int j = 0; j < 3; j++)
+		for (uint32_t j = 0; j < 3; j++)
 		{
+
 			aiVector3D vert = objMesh->mVertices[face.mIndices[j]];
 			aiVector3D faceVert(vert.x * scale, vert.y * scale, vert.z * scale);
 			vertices.push_back(faceVert);

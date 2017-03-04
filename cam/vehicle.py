@@ -1,4 +1,4 @@
-import physics
+﻿import physics
 import vehicle
 import types
 import controller
@@ -10,7 +10,7 @@ def init(self):
     dims = physics.PxVec3(2, 2, 5)
 
 
-    c.position = physics.PxVec3(0, 2, -20)
+    c.position = physics.PxVec3(0, 10, -10)
     c.torque = 2000
     c.chassis_dimensions = dims
 
