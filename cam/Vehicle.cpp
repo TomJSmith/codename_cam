@@ -358,7 +358,7 @@ void Vehicle::RegisterHandlers()
 	auto t = actor_->getGlobalPose();
 	entity_->GetTransform().position = vec3(t.p.x, t.p.y, t.p.z);
 	entity_->GetTransform().rotation = quaternion(t.q.w, t.q.x, t.q.y, t.q.z);
-	actor_->userData = &entity_->GetTransform();
+	actor_->userData = entity_;
 }
 
 void Vehicle::Drive(int i)
@@ -366,7 +366,6 @@ void Vehicle::Drive(int i)
 
 	if (i >= 0 && i < 4) //checks to see if its a viable controller slot only 0 to 3 are potential controllers
 	{
-		
 		controller_->UpdateState(i);
 		switch (controller_->getAccelleration(i))
 		{
@@ -411,6 +410,7 @@ void Vehicle::Drive(int i)
 			input_.setDigitalSteerLeft(false);
 			break;
 		}
+
 	}
 	else
 	{

@@ -161,5 +161,7 @@
     <None Include="chaser_mesh.fbx" />
     <None Include="runner_mesh.fbx" />
     <None Include="car_ai.py" />
+    <None Include="collision.py" />
+    <None Include="a_star.py" />
   </ItemGroup>
 </Project>

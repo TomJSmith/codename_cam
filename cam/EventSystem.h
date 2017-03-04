@@ -3,6 +3,7 @@
 #include <functional>
 #include <vector>
 
+#include "Physics.h"
 #include "Renderer.h"
 
 template <class... EventTypes>
@@ -52,4 +53,4 @@ private:
 // write EventSystem<Event1, Event2, ...> everywhere).
 //
 // To add an event type, add it to the template arguments here.
-using EventSystem = EventSystem_<Renderer::RenderEvent>;
+using EventSystem = EventSystem_<Renderer::RenderEvent, Physics::CollisionEvent>;

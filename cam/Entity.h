@@ -20,33 +20,34 @@ class Entity {
 	void AddComponent(std::shared_ptr<Component> c);
 	void SetParent(Entity *parent);
 
+	unsigned int Id() { return id_; }
 	Entity *GetParent() { return parent_; }
 	EventSystem &GetEvents() { return events_; }
 	Transform &GetTransform() { return transform_; }
 
 	mat4 GetGlobalTransform() const;
 
-	template <typename T>
+	template <class T>
 	void RegisterEventHandler(std::function<void(T)> handler)
 	{
 		events_.RegisterEventHandler(handler);
 	}
 
-	template <typename T>
+	template <class T>
 	void BroadcastEvent(T &event)
 	{
 		FireEvent(event);
 		for (auto &child : children_) child->BroadcastEvent(event);
 	}
 
-	template <typename T>
+	template <class T>
 	void FireEvent(T &event)
 	{
 		events_.FireEvent(event);
 	}
  private:
 	
-	int id_;
+	unsigned int id_;
 
 	std::vector<std::shared_ptr<Component>> components_;
 	std::vector<std::shared_ptr<Entity>> children_;

@@ -18,7 +18,7 @@ void RigidBody::RegisterHandlers()
 	auto t = body_->getGlobalPose();
 	entity_->GetTransform().position = vec3(t.p.x, t.p.y, t.p.z);
 	entity_->GetTransform().rotation = quaternion(t.q.w, t.q.x, t.q.y, t.q.z);
-	body_->userData = &entity_->GetTransform();
+	body_->userData = entity_;
 }
 
 RigidBody::RigidBody(Physics &physics, PxMaterial &material, PxGeometry &geometry, PxTransform &transform, bool dynamic)

@@ -78,9 +78,10 @@ void AddComponent(Entity &e, std::shared_ptr<T> c) {
 }
 
 BOOST_PYTHON_MODULE(entity) {
-	python::class_<Entity>("Entity")
+	python::class_<Entity, std::shared_ptr<Entity>>("Entity")
 		// For every type of component we want to create in scripts, we need to
 		// add an overload here
+		.add_property("id", &Entity::Id)
 		.def("add_component", AddComponent<Vehicle>)
 		.def("transform", &Entity::GetTransform, python::return_internal_reference<>());
 }
@@ -140,6 +141,17 @@ ScriptComponent::ScriptComponent(const std::string &type, Physics &physics) :
 void ScriptComponent::RegisterHandlers()
 {
 	InitScript(type_);
+
+	entity_->GetEvents().RegisterEventHandler([this](Physics::CollisionEvent e) {
+		try {
+			if (locals_.has_key("collision")) {
+				locals_["collision"](python::ptr(this), python::ptr(e.other));
+			}
+		}
+		catch (const python::error_already_set &) {
+			PyErr_Print();
+		}
+	});
 }
 
 void ScriptComponent::Update(seconds dt)
@@ -198,6 +210,13 @@ void ScriptComponent::InitScript(const std::string &type)
 
 // Workaround for known MSVC bug
 namespace boost {
+	template <>
+	Entity const volatile * get_pointer<class Entity const volatile>(
+		class Entity const volatile *c
+		) {
+		return c;
+	}
+
 	template <>
 	ScriptComponent const volatile * get_pointer<class ScriptComponent const volatile>(
 		class ScriptComponent const volatile *c
