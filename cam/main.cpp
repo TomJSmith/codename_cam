@@ -24,10 +24,12 @@ int main() {
 		Physics physics;
 		auto root = Entity::Create(nullptr);
 
+#ifdef DEBUG
 		root->GetEvents().RegisterEventHandler([&physics](Renderer::RenderEvent e) {
 			auto d = physics.GetDebugMeshData();
 			e.data.insert(e.data.end(), d.begin(), d.end());
 		});
+#endif // #ifdef DEBUG
 
 
 		Audio audio;
@@ -55,12 +57,12 @@ int main() {
 		camera->AddComponent(std::move(cam));
 		camera->AddComponent(std::move(ctrl));
 
-		auto other = Entity::Create(root.get());
+		/*auto other = Entity::Create(root.get());
 		std::shared_ptr<Component> othermesh(new Mesh(Shader::Load("passthrough.vert", "passthrough.frag"), "runner_mesh.fbx", vec3(0.1, 0.1, 0.6), 2.5, GL_TRIANGLES));
 		std::shared_ptr<Component> rb(new RigidBody(physics, *physics.GetPhysics()->createMaterial(0.5f, 0.5f, 0.5f), "runner_mesh.fbx", 2.5f));
 		other->GetTransform().position = vec3(10.0f, 2.0f, 10.0f);
 		other->AddComponent(std::move(othermesh));
-		other->AddComponent(std::move(rb));
+		other->AddComponent(std::move(rb));*/
 		/*
 		Entity chaser(&root);
 		std::shared_ptr<Component> ai(new ScriptComponent("chaser_ai", physics));
