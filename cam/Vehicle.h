@@ -70,7 +70,8 @@ public:
 	Vehicle(Physics &physics, std::shared_ptr<Controller> controller, Configuration &config = Configuration());
 	Vehicle(Physics &physics, std::shared_ptr<aiController> aicontroller, Configuration &config = Configuration());
 	~Vehicle();
-
+	std::shared_ptr<aiController> getAiController();
+	
 	void Update(seconds dt);
 
 protected:

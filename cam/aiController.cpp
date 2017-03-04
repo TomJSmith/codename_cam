@@ -32,3 +32,37 @@ bool aiController::getRight()
 {
 	return right;
 }
+void aiController::setLeft(int dir)
+{
+	if (dir == 1)
+		left = true;
+	else
+		left = false;
+}
+bool aiController::getLeft()
+{
+	return left;
+}
+
+void aiController::setBrake(int dir)
+{
+	if (dir == 1)
+		brake = true;
+	else
+		brake = false;
+}
+bool aiController::getBrake()
+{
+	return brake;
+}
+void aiController::setReverse(int dir)
+{
+	if (dir == 1)
+		reverse = true;
+	else
+		reverse = false;
+}
+bool aiController::getReverse()
+{
+	return reverse;
+}

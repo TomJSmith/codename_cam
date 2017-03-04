@@ -364,9 +364,9 @@ void Vehicle::RegisterHandlers()
 void Vehicle::Drive(int i)
 {
 
-	std::cout << "VEHICLE DRIVE I: " << i  << std::endl;
 	if (i >= 0 && i < 4) //checks to see if its a viable controller slot only 0 to 3 are potential controllers
 	{
+		
 		controller_->UpdateState(i);
 		switch (controller_->getAccelleration(i))
 		{
@@ -419,11 +419,33 @@ void Vehicle::Drive(int i)
 		input_.setDigitalBrake(false);
 		if (aiController_ != nullptr)
 		{
+			if (aiController_->getBrake())
+			{
+				input_.setDigitalBrake(true);
+				input_.setDigitalAccel(false);
+			}
+			else
+			{
+				input_.setDigitalBrake(false);
+				input_.setDigitalAccel(true);
+			}
+
 			if (aiController_->getRight())
 			{
 				input_.setDigitalSteerRight(true);
 				input_.setDigitalSteerLeft(false);
 			}
+			else if (aiController_->getLeft())
+			{
+				input_.setDigitalSteerRight(false);
+				input_.setDigitalSteerLeft(true);
+			}
+			else
+			{
+				input_.setDigitalSteerRight(false);
+				input_.setDigitalSteerLeft(false);
+			}
+
 		}
 	}
 }
@@ -507,4 +529,10 @@ void Vehicle::Update(seconds dt)
 		vehicles,
 		vehicleresults
 	);
+
+	
+}
+std::shared_ptr<aiController> Vehicle::getAiController()
+{
+	return aiController_;
 }

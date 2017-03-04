@@ -9,12 +9,13 @@ v = None
 time = 0
 # controller_ = None
 
-targets = [Vec3(10, 0, 10), Vec3(10, 0, -10), Vec3(-10, 0, -10), Vec3(-10, 0, 10)]
+targets = [Vec3(50, 0, -50), Vec3(10, 0, -10), Vec3(-10, 0, -10), Vec3(-10, 0, 10)]
 target = 0
 
 def init(self):
 
     global v
+    global _controller 
     _controller = aicontroller.aiController(4)
     config = vehicle.Configuration()
     dims = PxVec3(2, 2, 5)
@@ -35,36 +36,59 @@ def init(self):
 
 def drive_at(self, target):
 	global v
-	# global _controller
+	global _controller
 
-
-	direction = target - self.entity().transform().global_position()
+	direction = target - self.entity().transform().position
 	forward = self.entity().transform().forward()
-
+	right = self.entity().transform().right()
+	test = self.entity().transform().position
+	print test.x
+	print test.y
+	print test.z
 	direction.y = 0
 	forward.y = 0
 
-	direction = Vec3(-direction.z, 0, direction.x)
-	dot = Vec3.dot(forward, direction)
+	#direction = Vec3(-direction.z, 0, direction.x)
+	dot = Vec3.dot( direction, right)
+	
+	
+	#dot = dot / (direction.length() + right.length())
+	#print dot
+	#print angle
+	#print target.x 
+	#print target.y 
+	#print target.z
 
-	if dot > 0.01:
-		v.aiController_.setRight(1)
-	   # v.input().set_steer_right(1)
+	#print forward.x 
+	#print forward.y 
+	#print forward.z
+	_controller.setRight(0)
+	_controller.setLeft(0)
+	if dot > 0.1:
+		_controller.setLeft(1)
+		_controller.setBrake(1)
 	else:
-		v.aiController_.setRight(0)
-       # v.input().set_steer_right(0)
+		_controller.setLeft(0)
+		_controller.setBrake(0)
 
-	#if dot < -0.01:
+	if dot < -0.1:
+		_controller.setRight(1)
+		_controller.setBrake(1)
        # v.input().set_steer_left(1)
-	#else:
+	else:
+		_controller.setRight(0)
+		_controller.setBrake(0)
+
        # v.input().set_steer_left(0)
 
-    #if direction.length() < 0.5:
-       # print "We're there!"
+	if direction.length() < 0.5:
+		print "We're there!"
+		_controller.setBrake(1)
        # v.input().set_brake(True)
        # v.input().set_acceleration(False)
-    #else:
-       # print "Not there yet, accelerating..."
+	else:
+		print "Not there yet, accelerating..."
+		_controller.setBrake(0)
        # v.input().set_acceleration(True)
        # v.input().set_brake(False)
 	
@@ -78,7 +102,7 @@ def update(self, dt):
 
     time += dt
     if time > 5:
-        target = (target + 1) % len(targets)
+       #target = (target + 1) % len(targets)
         time = 0
-
+        target = 0
     drive_at(self, targets[target])

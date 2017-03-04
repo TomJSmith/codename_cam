@@ -9,6 +9,13 @@ public:
 	void setRight(int dir);
 	bool right =false, left=false, none=false, brake=false, reverse=false;
 	bool getRight();
+	bool getLeft();
+	void setLeft(int dir);
+	void setBrake(int dir);
+	bool getBrake();
+	void setReverse(int dir);
+	bool getReverse();
+
 
 private:
 	XINPUT_STATE stateAi;
