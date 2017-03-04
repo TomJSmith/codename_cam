@@ -24,11 +24,12 @@ int main() {
 		Physics physics;
 		auto root = Entity::Create(nullptr);
 
+#ifdef DEBUG
 		root->GetEvents().RegisterEventHandler([&physics](Renderer::RenderEvent e) {
 			auto d = physics.GetDebugMeshData();
 			e.data.insert(e.data.end(), d.begin(), d.end());
 		});
-
+#endif
 
 		Audio audio;
 		//audio.initAudio();
