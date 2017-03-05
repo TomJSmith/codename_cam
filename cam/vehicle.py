@@ -5,7 +5,7 @@ import controller
 import math
 
 def init(self):
-    _controller = controller.Controller()
+    _controller = controller.Controller(0)
     c = vehicle.Configuration()
 
     dims = physics.PxVec3(3, 1, 5)
@@ -14,11 +14,11 @@ def init(self):
     c.position = physics.PxVec3(0, 2, -20)
     c.chassis_dimensions = dims
     c.steer_angle = math.pi * .05
-    c.torque = 10000
+    c.torque = 100000
     c.wheel_radius = 0.5
     c.wheel_width = 0.4
     c.wheel_mass = 10
-    c.omega = 100
+    c.omega = 1000
     c.chassis_mass = 1000
     # c.suspension_damping = 1000
 
@@ -31,7 +31,7 @@ def init(self):
     #                              (dims.x ** 2 + dims.y ** 2) * c.chassis_mass / 12)
 
     c.wheel_moi = 20
-    c.chassis_moi = physics.PxVec3(c.chassis_mass, c.chassis_mass / 10, c.chassis_mass)
+    c.chassis_moi = physics.PxVec3(c.chassis_mass, c.chassis_mass / 2, c.chassis_mass)
     c.chassis_offset = physics.PxVec3(0, -dims.y, 0)
     # c.chassis_offset = physics.PxVec3(0, 0, 0)
 
