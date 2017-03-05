@@ -152,9 +152,10 @@
     <None Include="camera_control.py" />
     <None Include="chaser_ai.py" />
     <None Include="test_map_mesh.obj" />
-    <None Include="chaser_mesh.fbx" />
-    <None Include="runner_mesh.fbx" />
     <None Include="collision.py" />
     <None Include="a_star.py" />
+    <None Include="chaser_mesh.obj" />
+    <None Include="runner_mesh.obj" />
+    <None Include="map_mesh.fbx" />
   </ItemGroup>
 </Project>

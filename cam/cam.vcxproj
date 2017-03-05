@@ -96,17 +96,20 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>$(ProjectDir)Include\assimp;$(ProjectDir)Include\openAL;$(ProjectDir)Include;$(ProjectDir)Include\Python;$(ProjectDir)Include\SDL;$(ProjectDir)Include\PhysX;%(AdditionalIncludeDirectories);$(ProjectDir)Include\assimp</AdditionalIncludeDirectories>
-      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
-      <PreprocessorDefinitions>SDL_MAIN_HANDLED;BOOST_PYTHON_STATIC_LIB;GLEW_STATIC;DEBUG;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <PreprocessorDefinitions>PX_CHECKED;SDL_MAIN_HANDLED;BOOST_PYTHON_STATIC_LIB;DEBUG;NDEBUG;GLEW_STATIC;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <DisableSpecificWarnings>4244;</DisableSpecificWarnings>
       <TreatWarningAsError>true</TreatWarningAsError>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>Xinput9_1_0.lib;assimp.lib;EFX-Util.lib;OpenAL32.lib;winmm.lib;PhysX3CommonDEBUG_x64.lib;PhysX3CookingDEBUG_x64.lib;LowLevelClothDEBUG.lib;LowLevelDEBUG.lib;PhysX3CharacterKinematicDEBUG_x64.lib;PhysX3ExtensionsDEBUG.lib;PhysX3VehicleDEBUG.lib;PhysXProfileSDKDEBUG.lib;PhysXVisualDebuggerSDKDEBUG.lib;PvdRuntimeDEBUG.lib;PxTaskDEBUG.lib;SceneQueryDEBUG.lib;SimulationControllerDEBUG.lib;PhysX3DEBUG_x64.lib;opengl32.lib;glfw3.lib;glew32sd.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;</AdditionalDependencies>
+      <AdditionalDependencies>Xinput9_1_0.lib;assimp.lib;EFX-Util.lib;OpenAL32.lib;winmm.lib;PhysX3CommonCHECKED_x64.lib;PhysX3CookingCHECKED_x64.lib;LowLevelClothCHECKED.lib;LowLevelCHECKED.lib;PhysX3CharacterKinematicCHECKED_x64.lib;PhysX3ExtensionsCHECKED.lib;PhysX3VehicleCHECKED.lib;PhysXProfileSDKCHECKED.lib;PhysXVisualDebuggerSDKCHECKED.lib;PvdRuntimeCHECKED.lib;PxTaskCHECKED.lib;SceneQueryCHECKED.lib;SimulationControllerCHECKED.lib;PhysX3CHECKED_x64.lib;opengl32.lib;glfw3.lib;glew32s.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(ProjectDir)Libraries\openAL;$(ProjectDir)Libraries\SDL;$(ProjectDir)Libraries\Debug;%(AdditionalLibraryDirectories);$(ProjectDir)Libraries\assimp\64</AdditionalLibraryDirectories>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <EntryPointSymbol>
       </EntryPointSymbol>
+      <IgnoreSpecificDefaultLibraries>
+      </IgnoreSpecificDefaultLibraries>
     </Link>
     <CustomBuildStep>
       <Command>
@@ -324,25 +327,25 @@
       <CopyToOutputDirectory Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">PreserveNewest</CopyToOutputDirectory>
       <TargetPath>nvToolsExt64_1.dll</TargetPath>
     </ContentWithTargetPath>
-    <ContentWithTargetPath Include="Libraries\Debug\PhysX3CharacterKinematicDEBUG_x64.dll">
+    <ContentWithTargetPath Include="Libraries\Debug\PhysX3CharacterKinematicCHECKED_x64.dll">
       <DeploymentContent>true</DeploymentContent>
       <CopyToOutputDirectory Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">PreserveNewest</CopyToOutputDirectory>
-      <TargetPath>PhysX3CharacterKinematicDEBUG_x64.dll</TargetPath>
+      <TargetPath>PhysX3CharacterKinematicCHECKED_x64.dll</TargetPath>
     </ContentWithTargetPath>
-    <ContentWithTargetPath Include="Libraries\Debug\PhysX3CommonDEBUG_x64.dll">
+    <ContentWithTargetPath Include="Libraries\Debug\PhysX3CommonCHECKED_x64.dll">
       <DeploymentContent>true</DeploymentContent>
       <CopyToOutputDirectory Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">PreserveNewest</CopyToOutputDirectory>
-      <TargetPath>PhysX3CommonDEBUG_x64.dll</TargetPath>
+      <TargetPath>PhysX3CommonCHECKED_x64.dll</TargetPath>
     </ContentWithTargetPath>
-    <ContentWithTargetPath Include="Libraries\Debug\PhysX3CookingDEBUG_x64.dll">
+    <ContentWithTargetPath Include="Libraries\Debug\PhysX3CookingCHECKED_x64.dll">
       <DeploymentContent>true</DeploymentContent>
       <CopyToOutputDirectory Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">PreserveNewest</CopyToOutputDirectory>
-      <TargetPath>PhysX3CookingDEBUG_x64.dll</TargetPath>
+      <TargetPath>PhysX3CookingCHECKED_x64.dll</TargetPath>
     </ContentWithTargetPath>
-    <ContentWithTargetPath Include="Libraries\Debug\PhysX3DEBUG_x64.dll">
+    <ContentWithTargetPath Include="Libraries\Debug\PhysX3CHECKED_x64.dll">
       <DeploymentContent>true</DeploymentContent>
       <CopyToOutputDirectory Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">PreserveNewest</CopyToOutputDirectory>
-      <TargetPath>PhysX3DEBUG_x64.dll</TargetPath>
+      <TargetPath>PhysX3CHECKED_x64.dll</TargetPath>
     </ContentWithTargetPath>
     <None Include="passthrough.frag">
       <FileType>Document</FileType>
