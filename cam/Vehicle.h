@@ -68,9 +68,12 @@ public:
 	};
 
 	Vehicle(Physics &physics, std::shared_ptr<Controller> controller, Configuration &config = Configuration());
+
+	// For python's sake
+	// It can't make shared_ptr<Controller>s out of AiControllers so this ctor converts for us
 	Vehicle(Physics &physics, std::shared_ptr<aiController> aicontroller, Configuration &config = Configuration());
+
 	~Vehicle();
-	//std::shared_ptr<aiController> getAiController();
 	
 	void Update(seconds dt);
 
@@ -81,7 +84,6 @@ private:
 	void Drive();
 	Physics &physics_;
 	std::shared_ptr<Controller> controller_;
-	//std::shared_ptr<aiController> aiController_;
 
 	PxBatchQuery *batchquery_;
 

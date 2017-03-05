@@ -318,6 +318,7 @@ Vehicle::Vehicle(Physics &physics, std::shared_ptr<Controller> controller, Confi
 
 	wheels->free();
 }
+
 Vehicle::Vehicle(Physics &physics, std::shared_ptr<aiController> aicontroller, Configuration &config) :
 	Vehicle(physics, std::shared_ptr<Controller>(aicontroller), config)
 {}
