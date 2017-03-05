@@ -22,8 +22,17 @@ class SimulationCallback : public PxSimulationEventCallback {
 			auto e0 = static_cast<Entity *>(header.actors[0]->userData);
 			auto e1 = static_cast<Entity *>(header.actors[1]->userData);
 
-			e0->FireEvent(Physics::CollisionEvent { e1 });
-			e1->FireEvent(Physics::CollisionEvent { e0 });
+			if (e0->Id() > 5 || e1->Id() > 5) {
+				std::cout << "hmmmm...\n";
+			}
+			else {
+				e0->FireEvent(Events::Collided{ e1 });
+				e1->FireEvent(Events::Collided{ e0 });
+				std::cout << "colliding objects\n";
+			}
+		}
+		else {
+			std::cout << "deleted object collision...\n";
 		}
 	}
 };

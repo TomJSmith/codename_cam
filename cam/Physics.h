@@ -41,10 +41,6 @@ public:
 		CHASSIS_COLLISIONS = CollisionFlags::GROUND | CollisionFlags::WHEEL | CollisionFlags::CHASSIS // chassis hits everything!
 	};
 
-	struct CollisionEvent {
-		Entity *other;
-	};
-
 private:
 	PxFoundation *foundation_;
 	PxPhysics *physics_;

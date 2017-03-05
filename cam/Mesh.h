@@ -6,7 +6,7 @@
 #include <vector>
 
 #include "Component.h"
-#include "Renderer.h"
+#include "Events.h"
 #include "Transform.h"
 
 class Shader;
@@ -18,8 +18,9 @@ public:
 		 glm::vec3 colour,
 		 float scale,
 		 GLuint type);
+	~Mesh();
 
-	void GetMeshData(Renderer::RenderEvent event);
+	void GetMeshData(Events::Render event);
 
 protected:
 	void RegisterHandlers() override;
@@ -31,5 +32,5 @@ private:
 
 	Shader &shader_;
 
-	std::function<void(Renderer::RenderEvent)> handler_;
+	std::function<void(Events::Render)> handler_;
 };

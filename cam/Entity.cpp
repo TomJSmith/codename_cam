@@ -1,8 +1,10 @@
 #include "Entity.h"
 
 #include <algorithm>
+#include <iostream>
 
 unsigned int Entity::nextId = 0;
+std::vector<std::shared_ptr<Entity>> Entity::destroyed_;
 
 Entity::Entity() : id_(nextId++), parent_(nullptr) {}
 
@@ -43,7 +45,7 @@ void Entity::SetParent(Entity *parent) {
 	auto it = std::find_if(
 		std::begin(parent_->children_),
 		std::end(parent_->children_),
-		[=](const auto &p) {return p.get() == this;}
+		[this](const auto &p) {return p.get() == this;}
 	);
 
 	if (it == std::end(parent_->children_)) throw std::runtime_error("unable to find entity in parent's children!");
@@ -55,6 +57,38 @@ void Entity::SetParent(Entity *parent) {
 	if (parent_) {
 		parent_->children_.push_back(ptr);
 	}
+}
+
+void Entity::Destroy() {
+	BroadcastEvent(Events::Destroyed {});
+
+	auto children = children_;
+	auto components = components_;
+
+	for (auto &child : children) child->Destroy();
+	for (auto &component : components) component->Destroy();
+
+	if (parent_) {
+		auto it = std::find_if(
+			std::begin(parent_->children_),
+			std::end(parent_->children_),
+			[this](const auto &p) {return p.get() == this; }
+		);
+
+		if (it == std::end(parent_->children_)) throw std::runtime_error("unable to find entity in parent's children!");
+
+		destroyed_.push_back(*it);
+		parent_->children_.erase(it);
+		parent_ = nullptr;
+	}
+}
+
+void Entity::DeleteDestroyed() {
+	// destroys what is (presumably) the last remaining reference to any destroyed entity
+	// if a reference is held afterwards, the entity will remain alive until that reference is
+	// destroyed. watchers worried about the entity being destroyed can listen for
+	// Entity::DestroyEvent.
+	destroyed_.clear();
 }
 
 mat4 Entity::GetGlobalTransform() const

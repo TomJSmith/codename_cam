@@ -21,7 +21,8 @@ void RigidBody::RegisterHandlers()
 	body_->userData = entity_;
 }
 
-RigidBody::RigidBody(Physics &physics, PxMaterial &material, PxGeometry &geometry, PxTransform &transform, bool dynamic)
+RigidBody::RigidBody(Physics &physics, PxMaterial &material, PxGeometry &geometry, PxTransform &transform, bool dynamic) :
+	physics_(physics)
 {
 	if (dynamic) body_ = physics.GetPhysics()->createRigidDynamic(transform);
 	else body_ = physics.GetPhysics()->createRigidStatic(transform);
@@ -117,5 +118,6 @@ RigidBody::RigidBody(Physics &physics, PxMaterial &material, const char *objfile
 
 RigidBody::~RigidBody()
 {
+	physics_.GetScene()->removeActor(*body_);
 	body_->release();
 }

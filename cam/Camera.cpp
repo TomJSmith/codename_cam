@@ -4,7 +4,14 @@
 
 void Camera::RegisterHandlers()
 {
-	entity_->GetEvents().RegisterEventHandler([this] (Renderer::RenderEvent e) {
+	handler_ = [this](Events::Render e) {
 		e.cameraTransform = entity_->GetGlobalTransform();
-	});
+	};
+
+	entity_->GetEvents().RegisterEventHandler(&handler_);
+}
+
+Camera::~Camera()
+{
+	entity_->GetEvents().UnregisterEventHandler(&handler_);
 }

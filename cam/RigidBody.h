@@ -18,5 +18,6 @@ public:
 
 private:
 	PxRigidActor *body_;
+	Physics &physics_;
 };
 

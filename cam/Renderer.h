@@ -23,11 +23,6 @@ public:
 		mat4 modelMatrix;
 	};
 
-	struct RenderEvent {
-		std::vector<MeshData> &data;
-		mat4 &cameraTransform;
-	};
-
 	GLFWwindow* getWindow();
 private:
 	static GLFWwindow *window_;

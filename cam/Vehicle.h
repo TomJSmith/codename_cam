@@ -82,6 +82,7 @@ protected:
 
 private:
 	void Drive();
+
 	Physics &physics_;
 	std::shared_ptr<Controller> controller_;
 

@@ -1,4 +1,5 @@
 from physics import *
+import events
 import controller
 import aicontroller
 import vehicle
@@ -11,6 +12,12 @@ _controller = None
 
 targets = [Vec3(50, 0, -50), Vec3(10, 0, -10), Vec3(-10, 0, -10), Vec3(-10, 0, 10)]
 target = 0
+
+def destroyed(event):
+    pass
+    global v
+    v = None
+    print "chaser ai collided"
 
 def init(self):
 
@@ -44,9 +51,10 @@ def init(self):
 
     # config.chassis_offset = PxVec3(0, -dims.y, .25)
 
-	
+
     v = vehicle.Vehicle(self.physics(), _controller, config)
     self.entity().add_component(v)
+    # self.entity().register_destroyed_handler(destroyed)
 
 def drive_at(self, target):
 	global v

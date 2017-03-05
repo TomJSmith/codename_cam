@@ -11,6 +11,7 @@ class Physics;
 class ScriptComponent : public Component {
  public:
 	ScriptComponent(const std::string &filename, Physics &physics);
+	~ScriptComponent();
 
 	virtual void Update(seconds dt) override;
 
@@ -27,5 +28,7 @@ class ScriptComponent : public Component {
 	virtual void RegisterHandlers() override;
 	void InitScript(const std::string &filename);
 	static void InitPython();
+
+	std::function<void(Events::Collided)> handler_;
 };
 

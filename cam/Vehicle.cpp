@@ -309,7 +309,7 @@ Vehicle::Vehicle(Physics &physics, std::shared_ptr<Controller> controller, Confi
 	vehicle_ = PxVehicleDrive4W::allocate(config.nWheels);
 	vehicle_->setup(physics.GetPhysics(), actor_, *wheels, drive, config.nWheels - 4);
 
-	physics.GetScene()->addActor(*actor_);
+	physics.GetScene()->addActor(*vehicle_->getRigidDynamicActor());
 
 	vehicle_->setToRestState();
 	vehicle_->mDriveDynData.forceGearChange(PxVehicleGearsData::eFIRST);
@@ -325,9 +325,12 @@ Vehicle::Vehicle(Physics &physics, std::shared_ptr<aiController> aicontroller, C
 
 Vehicle::~Vehicle()
 {
-	frictionpairs_->release();
-	actor_->release();
+	std::cout << "killing a vehicle!\n";
+	physics_.GetScene()->removeActor(*vehicle_->getRigidDynamicActor());
+	vehicle_->getRigidDynamicActor()->release();
+	//vehicle_->release(); 
 	vehicle_->free();
+	frictionpairs_->release();
 	batchquery_->release();
 }
 
@@ -450,6 +453,6 @@ void Vehicle::Update(seconds dt)
 		*frictionpairs_,
 		1,
 		vehicles,
-		vehicleresults
+		nullptr
 	);
 }
