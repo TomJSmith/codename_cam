@@ -15,12 +15,13 @@ class Controller {
 public:
 	Controller(int currContIndex);
 	~Controller();
-	void UpdateState();
-	int getAccelleration();
-	bool getBrake();
-	int getDirectional();
-	int MAX_NUM_CONTROL = 4;
-	int i;
+
+	virtual void UpdateState();
+	virtual int getAcceleration();
+	virtual bool getBrake();
+	virtual int getDirectional();
+
 private:
+	int i;
 	XINPUT_STATE state;
 };

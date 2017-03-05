@@ -1,25 +1,30 @@
 #include "aiController.h"
 #include <iostream>
 
-aiController::aiController(int currIndex) : Controller(i)
-{
-
-	ZeroMemory(&stateAi, sizeof(XINPUT_STATE));
-	if (XInputGetState(1, &stateAi) == ERROR_SUCCESS) {
-		std::cout << "Controller is connected" << std::endl;
-	}
-	else
-	{
-		std::cout << "Controller is not connected" << std::endl;
-	}
-	i = currIndex;
-	std::cout << "AI CONTROLLER CONSTRUCTOR" << std::endl;
-}
+aiController::aiController()
+	: Controller(4)
+{}
 
 aiController::~aiController()
-{
+{}
 
+int aiController::getAcceleration() {
+	if (reverse) return C_REVERSE;
+	return C_FAST; // TODO
 }
+
+int aiController::getDirectional() {
+	if (right) return C_RIGHT;
+	if (left) return C_LEFT;
+	return C_NO_DIRECTION;
+}
+
+bool aiController::getBrake()
+{
+	return brake;
+}
+
+void aiController::UpdateState() { /* do nothing, this is for xbox controllers */ }
 
 void aiController::setRight(int dir)
 {
@@ -28,20 +33,13 @@ void aiController::setRight(int dir)
 	else
 		right = false;
 }
-bool aiController::getRight()
-{
-	return right;
-}
+
 void aiController::setLeft(int dir)
 {
 	if (dir == 1)
 		left = true;
 	else
 		left = false;
-}
-bool aiController::getLeft()
-{
-	return left;
 }
 
 void aiController::setBrake(int dir)
@@ -51,18 +49,11 @@ void aiController::setBrake(int dir)
 	else
 		brake = false;
 }
-bool aiController::getBrake()
-{
-	return brake;
-}
+
 void aiController::setReverse(int dir)
 {
 	if (dir == 1)
 		reverse = true;
 	else
 		reverse = false;
-}
-bool aiController::getReverse()
-{
-	return reverse;
 }

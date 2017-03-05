@@ -70,7 +70,7 @@ public:
 	Vehicle(Physics &physics, std::shared_ptr<Controller> controller, Configuration &config = Configuration());
 	Vehicle(Physics &physics, std::shared_ptr<aiController> aicontroller, Configuration &config = Configuration());
 	~Vehicle();
-	std::shared_ptr<aiController> getAiController();
+	//std::shared_ptr<aiController> getAiController();
 	
 	void Update(seconds dt);
 
@@ -78,10 +78,10 @@ protected:
 	void RegisterHandlers() override;
 
 private:
-	void Drive(int i);
+	void Drive();
 	Physics &physics_;
 	std::shared_ptr<Controller> controller_;
-	std::shared_ptr<aiController> aiController_;
+	//std::shared_ptr<aiController> aiController_;
 
 	PxBatchQuery *batchquery_;
 

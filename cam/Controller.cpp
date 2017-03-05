@@ -9,17 +9,17 @@
 
 Controller::Controller(int currContIndex) {
 	//ZeroMemory(&state, sizeof(XINPUT_STATE));
-	for (int i = 0; i < MAX_NUM_CONTROL; i++)
-	{
-		if (XInputGetState(i, &state) == ERROR_SUCCESS) {
-			std::cout << "Controller is connected" << std::endl;
-		}
-		else
-		{
-			std::cout << "Controller is not connected" << std::endl;
-		}
-	}
+	//for (int i = 0; i < MAX_NUM_CONTROL; i++)
 	i = currContIndex;
+	//{
+	if (XInputGetState(i, &state) == ERROR_SUCCESS) {
+		std::cout << "Controller is connected" << std::endl;
+	}
+	else
+	{
+		std::cout << "Controller is not connected" << std::endl;
+	}
+	//}
 }
 
 
@@ -31,7 +31,7 @@ void Controller::UpdateState() {
 	XInputGetState(i, &state);
 }
 
-int Controller::getAccelleration() {
+int Controller::getAcceleration() {
 	if (state.Gamepad.wButtons & XINPUT_GAMEPAD_A) {
 		return C_FAST;
 	}

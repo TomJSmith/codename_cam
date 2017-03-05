@@ -59,7 +59,7 @@ BOOST_PYTHON_MODULE(controller) {
 }
 
 BOOST_PYTHON_MODULE(aicontroller) {
-	python::class_<aiController, std::shared_ptr<aiController>>("aiController", python::init<int>())
+	python::class_<aiController, std::shared_ptr<aiController>>("aiController", python::init<>())
 		.def("setRight", &aiController::setRight)
 		.def("setLeft", &aiController::setLeft)
 		.def("setBrake", &aiController::setBrake)
@@ -104,8 +104,8 @@ BOOST_PYTHON_MODULE(vehicle) {
 
 	python::class_<Vehicle, std::shared_ptr<Vehicle>, python::bases<Component>>
 		("Vehicle", python::init<Physics &, std::shared_ptr<Controller>, Vehicle::Configuration &>())
-		.def(python::init<Physics &, std::shared_ptr<aiController>, Vehicle::Configuration &>())
-		.def("aiController_", &Vehicle::getAiController);
+		.def(python::init<Physics &, std::shared_ptr<aiController>, Vehicle::Configuration &>());
+		//.def("aiController_", &Vehicle::getAiController);
 
 	python::class_<Vehicle::Configuration>("Configuration")
 		.def_readwrite("position", &Vehicle::Configuration::position)
@@ -227,6 +227,20 @@ namespace boost {
 	template <>
 	Component const volatile * get_pointer<class Component const volatile>(
 		class Component const volatile *c
+		) {
+		return c;
+	}
+
+	template <>
+	Controller const volatile * get_pointer<class Controller const volatile>(
+		class Controller const volatile *c
+		) {
+		return c;
+	}
+
+	template <>
+	aiController const volatile * get_pointer<class aiController const volatile>(
+		class aiController const volatile *c
 		) {
 		return c;
 	}
