@@ -13,13 +13,14 @@
 
 class Controller {
 public:
-	Controller();
+	Controller(int currContIndex);
 	~Controller();
 	void UpdateState();
 	int getAccelleration();
 	bool getBrake();
 	int getDirectional();
+	int MAX_NUM_CONTROL = 4;
+	int i;
 private:
 	XINPUT_STATE state;
-	XINPUT_STATE getState();
 };

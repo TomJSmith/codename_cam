@@ -10,6 +10,7 @@
 #include "Component.h"
 #include "Physics.h"
 #include "Controller.h"
+#include "aiController.h"
 
 class Vehicle : public Component
 {
@@ -56,10 +57,10 @@ public:
 		PxF32 camberAtMaxCompression = -0.1f;
 
 		// Engine parameters
-		PxF32 torque = 500.0f;
+		PxF32 torque = 3000.0f;
 
 		// Also not certain what this is, something engine-related
-		PxF32 maxOmega = 600.0f;
+		PxF32 maxOmega = 1000.0f; //INCREASE THIS TO INCREASE OUR SPEED I BELIEVE
 
 		// Not meant to be set externally - just something that needs to be passed around
 		// internally within Vehicle()
@@ -67,17 +68,20 @@ public:
 	};
 
 	Vehicle(Physics &physics, std::shared_ptr<Controller> controller, Configuration &config = Configuration());
+	Vehicle(Physics &physics, std::shared_ptr<aiController> aicontroller, Configuration &config = Configuration());
 	~Vehicle();
-
+	std::shared_ptr<aiController> getAiController();
+	
 	void Update(seconds dt);
 
 protected:
 	void RegisterHandlers() override;
 
 private:
-	void Drive();
+	void Drive(int i);
 	Physics &physics_;
 	std::shared_ptr<Controller> controller_;
+	std::shared_ptr<aiController> aiController_;
 
 	PxBatchQuery *batchquery_;
 

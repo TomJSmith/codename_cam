@@ -7,32 +7,28 @@
 #include "Xinput.h"
 
 
-Controller::Controller() {
-	XINPUT_STATE state;
-	ZeroMemory(&state, sizeof(XINPUT_STATE));
-
-	if (XInputGetState(0, &state) == ERROR_SUCCESS){
-		std::cout << "Controller is connected";
-	}
-	else
+Controller::Controller(int currContIndex) {
+	//ZeroMemory(&state, sizeof(XINPUT_STATE));
+	for (int i = 0; i < MAX_NUM_CONTROL; i++)
 	{
-		std::cout << "Controller is not connected";
+		if (XInputGetState(i, &state) == ERROR_SUCCESS) {
+			std::cout << "Controller is connected" << std::endl;
+		}
+		else
+		{
+			std::cout << "Controller is not connected" << std::endl;
+		}
 	}
+	i = currContIndex;
 }
 
 
 Controller::~Controller() {
 }
 
-XINPUT_STATE Controller::getState() {
-	ZeroMemory(&state, sizeof(XINPUT_STATE));
-	XInputGetState(0, &state);
-	return state;
-}
-
 void Controller::UpdateState() {
-	ZeroMemory(&state, sizeof(XINPUT_STATE));
-	XInputGetState(0, &state);
+	//ZeroMemory(&state, sizeof(XINPUT_STATE));
+	XInputGetState(i, &state);
 }
 
 int Controller::getAccelleration() {
