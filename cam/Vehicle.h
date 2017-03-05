@@ -22,7 +22,7 @@ public:
 		PxF32 wheelMass = 20.0f;
 		PxF32 wheelRadius = 0.5f;
 		PxF32 wheelWidth = 0.4f;
-		PxU32 nWheels = 4;
+		PxU32 nWheels = 6;
 
 		// Not certain we really want to be setting this tbh, we might want to just
 		// derive it from the wheel mass and radius?...

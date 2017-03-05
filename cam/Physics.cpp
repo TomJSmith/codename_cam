@@ -80,8 +80,11 @@ Physics::Physics()
 		pvd_ = PxVisualDebuggerExt::createConnection(pvdmanager, "127.0.0.1", 5425, 1000, PxVisualDebuggerExt::getAllConnectionFlags());
 	};
 
+	PxVec3 min(-0.5f, -0.5f, -0.5f);
+	PxVec3 max(0.5f, 0.5f, 0.5f);
+	scene_->setVisualizationCullingBox(PxBounds3(min, max));
 	scene_->setVisualizationParameter(PxVisualizationParameter::eSCALE, 1.0f);
-	scene_->setVisualizationParameter(PxVisualizationParameter::eCOLLISION_SHAPES, 1.0f);
+	scene_->setVisualizationParameter(PxVisualizationParameter::eCOLLISION_AABBS, 1.0f);
 #endif // #ifdef DEBUG
 }
 

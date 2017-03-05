@@ -61,6 +61,7 @@ static PxVehicleWheelsSimData *SetupWheels(Vehicle::Configuration &config)
 	config.wheelOffsets = ComputeWheelOffsets(config);
 
 	PxVehicleWheelsSimData *ret = PxVehicleWheelsSimData::allocate(config.nWheels);
+	//ret->setChassisMass(config.chassisMass)
 
 	std::vector<PxVehicleWheelData> wheels(config.nWheels);
 	for (auto &wheel : wheels) {
@@ -268,26 +269,26 @@ static PxRigidDynamic *CreateVehicleActor(Vehicle::Configuration config, PxPhysi
 static PxBatchQueryDesc CreateQueryDescription(PxRaycastQueryResult *queryBuffer,
 											   PxRaycastHit *hitBuffer)
 {
-	PxBatchQueryDesc ret(4, 0, 0);
+	PxBatchQueryDesc ret(6, 0, 0);
 	ret.queryMemory.userRaycastResultBuffer = queryBuffer;
 	ret.queryMemory.userRaycastTouchBuffer = hitBuffer;
-	ret.queryMemory.raycastTouchBufferSize = 4;
+	ret.queryMemory.raycastTouchBufferSize = 6;
 	ret.preFilterShader = WheelPreFilterShader;
 
 	return ret;
 }
 
-static PxVehicleDrivableSurfaceToTireFrictionPairs *CreateFrictionPairs(PxPhysics *physics)
+static PxVehicleDrivableSurfaceToTireFrictionPairs *CreateFrictionPairs(PxPhysics *physics, float mass)
 {
 	PxVehicleDrivableSurfaceToTireFrictionPairs *ret =
 		PxVehicleDrivableSurfaceToTireFrictionPairs::allocate(1, 1);
 
 	// TODO do we ever actually want to change the surface/tire types?
 	// This is probably how we can add oil slicks etc.
-	const PxMaterial *surfaces[1] = { physics->createMaterial(0.5f, 0.5f, 0.6f) };
+	const PxMaterial *surfaces[1] = { physics->createMaterial(.5f, .5f, 0.6f) };
 	PxVehicleDrivableSurfaceType types[1] = { 0 };
 	ret->setup(1, 1, surfaces, types);
-	ret->setTypePairFriction(0, 0, 1.00f);
+	ret->setTypePairFriction(0, 0, 1.0f * mass);
 
 	return ret;
 }
@@ -295,8 +296,8 @@ static PxVehicleDrivableSurfaceToTireFrictionPairs *CreateFrictionPairs(PxPhysic
 Vehicle::Vehicle(Physics &physics, std::shared_ptr<Controller> controller, Configuration &config) :
 	physics_(physics),
 	controller_(controller),
-	querybuffer_(4),
-	hitbuffer_(4)
+	querybuffer_(config.nWheels),
+	hitbuffer_(config.nWheels)
 {
 	auto desc = CreateQueryDescription(querybuffer_.data(), hitbuffer_.data());
 	batchquery_ = physics.GetScene()->createBatchQuery(desc);
@@ -312,9 +313,9 @@ Vehicle::Vehicle(Physics &physics, std::shared_ptr<Controller> controller, Confi
 
 	vehicle_->setToRestState();
 	vehicle_->mDriveDynData.forceGearChange(PxVehicleGearsData::eFIRST);
-	vehicle_->mDriveDynData.setUseAutoGears(true);
+	//vehicle_->mDriveDynData.setUseAutoGears(true);
 
-	frictionpairs_ = CreateFrictionPairs(physics_.GetPhysics());
+	frictionpairs_ = CreateFrictionPairs(physics_.GetPhysics(), config.chassisMass);
 
 	wheels->free();
 }
@@ -342,24 +343,24 @@ void Vehicle::Drive()
 	{
 	case C_FAST:
 		input_.setDigitalAccel(true);
-		input_.setDigitalBrake(false);
+		//input_.setDigitalBrake(false);
 		break;
 	case C_NEUTRAL:
 		vehicle_->mDriveDynData.startGearChange(PxVehicleGearsData::eFIRST);
 		input_.setDigitalAccel(false);
-		input_.setDigitalBrake(true);
+		//input_.setDigitalBrake(true);
 		break;
 	case C_REVERSE:
 		vehicle_->mDriveDynData.startGearChange(PxVehicleGearsData::eREVERSE);
-		input_.setDigitalBrake(false);
+		//input_.setDigitalBrake(false);
 		input_.setDigitalAccel(true);
 		break;
 	}
 
 	switch (controller_->getBrake()) {
 	case true:
-		vehicle_->mDriveDynData.startGearChange(PxVehicleGearsData::eFIRST);
-		input_.setDigitalAccel(false);
+		//vehicle_->mDriveDynData.startGearChange(PxVehicleGearsData::eFIRST);
+		//input_.setDigitalAccel(false);
 		input_.setDigitalHandbrake(true);
 		break;
 	case false:

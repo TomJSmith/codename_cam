@@ -39,7 +39,7 @@ int Controller::getAccelleration() {
 	if (state.Gamepad.wButtons & XINPUT_GAMEPAD_A) {
 		return C_FAST;
 	}
-	else if (state.Gamepad.wButtons & XINPUT_GAMEPAD_Y) {
+	else if (state.Gamepad.wButtons & XINPUT_GAMEPAD_B) {
 		return C_REVERSE;
 	}
 	else {
@@ -48,7 +48,9 @@ int Controller::getAccelleration() {
 }
 
 bool Controller::getBrake() {
-	if (state.Gamepad.wButtons & XINPUT_GAMEPAD_B) {
+	// bRightTrigger = 0..255
+	// if more than half pressed, brake
+	if (state.Gamepad.bRightTrigger > 127) {
 		return true;
 	}
 	else {
