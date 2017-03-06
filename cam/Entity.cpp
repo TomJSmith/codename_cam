@@ -88,6 +88,9 @@ void Entity::DeleteDestroyed() {
 	// if a reference is held afterwards, the entity will remain alive until that reference is
 	// destroyed. watchers worried about the entity being destroyed can listen for
 	// Entity::DestroyEvent.
+	if (!destroyed_.empty()) {
+		std::cout << "cleaning up the bodies...\n";
+	}
 	destroyed_.clear();
 }
 
@@ -98,6 +101,32 @@ mat4 Entity::GetGlobalTransform() const
 
 	while (e) {
 		ret = e->transform_.Matrix() * ret;
+		e = e->parent_;
+	}
+
+	return ret;
+}
+
+quaternion Entity::GetGlobalRotation() const
+{
+	quaternion ret(1.0f, vec3(0.0f, 0.0f, 0.0f));
+	auto e = this;
+
+	while (e) {
+		ret = e->transform_.rotation * ret;
+		e = e->parent_;
+	}
+
+	return ret;
+}
+
+vec3 Entity::GetGlobalPosition() const
+{
+	vec3 ret(0.0f, 0.0f, 0.0f);
+	auto e = this;
+
+	while (e) {
+		ret = e->transform_.position + ret;
 		e = e->parent_;
 	}
 

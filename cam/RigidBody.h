@@ -10,14 +10,14 @@ class RigidBody : public Component
 {
 public:
 	RigidBody(Physics &physics, PxMaterial &material, PxGeometry &geometry, PxTransform &transform, bool dynamic = true);
-	RigidBody(Physics &physics, PxMaterial &material, const char *objfile, float scale);
+	RigidBody(Physics &physics, PxMaterial &material, const char *objfile, float scale, bool dynamic = true);
 
 	~RigidBody();
 
 	void RegisterHandlers() override;
+	PxRigidActor *GetRigidBody() { return body_; }
 
 private:
 	PxRigidActor *body_;
 	Physics &physics_;
 };
-

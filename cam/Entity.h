@@ -35,6 +35,8 @@ class Entity {
 	Transform &GetTransform() { return transform_; }
 
 	mat4 GetGlobalTransform() const;
+	quaternion GetGlobalRotation() const;
+	vec3 GetGlobalPosition() const;
 
 	template <class T>
 	void RegisterEventHandler(std::function<void(T)> handler)

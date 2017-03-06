@@ -7,6 +7,7 @@ def infected(event):
 
     print "infected yo"
     e.destroy()
+    e = None
     # self.entity().destroy()
 
 def destroyed(event):

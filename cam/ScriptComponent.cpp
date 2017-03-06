@@ -8,6 +8,7 @@
 #include "ScriptComponent.h"
 #include "Vehicle.h"
 #include "Controller.h"
+#include "Camera.h"
 
 using namespace boost;
 
@@ -111,6 +112,7 @@ BOOST_PYTHON_MODULE(entity) {
 		// add an overload here
 		.add_property("id", &Entity::Id)
 		.def("add_component", AddComponent<Vehicle>)
+		.def("add_component", AddComponent<Camera>)
 		.def("fire_event", &Entity::FireEvent<Events::Infected>)
 		.def("fire_event", &Entity::FireEvent<Events::Destroyed>)
 		.def("fire_event", &Entity::FireEvent<Events::Collided>)
@@ -166,6 +168,10 @@ BOOST_PYTHON_MODULE(vehicle) {
 		.def_readwrite("max_omega", &Vehicle::Configuration::maxOmega);
 }
 
+BOOST_PYTHON_MODULE(camera) {
+	python::class_<Camera, std::shared_ptr<Camera>, python::bases<Component>>("Camera", python::init<std::shared_ptr<Vehicle>>());
+}
+
 ScriptComponent::ScriptComponent(const std::string &type, Physics &physics) :
 	type_(type),
 	physics_(physics)
@@ -175,6 +181,7 @@ ScriptComponent::ScriptComponent(const std::string &type, Physics &physics) :
 
 ScriptComponent::~ScriptComponent()
 {
+	locals_.clear(); // garbage-collect any leftover references in python
 	entity_->GetEvents().UnregisterEventHandler(&handler_);
 }
 
@@ -224,6 +231,7 @@ void ScriptComponent::InitPython()
 			initcontroller();
 			initaicontroller();
 			initevents();
+			initcamera();
 
 			initialized = true;
 		} catch (const python::error_already_set &) {
@@ -258,6 +266,13 @@ namespace boost {
 	template <>
 	Entity const volatile * get_pointer<class Entity const volatile>(
 		class Entity const volatile *c
+		) {
+		return c;
+	}
+
+	template <>
+	Camera const volatile * get_pointer<class Camera const volatile>(
+		class Camera const volatile *c
 		) {
 		return c;
 	}

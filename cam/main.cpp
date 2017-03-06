@@ -32,12 +32,11 @@ int main() {
 #endif // #ifdef DEBUG
 
 		Audio audio;
-		//audio.initAudio();
-		//audio.playAudio(4); //1,2,3,4 for Audio atm can play more than one at a time
+
 		{
 			auto plane = Entity::Create(root.get());
 			std::shared_ptr<Component> planemesh(new Mesh(Shader::Load("passthrough.vert", "passthrough.frag"), "map_mesh.fbx", vec3(0.2, 0.4, 0.2), 1.0f, GL_TRIANGLES));
-			std::shared_ptr<Component> planebody(new RigidBody(physics, *physics.GetPhysics()->createMaterial(1.0f, 1.0f, 1.0f), "map_mesh.fbx", 1.0f));
+			std::shared_ptr<Component> planebody(new RigidBody(physics, *physics.GetPhysics()->createMaterial(1.0f, 1.0f, 1.0f), "map_mesh.fbx", 1.0f, false));
 			plane->AddComponent(std::move(planemesh));
 			plane->AddComponent(std::move(planebody));
 
@@ -50,14 +49,7 @@ int main() {
 			vehicle->AddComponent(std::move(mesh));
 			vehicle->AddComponent(std::move(v));
 			vehicle->AddComponent(std::move(c));
-
 			vehicle->AddComponent(std::make_unique<ScriptComponent>("chaser", physics));
-
-			auto camera = Entity::Create(vehicle.get());
-			std::shared_ptr<Component> cam(new Camera);
-			std::shared_ptr<Component> ctrl(new ScriptComponent("camera_control", physics));
-			camera->AddComponent(std::move(cam));
-			camera->AddComponent(std::move(ctrl));
 
 			auto aiVehicle = Entity::Create(root.get());
 			std::shared_ptr<Component> aiMesh(new Mesh(Shader::Load("passthrough.vert", "passthrough.frag"), "runner_mesh.fbx", vec3(1.0, 0.84, 0.0), 1.5, GL_TRIANGLES));//debug seems to work better was 2.5
@@ -68,18 +60,6 @@ int main() {
 			aiVehicle->AddComponent(std::make_unique<ScriptComponent>("runner", physics));
 		}
 
-		/*auto other = Entity::Create(root.get());
-		std::shared_ptr<Component> othermesh(new Mesh(Shader::Load("passthrough.vert", "passthrough.frag"), "runner_mesh.fbx", vec3(0.1, 0.1, 0.6), 2.5, GL_TRIANGLES));
-		std::shared_ptr<Component> rb(new RigidBody(physics, *physics.GetPhysics()->createMaterial(0.5f, 0.5f, 0.5f), "runner_mesh.fbx", 2.5f));
-		other->GetTransform().position = vec3(10.0f, 2.0f, 10.0f);
-		other->AddComponent(std::move(othermesh));
-		other->AddComponent(std::move(rb));*/
-
-		/*
-		Entity chaser(&root);
-		std::shared_ptr<Component> ai(new ScriptComponent("chaser_ai", physics));
-		chaser.AddComponent(std::move(ai));
-		*/
 		auto lastTime = timer::now();
 
 		bool soundT = true;
@@ -88,7 +68,6 @@ int main() {
 			auto dt = seconds(currentTime - lastTime);
 			lastTime = currentTime;
 
-			//audio.playAudio(3);
 			physics.Update(dt);
 			root->Update(dt);
 			renderer.Render(*root);
