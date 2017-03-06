@@ -8,6 +8,7 @@
 #include "Camera.h"
 #include "Entity.h"
 #include "Mesh.h"
+#include "NavMesh.h"
 #include "Physics.h"
 #include "Renderer.h"
 #include "RigidBody.h"
@@ -59,6 +60,8 @@ int main() {
 
 			aiVehicle->AddComponent(std::make_unique<ScriptComponent>("runner", physics));
 		}
+
+		//NavMesh levelNavMesh = NavMesh("nav_mesh.fbx");
 
 		auto lastTime = timer::now();
 
