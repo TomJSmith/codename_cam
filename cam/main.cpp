@@ -58,7 +58,7 @@ int main() {
 			vehicle->AddComponent(std::make_unique<ScriptComponent>("chaser", physics));
 
 			auto aiVehicle = Entity::Create(root.get());
-			std::shared_ptr<Component> aiMesh(new Mesh(Shader::Load("passthrough.vert", "passthrough.frag"), "runner_mesh.fbx", vec3(1.0, 0.84, 0.0), 1.5, GL_TRIANGLES));//debug seems to work better was 2.5
+			std::shared_ptr<Component> aiMesh(new Mesh(Shader::Load("passthrough.vert", "passthrough.frag"), "runner_mesh.obj", vec3(1.0, 0.84, 0.0), 1.5, GL_TRIANGLES));//debug seems to work better was 2.5
 			std::shared_ptr<Component> aiV(new ScriptComponent("chaser_ai", physics));
 			aiVehicle->AddComponent(std::move(aiMesh));
 			aiVehicle->AddComponent(std::move(aiV));
@@ -66,7 +66,7 @@ int main() {
 			aiVehicle->AddComponent(std::make_unique<ScriptComponent>("runner", physics));
 		}
 
-		//NavMesh levelNavMesh = NavMesh("nav_mesh.fbx");
+		NavMesh levelNavMesh = NavMesh("nav_mesh.fbx");
 
 
 		auto lastTime = timer::now();
