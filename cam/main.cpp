@@ -8,6 +8,7 @@
 #include "Camera.h"
 #include "Entity.h"
 #include "Mesh.h"
+#include "NavMesh.h"
 #include "Physics.h"
 #include "Renderer.h"
 #include "RigidBody.h"
@@ -32,8 +33,7 @@ int main() {
 #endif // #ifdef DEBUG
 
 		Audio audio;
-		//audio.initAudio();
-		//audio.playAudio(4); //1,2,3,4 for Audio atm can play more than one at a time
+		NavMesh levelNavMesh = NavMesh("nav_mesh.fbx");
 
 		auto plane = Entity::Create(root.get());
 		std::shared_ptr<Component> planemesh(new Mesh(Shader::Load("passthrough.vert", "passthrough.frag"), "map_mesh.fbx", vec3(0.2, 0.4, 0.2), 1.0f, GL_TRIANGLES));
@@ -44,7 +44,7 @@ int main() {
 
 		auto vehicle = Entity::Create(root.get());
 
-		std::shared_ptr<Component> mesh(new Mesh(Shader::Load("passthrough.vert", "passthrough.frag"), "chaser_mesh.obj", vec3(0.1, 0.1, 0.6), 1.0f, GL_TRIANGLES));
+		std::shared_ptr<Component> mesh(new Mesh(Shader::Load("passthrough.vert", "passthrough.frag"), "runner_mesh.obj", vec3(0.1, 0.1, 0.6), 1.0f, GL_TRIANGLES));
 		std::shared_ptr<Component> v(new ScriptComponent("vehicle", physics));
 		std::shared_ptr<Component> c(new ScriptComponent("collision", physics));
 		vehicle->AddComponent(std::move(mesh));
@@ -58,7 +58,7 @@ int main() {
 		camera->AddComponent(std::move(ctrl));
 
 		auto aiVehicle = Entity::Create(root.get());
-		std::shared_ptr<Component> aiMesh(new Mesh(Shader::Load("passthrough.vert", "passthrough.frag"), "runner_mesh.fbx", vec3(1.0, 0.84, 0.0), 1.5, GL_TRIANGLES));//debug seems to work better was 2.5
+		std::shared_ptr<Component> aiMesh(new Mesh(Shader::Load("passthrough.vert", "passthrough.frag"), "runner_mesh.obj", vec3(1.0, 0.84, 0.0), 1.0f, GL_TRIANGLES));//debug seems to work better was 2.5
 		std::shared_ptr<Component> aiV(new ScriptComponent("chaser_ai", physics));
 		aiVehicle->AddComponent(std::move(aiMesh));
 		aiVehicle->AddComponent(std::move(aiV));
