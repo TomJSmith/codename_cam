@@ -57,7 +57,6 @@ void Camera::RegisterHandlers()
 		// THESE SETTING PRETTY MUCH DONT MAKE SENSE.
 		d6->setConstraintFlag(PxConstraintFlag::eCOLLISION_ENABLED, false);
 		d6->setConstraintFlag(PxConstraintFlag::ePROJECTION, true);
-		d6->setProjectionAngularTolerance(5.0f);
 		//d6->setMotion(PxD6Axis::eX, PxD6Motion::eLIMITED);
 		d6->setMotion(PxD6Axis::eZ, PxD6Motion::eLIMITED);
 		d6->setMotion(PxD6Axis::eSWING1, PxD6Motion::eLIMITED);
