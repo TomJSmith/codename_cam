@@ -34,7 +34,7 @@ int main() {
 
 		Audio audio;
 
-		//audio.initAudio();
+		audio.initAudio();
 		//audio.playAudio(4); //1,2,3,4 for Audio atm can play more than one at a time
 
 
@@ -76,11 +76,11 @@ int main() {
 			auto currentTime = timer::now();
 			auto dt = seconds(currentTime - lastTime);
 			lastTime = currentTime;
-
+			
 			physics.Update(dt);
 			root->Update(dt);
 			renderer.Render(*root);
-
+			audio.playAudio(4);
 			Entity::DeleteDestroyed();
 
 			glfwPollEvents();
