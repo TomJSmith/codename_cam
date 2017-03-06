@@ -16,8 +16,9 @@ public:
 	void setLeft(int dir);
 	void setBrake(int dir);
 	void setReverse(int dir);
+	void setAccel(int dir);
 
 private:
-	bool right = false, left = false, none = false, brake = false, reverse = false;
+	bool right = false, left = false, none = false, brake = false, reverse = false, accel = false;
 };
 

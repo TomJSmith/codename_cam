@@ -41,6 +41,6 @@ vec3 Transform::Right() const
 
 vec3 Transform::GlobalPosition() const
 {
-	vec3 ret = Matrix() * vec4(0.0f, 0.0f, 0.0f, 0.0f);
+	vec3 ret = Matrix() * vec4(1.0f, 1.0f, 1.0f, 1.0f);
 	return ret;
 }

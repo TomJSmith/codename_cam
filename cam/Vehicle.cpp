@@ -341,6 +341,7 @@ void Vehicle::RegisterHandlers()
 
 void Vehicle::Drive()
 {
+	
 	controller_->UpdateState();
 	switch (controller_->getAcceleration())
 	{

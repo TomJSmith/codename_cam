@@ -58,7 +58,7 @@ int main() {
 		camera->AddComponent(std::move(ctrl));
 
 		auto aiVehicle = Entity::Create(root.get());
-		std::shared_ptr<Component> aiMesh(new Mesh(Shader::Load("passthrough.vert", "passthrough.frag"), "runner_mesh.fbx", vec3(1.0, 0.84, 0.0), 1.5, GL_TRIANGLES));//debug seems to work better was 2.5
+		std::shared_ptr<Component> aiMesh(new Mesh(Shader::Load("passthrough.vert", "passthrough.frag"), "runner_mesh.obj", vec3(1.0, 0.84, 0.0), 1.0, GL_TRIANGLES));//debug seems to work better was 2.5
 		std::shared_ptr<Component> aiV(new ScriptComponent("chaser_ai", physics));
 		aiVehicle->AddComponent(std::move(aiMesh));
 		aiVehicle->AddComponent(std::move(aiV));

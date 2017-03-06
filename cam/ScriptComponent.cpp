@@ -63,7 +63,8 @@ BOOST_PYTHON_MODULE(aicontroller) {
 		.def("setRight", &aiController::setRight)
 		.def("setLeft", &aiController::setLeft)
 		.def("setBrake", &aiController::setBrake)
-		.def("setReverse", &aiController::setReverse);
+		.def("setReverse", &aiController::setReverse)
+		.def("setAccel", &aiController::setAccel);
 }
 
 // boost::python won't let us use shared_ptr<Component> for subclasses of Component by
@@ -76,6 +77,7 @@ template <class T>
 void AddComponent(Entity &e, std::shared_ptr<T> c) {
 	e.AddComponent(std::shared_ptr<Component>(c));
 }
+
 
 BOOST_PYTHON_MODULE(entity) {
 	python::class_<Entity, std::shared_ptr<Entity>>("Entity")
