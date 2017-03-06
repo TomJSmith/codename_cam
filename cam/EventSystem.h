@@ -1,10 +1,8 @@
 #pragma once
 
+#include <algorithm>
 #include <functional>
 #include <vector>
-
-#include "Physics.h"
-#include "Renderer.h"
 
 template <class... EventTypes>
 class EventSystem_ {
@@ -12,6 +10,7 @@ public:
 	EventSystem_() {}
 	void FireEvent() {}
 	void RegisterEventHandler() {}
+	void UnregisterEventHandler() {}
 };
 
 template <class EventType, class... EventTypes>
@@ -22,10 +21,11 @@ public:
 	// specific subclass's functions are always called, regardless of type.
 	using EventSystem_<EventTypes...>::FireEvent;
 	using EventSystem_<EventTypes...>::RegisterEventHandler;
+	using EventSystem_<EventTypes...>::UnregisterEventHandler;
 
 	// Call all registered handlers for @EventType with @event as the parameter.
 	void FireEvent(EventType event) {
-		for (const auto &handler : handlers_) handler(event);
+		for (const auto &handler : handlers_) (*handler)(event);
 	}
 
 	// Add the function @handler to the list of handlers for @EventType.
@@ -41,16 +41,13 @@ public:
 	//   void operator()(EventType e) { /* handle event */ };
 	// };
 	// RegisterEventHandler(Handler());
-	void RegisterEventHandler(std::function<void(EventType)> handler) {
+	void RegisterEventHandler(std::function<void(EventType)> *handler) {
 		handlers_.push_back(handler);
 	}
 
+	void UnregisterEventHandler(std::function<void(EventType)> *handler) {
+		handlers_.erase(std::remove(handlers_.begin(), handlers_.end(), handler), handlers_.end());
+	}
 private:
-	std::vector<std::function<void(EventType)>> handlers_;
+	std::vector<std::function<void(EventType)> *> handlers_;
 };
-
-// Expose the template class with all event types as EventSystem (so we don't have to
-// write EventSystem<Event1, Event2, ...> everywhere).
-//
-// To add an event type, add it to the template arguments here.
-using EventSystem = EventSystem_<Renderer::RenderEvent, Physics::CollisionEvent>;

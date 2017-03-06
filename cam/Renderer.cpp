@@ -50,7 +50,7 @@ void Renderer::Render(Entity &entity)
 {
 	std::vector<MeshData> data;
 	mat4 cam(1.0f);
-	RenderEvent e {data, cam};
+	Events::Render e {data, cam};
 
 	entity.BroadcastEvent(e);
 

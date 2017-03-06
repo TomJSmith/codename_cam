@@ -8,6 +8,7 @@
 #include "ScriptComponent.h"
 #include "Vehicle.h"
 #include "Controller.h"
+#include "Camera.h"
 
 using namespace boost;
 
@@ -79,12 +80,49 @@ void AddComponent(Entity &e, std::shared_ptr<T> c) {
 }
 
 
+// For this, we just need a template so we can pass a Python function (as python::object)
+// to the handler of the right type
+template <class T>
+void RegisterEventHandler(Entity &e, python::object pyhandler) {
+	// TODO this is some grease right hurrrrr
+	static std::vector<std::function<void(T)>> handlers;
+
+	auto handler = [=](T event) {
+		try {
+			pyhandler(event);
+		}
+		catch (const python::error_already_set &) {
+			PyErr_Print();
+		}
+	};
+
+	handlers.push_back(handler);
+
+	e.GetEvents().RegisterEventHandler(&handlers.back());
+}
+
+BOOST_PYTHON_MODULE(events) {
+	python::class_<Events::Infected>("Infected");
+	python::class_<Events::Destroyed>("Destroyed");
+	python::class_<Events::Collided>("Collided")
+		.def("other", &Events::Collided::GetOther, python::return_internal_reference<>());
+}
+
+
 BOOST_PYTHON_MODULE(entity) {
 	python::class_<Entity, std::shared_ptr<Entity>>("Entity")
 		// For every type of component we want to create in scripts, we need to
 		// add an overload here
 		.add_property("id", &Entity::Id)
 		.def("add_component", AddComponent<Vehicle>)
+		.def("add_component", AddComponent<Camera>)
+		.def("fire_event", &Entity::FireEvent<Events::Infected>)
+		.def("fire_event", &Entity::FireEvent<Events::Destroyed>)
+		.def("fire_event", &Entity::FireEvent<Events::Collided>)
+		.def("register_infected_handler", RegisterEventHandler<Events::Infected>)
+		.def("register_destroyed_handler", RegisterEventHandler<Events::Destroyed>)
+		.def("register_collided_handler", RegisterEventHandler<Events::Collided>)
+		.def("destroy", &Entity::Destroy)
 		.def("transform", &Entity::GetTransform, python::return_internal_reference<>());
 }
 
@@ -133,6 +171,10 @@ BOOST_PYTHON_MODULE(vehicle) {
 		.def_readwrite("max_omega", &Vehicle::Configuration::maxOmega);
 }
 
+BOOST_PYTHON_MODULE(camera) {
+	python::class_<Camera, std::shared_ptr<Camera>, python::bases<Component>>("Camera", python::init<std::shared_ptr<Vehicle>>());
+}
+
 ScriptComponent::ScriptComponent(const std::string &type, Physics &physics) :
 	type_(type),
 	physics_(physics)
@@ -140,11 +182,17 @@ ScriptComponent::ScriptComponent(const std::string &type, Physics &physics) :
 	InitPython();
 }
 
+ScriptComponent::~ScriptComponent()
+{
+	locals_.clear(); // garbage-collect any leftover references in python
+	entity_->GetEvents().UnregisterEventHandler(&handler_);
+}
+
 void ScriptComponent::RegisterHandlers()
 {
 	InitScript(type_);
 
-	entity_->GetEvents().RegisterEventHandler([this](Physics::CollisionEvent e) {
+	handler_ = [this](Events::Collided e) {
 		try {
 			if (locals_.has_key("collision")) {
 				locals_["collision"](python::ptr(this), python::ptr(e.other));
@@ -153,7 +201,9 @@ void ScriptComponent::RegisterHandlers()
 		catch (const python::error_already_set &) {
 			PyErr_Print();
 		}
-	});
+	};
+
+	entity_->GetEvents().RegisterEventHandler(&handler_);
 }
 
 void ScriptComponent::Update(seconds dt)
@@ -161,6 +211,7 @@ void ScriptComponent::Update(seconds dt)
 	try {
 		if (locals_.has_key("update")) {
 			locals_["update"](python::ptr(this), dt.count());
+			python::exec("while gc.collect(): pass", locals_, locals_);
 		}
 	} catch (const python::error_already_set &) {
 		PyErr_Print();
@@ -182,6 +233,8 @@ void ScriptComponent::InitPython()
 			initvehicle();
 			initcontroller();
 			initaicontroller();
+			initevents();
+			initcamera();
 
 			initialized = true;
 		} catch (const python::error_already_set &) {
@@ -200,6 +253,7 @@ void ScriptComponent::InitScript(const std::string &type)
 		main_ = python::object(handle);
 		locals_ = python::dict(main_.attr("__dict__"));
 
+		python::exec("import gc;", locals_, locals_);
 		python::exec_file(filename.c_str(), locals_, locals_);
 
 		if (locals_.has_key("init")) {
@@ -215,6 +269,13 @@ namespace boost {
 	template <>
 	Entity const volatile * get_pointer<class Entity const volatile>(
 		class Entity const volatile *c
+		) {
+		return c;
+	}
+
+	template <>
+	Camera const volatile * get_pointer<class Camera const volatile>(
+		class Camera const volatile *c
 		) {
 		return c;
 	}

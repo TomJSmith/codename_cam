@@ -21,7 +21,8 @@ void RigidBody::RegisterHandlers()
 	body_->userData = entity_;
 }
 
-RigidBody::RigidBody(Physics &physics, PxMaterial &material, PxGeometry &geometry, PxTransform &transform, bool dynamic)
+RigidBody::RigidBody(Physics &physics, PxMaterial &material, PxGeometry &geometry, PxTransform &transform, bool dynamic) :
+	physics_(physics)
 {
 	if (dynamic) body_ = physics.GetPhysics()->createRigidDynamic(transform);
 	else body_ = physics.GetPhysics()->createRigidStatic(transform);
@@ -111,11 +112,12 @@ static PxTriangleMeshGeometry CreateGeometry(const char *objfile, Physics &physi
 	return geom;
 }
 
-RigidBody::RigidBody(Physics &physics, PxMaterial &material, const char *objfile, float scale) :
-	RigidBody(physics, material, CreateGeometry(objfile, physics, scale), PxTransform(PxIdentity), false)
+RigidBody::RigidBody(Physics &physics, PxMaterial &material, const char *objfile, float scale, bool dynamic) :
+	RigidBody(physics, material, CreateGeometry(objfile, physics, scale), PxTransform(PxIdentity), dynamic)
 {}
 
 RigidBody::~RigidBody()
 {
+	physics_.GetScene()->removeActor(*body_);
 	body_->release();
 }

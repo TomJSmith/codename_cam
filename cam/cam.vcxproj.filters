@@ -81,6 +81,15 @@
     <ClInclude Include="aiController.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Events.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="NavMesh.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="NavNode.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Component.cpp">
@@ -131,6 +140,12 @@
     <ClCompile Include="aiController.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="NavMesh.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="NavNode.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="passthrough.frag">
@@ -158,13 +173,12 @@
     <None Include="camera_control.py" />
     <None Include="chaser_ai.py" />
     <None Include="test_map_mesh.obj" />
-    <None Include="chaser_mesh.fbx" />
-    <None Include="runner_mesh.fbx" />
     <None Include="car_ai.py" />
     <None Include="collision.py" />
     <None Include="a_star.py" />
     <None Include="chaser_mesh.obj" />
     <None Include="runner_mesh.obj" />
     <None Include="map_mesh.fbx" />
+    <None Include="nav_mesh.obj" />
   </ItemGroup>
 </Project>

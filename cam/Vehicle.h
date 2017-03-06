@@ -76,12 +76,15 @@ public:
 	~Vehicle();
 	
 	void Update(seconds dt);
+	PxRigidDynamic *GetActor() { return actor_; }
+	Physics &GetPhysics() { return physics_; } // TODO we probably shouldn't need this....
 
 protected:
 	void RegisterHandlers() override;
 
 private:
 	void Drive();
+
 	Physics &physics_;
 	std::shared_ptr<Controller> controller_;
 

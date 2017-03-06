@@ -3,8 +3,8 @@
 #include <memory>
 #include <vector>
 
+#include "Events.h"
 #include "Component.h"
-#include "EventSystem.h"
 #include "Time.h"
 #include "Transform.h"
 #include "windows.h"
@@ -14,11 +14,20 @@ class Entity {
  public:
 	Entity();
 	static std::shared_ptr<Entity> Create(Entity *parent);
+	static void DeleteDestroyed();
 
 	void Update(seconds dt);
 	void AddChild(std::shared_ptr<Entity> c);
 	void AddComponent(std::shared_ptr<Component> c);
 	void SetParent(Entity *parent);
+
+	// Mark an entity for destruction at the next call to DeleteDestroyed().
+	// Note that while this does remove the entity from the scene graph, along
+	// with all its children, and send a DestroyEvent to any listeners, it does
+	// *not* delete the entity, or its components. This prevents bugs when destroying
+	// objects in Update() - those objects might still have Update() called later this
+	// frame, so we can't delete them until the end of the frame.
+	void Destroy();
 
 	unsigned int Id() { return id_; }
 	Entity *GetParent() { return parent_; }
@@ -26,6 +35,8 @@ class Entity {
 	Transform &GetTransform() { return transform_; }
 
 	mat4 GetGlobalTransform() const;
+	quaternion GetGlobalRotation() const;
+	vec3 GetGlobalPosition() const;
 
 	template <class T>
 	void RegisterEventHandler(std::function<void(T)> handler)
@@ -58,4 +69,5 @@ class Entity {
 	Transform transform_;
 
 	static unsigned int nextId;
+	static std::vector<std::shared_ptr<Entity>> destroyed_;
 };

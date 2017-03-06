@@ -22,8 +22,17 @@ class SimulationCallback : public PxSimulationEventCallback {
 			auto e0 = static_cast<Entity *>(header.actors[0]->userData);
 			auto e1 = static_cast<Entity *>(header.actors[1]->userData);
 
-			e0->FireEvent(Physics::CollisionEvent { e1 });
-			e1->FireEvent(Physics::CollisionEvent { e0 });
+			if (e0->Id() > 5 || e1->Id() > 5) {
+				std::cout << "hmmm...\n";
+			}
+			else {
+				e0->FireEvent(Events::Collided{ e1 });
+				e1->FireEvent(Events::Collided{ e0 });
+				std::cout << "colliding objects\n";
+			}
+		}
+		else {
+			std::cout << "deleted object collision...\n";
 		}
 	}
 };
@@ -56,6 +65,8 @@ Physics::Physics()
 
 	physics_ = PxCreatePhysics(PX_PHYSICS_VERSION, *foundation_, PxTolerancesScale());
 	if (!physics_) throw std::runtime_error("failed to create physics");
+
+	PxInitExtensions(*physics_);
 
 	PxSceneDesc scenedesc(physics_->getTolerancesScale());
 	scenedesc.gravity = PxVec3(0.0f, -9.8f, 0.0f);
@@ -114,11 +125,18 @@ void Physics::Update(seconds dt)
 	const auto transforms = scene_->getActiveTransforms(ntransforms);
 
 	for (PxU32 i = 0; i < ntransforms; ++i) {
-		auto &transform = static_cast<Entity *>(transforms[i].userData)->GetTransform();
+		auto entity = static_cast<Entity *>(transforms[i].userData);
+		if (!entity->GetParent()) {
+			std::cout << "hmmm...\n";
+			continue;
+		}
+		auto parentpos = entity->GetParent()->GetGlobalPosition();
+		auto parentrot = entity->GetParent()->GetGlobalRotation();
+		auto &transform = entity->GetTransform();
 		auto &pxtransform = transforms[i].actor2World;
 
-		transform.rotation = quaternion(pxtransform.q.w, pxtransform.q.x, pxtransform.q.y, pxtransform.q.z);
-		transform.position = vec3(pxtransform.p.x, pxtransform.p.y, pxtransform.p.z);
+		transform.rotation = glm::inverse(parentrot) * quaternion(pxtransform.q.w, pxtransform.q.x, pxtransform.q.y, pxtransform.q.z);
+		transform.position = vec3(pxtransform.p.x, pxtransform.p.y, pxtransform.p.z) - parentpos;
 	}
 }
 

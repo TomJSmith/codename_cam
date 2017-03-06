@@ -1,3 +1,4 @@
+import camera
 import physics
 import vehicle
 import types
@@ -36,4 +37,6 @@ def init(self):
     # c.chassis_offset = physics.PxVec3(0, 0, 0)
 
     v = vehicle.Vehicle(self.physics(),_controller, c)
+    cam = camera.Camera(v)
     self.entity().add_component(v)
+    self.entity().add_component(cam)
