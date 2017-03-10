@@ -64,7 +64,8 @@ BOOST_PYTHON_MODULE(aicontroller) {
 		.def("setRight", &aiController::setRight)
 		.def("setLeft", &aiController::setLeft)
 		.def("setBrake", &aiController::setBrake)
-		.def("setReverse", &aiController::setReverse);
+		.def("setReverse", &aiController::setReverse)
+		.def("setAccel", &aiController::setAccel);
 }
 
 // boost::python won't let us use shared_ptr<Component> for subclasses of Component by
@@ -77,6 +78,7 @@ template <class T>
 void AddComponent(Entity &e, std::shared_ptr<T> c) {
 	e.AddComponent(std::shared_ptr<Component>(c));
 }
+
 
 // For this, we just need a template so we can pass a Python function (as python::object)
 // to the handler of the right type
@@ -105,6 +107,7 @@ BOOST_PYTHON_MODULE(events) {
 	python::class_<Events::Collided>("Collided")
 		.def("other", &Events::Collided::GetOther, python::return_internal_reference<>());
 }
+
 
 BOOST_PYTHON_MODULE(entity) {
 	python::class_<Entity, std::shared_ptr<Entity>>("Entity")

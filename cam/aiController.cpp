@@ -10,7 +10,8 @@ aiController::~aiController()
 
 int aiController::getAcceleration() {
 	if (reverse) return C_REVERSE;
-	return C_FAST; // TODO
+	if (accel) return C_FAST;
+	return C_NEUTRAL; // TODO
 }
 
 int aiController::getDirectional() {
@@ -49,6 +50,14 @@ void aiController::setBrake(int dir)
 	else
 		brake = false;
 }
+void aiController::setAccel(int dir)
+{
+	if (dir == 1)
+		accel = true;
+	else
+		accel = false;
+}
+
 
 void aiController::setReverse(int dir)
 {

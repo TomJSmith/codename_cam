@@ -4,13 +4,13 @@ import controller
 import aicontroller
 import vehicle
 import math
-
 v = None
 
 time = 0
 _controller = None
+reachedGoal = True
 
-targets = [Vec3(50, 0, -50), Vec3(10, 0, -10), Vec3(-10, 0, -10), Vec3(-10, 0, 10)]
+targets = [Vec3(-0, 2, 40), Vec3(10, 0, -10), Vec3(-10, 0, -10), Vec3(-10, 0, 10)]
 target = 0
 
 def destroyed(event):
@@ -59,21 +59,64 @@ def init(self):
 def drive_at(self, target):
 	global v
 	global _controller
+	global reachedGoal
 
-	direction = target - self.entity().transform().position
+	direction = target - self.entity().transform().global_position() #transform().position
 	forward = self.entity().transform().forward()
 	right = self.entity().transform().right()
 	test = self.entity().transform().position
-	#print test.x
-	#print test.y
-	#print test.z
+	
+	target.y = 0
+	test.y = 0
 	direction.y = 0
+	right.y = 0
 	forward.y = 0
+	distanceToGoal = direction.length()
 
-	#direction = Vec3(-direction.z, 0, direction.x)
-	dot = Vec3.dot( direction, right)
+	print "CurrLoc X : ", test.x
+	print "currLoc Y : ", test.y
+	print "currLoc Z : ", test.z
+
+	print "Target X : ", target.x
+	print "Target Y : ", target.y
+	print "Target : ", target.z
+
+	#print "Direction X : ", direction.x
+	#print "Direction Y : ", direction.y
+	#print "Direction Z : ", direction.z
+
+	direction.x = direction.x / direction.length()
+	direction.y = direction.y / direction.length()
+	direction.z = direction.z / direction.length()
+
+	forward.x = forward.x / forward.length()
+	forward.y = forward.y / forward.length()
+	forward.z = forward.z / forward.length()
 	
-	
+	right.x = right.x / right.length()
+	right.y = right.y / right.length()
+	right.z = right.z / right.length()
+	#print "Direction X : ", direction.x
+	#print "Direction Y : ", direction.y
+	#print "Direction Z : ", direction.z
+
+	#print "Target X : ", target.x
+	#print "Target Y : ", target.y
+	#print "Target : ", target.z
+
+	#print "CurrLoc X : ", test.x
+	#print "currLoc X : ", test.y
+	#print "currLoc X : ", test.z
+	#direction.y = 0
+	#right.y = 0
+	#forward.y = 0
+	#direction = direction / direction.length()
+	#forward = forward / forward.length()
+
+	direction = Vec3(-direction.z, 0, direction.x)
+	dot = Vec3.dot( right, direction)
+	#print "Dot product : ", dot
+	#print "Distance to goal : ", distanceToGoal
 	#dot = dot / (direction.length() + right.length())
 	#print dot
 	#print angle
@@ -81,38 +124,50 @@ def drive_at(self, target):
 	#print target.y 
 	#print target.z
 
+	#print dot
+	print distanceToGoal
 	#print forward.x 
 	#print forward.y 
 	#print forward.z
-	_controller.setRight(0)
-	_controller.setLeft(0)
-	if dot > 0.1:
-		_controller.setLeft(1)
-		_controller.setBrake(1)
-	else:
-		_controller.setLeft(0)
-		_controller.setBrake(0)
+	
+	if reachedGoal:
+		
+		if distanceToGoal < 10.0:
+			reachedGoal = False
+			print "We're there!"
+			_controller.setAccel(0)
+			_controller.setBrake(1)
+		else:
+			_controller.setAccel(1)
+			_controller.setRight(0)
+			_controller.setLeft(0)
 
-	if dot < -0.1:
-		_controller.setRight(1)
-		_controller.setBrake(1)
-       # v.input().set_steer_left(1)
-	else:
-		_controller.setRight(0)
-		_controller.setBrake(0)
 
-       # v.input().set_steer_left(0)
+			if dot < -0.1:
+				_controller.setLeft(1)
+				#_controller.setBrake(1)
+			else:
+				_controller.setLeft(0)
+				_controller.setBrake(0)
 
-	if direction.length() < 0.5:
-		#print "We're there!"
-		_controller.setBrake(1)
-       # v.input().set_brake(True)
-       # v.input().set_acceleration(False)
-	else:
-		#print "Not there yet, accelerating..."
-		_controller.setBrake(0)
-       # v.input().set_acceleration(True)
-       # v.input().set_brake(False)
+			if dot > 0.1:
+				_controller.setRight(1)
+				#_controller.setBrake(1)
+			   # v.input().set_steer_left(1)
+			else:
+				_controller.setRight(0)
+				_controller.setBrake(0)
+
+		   # v.input().set_steer_left(0)
+
+		
+		   # v.input().set_brake(True)
+		   # v.input().set_acceleration(False)
+		#else:
+			#print "Not there yet, accelerating..."
+		#	_controller.setBrake(0)
+		   # v.input().set_acceleration(True)
+		   # v.input().set_brake(False)
 	
     # cosine = Vec3.dot(direction, forward) / (direction.length() + forward.length())
     # angle = math.acos(cosine)
