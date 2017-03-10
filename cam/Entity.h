@@ -13,12 +13,39 @@
 class Entity {
  public:
 	Entity();
-	static std::shared_ptr<Entity> Create(Entity *parent);
+	static std::shared_ptr<Entity> Create();
+	static std::weak_ptr<Entity> Create(Entity *parent);
 	static void DeleteDestroyed();
 
 	void Update(seconds dt);
-	void AddChild(std::shared_ptr<Entity> c);
-	void AddComponent(std::shared_ptr<Component> c);
+
+	// Add a child or a component to this entity.
+	//
+	// Note that these return a weak_ptr, and take the shared_ptr arguments as rvalue
+	// references. What this means is that those shared_ptrs are no longer valid after
+	// they've been added to an entity - you must refer to the entity/component using
+	// the returned weak_ptr.
+	//
+	// This ensures that entities are properly deleted when they are removed from
+	// the scene graph. Since nobody else has a shared_ptr to any of an entity's
+	// children or components, they are destroyed when the entity is, but others can
+	// still reference them via these weak_ptrs.
+	//
+	// This means two things for usage of this class:
+	//   - You can't pass a shared_ptr directly to these functions - you have to explicitly
+	//     move them in, or pass in a temporary.
+	//     eg: 
+	//         entity.AddChild(std::make_shared<Entity>())
+	//     or:
+	//         std::shared_ptr<Entity> child; entity.AddChild(std::move(child));
+	//
+	//   - You can't use these weak_ptrs without checking if they are still valid.
+	//     eg:
+	//         auto child = entity.AddComponent(...);
+	//         if (auto c = child.lock()) { /* use c */ }
+	std::weak_ptr<Entity> AddChild(std::shared_ptr<Entity> &&c);
+	std::weak_ptr<Component> AddComponent(std::shared_ptr<Component> &&c);
+
 	void SetParent(Entity *parent);
 
 	// Mark an entity for destruction at the next call to DeleteDestroyed().

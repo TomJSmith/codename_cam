@@ -21,7 +21,7 @@ int main() {
 		Renderer::Initialize();
 		Renderer renderer;
 		Physics physics;
-		auto root = Entity::Create(nullptr);
+		auto root = Entity::Create();
 
 #ifdef DEBUG
 		std::function<void(Events::Render)> handler = [&physics](Events::Render e) {
@@ -35,14 +35,13 @@ int main() {
 		Audio audio;
 
 		{
-			auto plane = Entity::Create(root.get());
+			auto plane = Entity::Create(root.get()).lock();
 			std::shared_ptr<Component> planemesh(new Mesh(Shader::Load("passthrough.vert", "passthrough.frag"), "map_mesh.fbx", vec3(0.2, 0.4, 0.2), 1.0f, GL_TRIANGLES));
 			std::shared_ptr<Component> planebody(new RigidBody(physics, *physics.GetPhysics()->createMaterial(1.0f, 1.0f, 1.0f), "map_mesh.fbx", 1.0f, false));
 			plane->AddComponent(std::move(planemesh));
 			plane->AddComponent(std::move(planebody));
 
-
-			auto vehicle = Entity::Create(root.get());
+			auto vehicle = Entity::Create(root.get()).lock();
 
 			std::shared_ptr<Component> mesh(new Mesh(Shader::Load("passthrough.vert", "passthrough.frag"), "chaser_mesh.obj", vec3(0.1, 0.1, 0.6), 1.0f, GL_TRIANGLES));
 			std::shared_ptr<Component> v(new ScriptComponent("vehicle", physics));
@@ -52,7 +51,7 @@ int main() {
 			vehicle->AddComponent(std::move(c));
 			vehicle->AddComponent(std::make_unique<ScriptComponent>("chaser", physics));
 
-			auto aiVehicle = Entity::Create(root.get());
+			auto aiVehicle = Entity::Create(root.get()).lock();
 			std::shared_ptr<Component> aiMesh(new Mesh(Shader::Load("passthrough.vert", "passthrough.frag"), "runner_mesh.fbx", vec3(1.0, 0.84, 0.0), 1.5, GL_TRIANGLES));//debug seems to work better was 2.5
 			std::shared_ptr<Component> aiV(new ScriptComponent("chaser_ai", physics));
 			aiVehicle->AddComponent(std::move(aiMesh));

@@ -8,15 +8,15 @@ std::vector<std::shared_ptr<Entity>> Entity::destroyed_;
 
 Entity::Entity() : id_(nextId++), parent_(nullptr) {}
 
-std::shared_ptr<Entity> Entity::Create(Entity *parent)
+std::shared_ptr<Entity> Entity::Create()
 {
-	auto ret = std::make_shared<Entity>();
+	return std::make_shared<Entity>();
+}
 
-	if (parent) {
-		parent->AddChild(ret);
-	}
-
-	return ret;
+std::weak_ptr<Entity> Entity::Create(Entity *parent)
+{
+	if (!parent) throw std::runtime_error("to create an entity with no parent, use Entity::Create()!");
+	return parent->AddChild(std::make_shared<Entity>());
 }
 
 void Entity::Update(seconds dt) {
@@ -27,16 +27,18 @@ void Entity::Update(seconds dt) {
 	for (auto &child : children) child->Update(dt);
 }
 
-void Entity::AddComponent(std::shared_ptr<Component> c)
+std::weak_ptr<Component> Entity::AddComponent(std::shared_ptr<Component> &&c)
 {
 	c->Attach(this);
-	components_.push_back(std::move(c));
+	components_.push_back(c);
+	return c;
 }
 
-void Entity::AddChild(std::shared_ptr<Entity> c)
+std::weak_ptr<Entity> Entity::AddChild(std::shared_ptr<Entity> &&c)
 {
 	c->parent_ = this;
-	children_.push_back(std::move(c));
+	children_.push_back(c);
+	return c;
 }
 
 void Entity::SetParent(Entity *parent) {
@@ -88,9 +90,6 @@ void Entity::DeleteDestroyed() {
 	// if a reference is held afterwards, the entity will remain alive until that reference is
 	// destroyed. watchers worried about the entity being destroyed can listen for
 	// Entity::DestroyEvent.
-	if (!destroyed_.empty()) {
-		std::cout << "cleaning up the bodies...\n";
-	}
 	destroyed_.clear();
 }
 
