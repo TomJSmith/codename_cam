@@ -10,7 +10,16 @@ drawAiPath::drawAiPath()
 drawAiPath::~drawAiPath()
 {
 }
+void drawAiPath::initRender() {
 
+
+	pathShader.Load("pathShader.vert", "pathShader.frag");
+
+
+	glGenBuffers(1, &vertBuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, vertBuffer);
+
+}
 void drawAiPath::setupDraw(vector<vec3> aiPath, vec3 carPos)
 {
 
@@ -32,6 +41,9 @@ void drawAiPath::setupDraw(vector<vec3> aiPath, vec3 carPos)
 			pathToDraw.push_back(aiPath[i+1]);
 		}
 	}
+
+
+
 	
 }
 vector<vec3> drawAiPath::getPath()

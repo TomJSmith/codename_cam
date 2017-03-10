@@ -15,6 +15,8 @@
 #include "ScriptComponent.h"
 #include "Shader.h"
 #include "Vehicle.h"
+/*Not sure where to put this afterwards just for testing*/
+#include "drawAiPath.h"
 
 int main() {
 	try {
@@ -30,7 +32,21 @@ int main() {
 		};
 
 		root->GetEvents().RegisterEventHandler(&handler);
+
+		vector<vec3> aiPathToDraw;
+		vec3 carPos = vec3(0.0f, 0.0f, -10.0f);
+
+		aiPathToDraw.push_back(vec3(0.0f, 2.0f, 10.0f));
+		aiPathToDraw.push_back(vec3(-10.0f, 0.0f, 10.0f));
+		aiPathToDraw.push_back(vec3(-10.0f, 0.0f, -10.0f));
+		aiPathToDraw.push_back(vec3(0.0f, 0.0f, -10.0f));
+
+
+		drawAiPath drawPath;
+		//drawPath.setupPath(aiPathToDraw, carPos);
+
 #endif // #ifdef DEBUG
+
 
 		Audio audio;
 
