@@ -78,6 +78,8 @@ void Renderer::Render(Entity &entity)
 		glUseProgram(0);
 		
 	}
+	/*Draw  Path here*/
+
 	glEnable(0);
 	glfwSwapBuffers(window_);
 }

@@ -34,7 +34,7 @@ int main() {
 
 		Audio audio;
 
-		audio.initAudio();
+		//audio.initAudio();
 		//audio.playAudio(4); //1,2,3,4 for Audio atm can play more than one at a time
 
 
@@ -80,7 +80,7 @@ int main() {
 			physics.Update(dt);
 			root->Update(dt);
 			renderer.Render(*root);
-			audio.playAudio(4);
+			//audio.playAudio(4);
 			Entity::DeleteDestroyed();
 
 			glfwPollEvents();
