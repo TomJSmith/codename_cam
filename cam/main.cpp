@@ -26,6 +26,7 @@ int main() {
 		auto root = Entity::Create(nullptr);
 
 #ifdef DEBUG
+
 		std::function<void(Events::Render)> handler = [&physics](Events::Render e) {
 			auto d = physics.GetDebugMeshData();
 			e.data.insert(e.data.end(), d.begin(), d.end());
@@ -33,17 +34,13 @@ int main() {
 
 		root->GetEvents().RegisterEventHandler(&handler);
 
-		vector<vec3> aiPathToDraw;
-		vec3 carPos = vec3(0.0f, 0.0f, -10.0f);
-
-		aiPathToDraw.push_back(vec3(0.0f, 2.0f, 10.0f));
-		aiPathToDraw.push_back(vec3(-10.0f, 0.0f, 10.0f));
-		aiPathToDraw.push_back(vec3(-10.0f, 0.0f, -10.0f));
-		aiPathToDraw.push_back(vec3(0.0f, 0.0f, -10.0f));
-
-
 		drawAiPath drawPath;
-		//drawPath.setupPath(aiPathToDraw, carPos);
+
+		std::function<void(Events::Render)> pathHandle = [&drawPath](Events::Render b) {
+			auto d = drawPath.GetDebugMeshData();
+			b.data.insert(b.data.end(), d.begin(), d.end());
+		};
+		root->GetEvents().RegisterEventHandler(&pathHandle);
 
 #endif // #ifdef DEBUG
 
