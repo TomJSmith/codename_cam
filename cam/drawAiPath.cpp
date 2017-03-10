@@ -116,7 +116,7 @@ std::vector<Renderer::MeshData> drawAiPath::GetDebugMeshData()
 		ret.push_back(Renderer::MeshData{
 			vao,
 			shader.Program(),
-			2,
+			(GLuint)pathToDraw.size(),
 			GL_LINES,
 			mat4(1.0)
 		});
