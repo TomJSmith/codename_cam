@@ -13,7 +13,7 @@ drawAiPath::~drawAiPath()
 
 void drawAiPath::setupDraw(vector<vec3> aiPath, vec3 carPos)
 {
-	vec3 color = vec3(1.0f, 1.0f, 1.0f);
+	vec3 color = vec3(0.0f, 0.0f, 0.0f);
 	colorPath.push_back(color);
 	colorPath.push_back(color);
 	pathToDraw.push_back(carPos);
@@ -81,10 +81,11 @@ std::vector<Renderer::MeshData> drawAiPath::GetDebugMeshData()
 
 		vec3 carPos = vec3(0.0f, 2.0f, -10.0f);
 
-		aiPathToDraw.push_back(vec3(0.0f, 2.0f, 10.0f));
-		aiPathToDraw.push_back(vec3(-10.0f, 2.0f, 10.0f));
-		aiPathToDraw.push_back(vec3(-10.0f, 2.0f, -10.0f));
-		aiPathToDraw.push_back(vec3(0.0f, 2.0f, -10.0f));
+		aiPathToDraw.push_back(vec3(0.0f, 2.0f, 20.0f));
+		aiPathToDraw.push_back(vec3(-70.0f, 2.0f, 20.0f));
+		aiPathToDraw.push_back(vec3(-70.0f, 2.0f, -60.0f));
+		aiPathToDraw.push_back(vec3(-20.0f, 2.0f, -60.0f));
+		aiPathToDraw.push_back(vec3(0.0f, 2.0f, -20.0f));
 		setupDraw(aiPathToDraw, carPos);
 
 		std::cout << "Path to draw array size"<< pathToDraw.size() << std::endl;
