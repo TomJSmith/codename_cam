@@ -10,7 +10,7 @@ time = 0
 _controller = None
 reachedGoal = True
 
-targets = [Vec3(0, 2, 10), Vec3(-10, 0, 10), Vec3(-10, 0, -10), Vec3(0, 0, -10)]
+targets = [Vec3(0, 2, 20), Vec3(-70, 0, 20), Vec3(-70, 0, -60), Vec3(-20, 2, -60), Vec3(0, 0, -20)]
 target = 0
 
 def destroyed(event):
@@ -81,11 +81,13 @@ def drive_at(self):
 	
 	if reachedGoal:
 		
-		if distanceToGoal < 1.0:
+		if distanceToGoal < 10.0:
 			#reachedGoal = False
 			#_controller.setBrake(1)
 			print "We're there!"
 			_controller.setAccel(0)
+			#_controller.setLeft(0)
+			#_controller.setRight(0)
 			target += 1
 			target = target % len(targets)
 		else:
@@ -96,12 +98,14 @@ def drive_at(self):
 
 			if dot < -0.1:
 				_controller.setLeft(1)
+				_controller.setRight(0)
 			else:
 				_controller.setLeft(0)
 				_controller.setBrake(0)
 
 			if dot > 0.1:
 				_controller.setRight(1)
+				_controller.setLeft(0)
 			else:
 				_controller.setRight(0)
 				_controller.setBrake(0)
