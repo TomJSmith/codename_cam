@@ -9,6 +9,7 @@
 #include "Vehicle.h"
 #include "Controller.h"
 #include "Camera.h"
+#include "NavMesh.h"
 
 using namespace boost;
 
@@ -66,6 +67,12 @@ BOOST_PYTHON_MODULE(aicontroller) {
 		.def("setBrake", &aiController::setBrake)
 		.def("setReverse", &aiController::setReverse)
 		.def("setAccel", &aiController::setAccel);
+}
+
+BOOST_PYTHON_MODULE(navmesh) {
+	python::class_<NavMesh, std::shared_ptr<NavMesh>>("NavMesh", python::init<const char*>())
+		.def("getSimpleGraph", &NavMesh::getSimpleGraph);
+		//.def("getSimpleNeighbors", &NavMesh::getSimpleNeighbors, args("node"))
 }
 
 // boost::python won't let us use shared_ptr<Component> for subclasses of Component by
@@ -235,6 +242,7 @@ void ScriptComponent::InitPython()
 			initaicontroller();
 			initevents();
 			initcamera();
+			initnavmesh();
 
 			initialized = true;
 		} catch (const python::error_already_set &) {
@@ -311,6 +319,13 @@ namespace boost {
 	template <>
 	Vehicle const volatile * get_pointer<class Vehicle const volatile>(
 		class Vehicle const volatile *c
+		) {
+		return c;
+	}
+
+	template <>
+	NavMesh const volatile * get_pointer<class NavMesh const volatile>(
+		class NavMesh const volatile *c
 		) {
 		return c;
 	}

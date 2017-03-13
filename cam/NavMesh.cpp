@@ -8,6 +8,8 @@
 #include <assimp\Importer.hpp>
 #include <algorithm>
 
+namespace py = boost::python;
+
 
 NavMesh::NavMesh(const char* navMeshFileName)
 {
@@ -38,11 +40,10 @@ void NavMesh::process()
 		for (uint32_t j = 0; j < navFace.mNumIndices; j++)
 		{
 			xSum += mNavMesh->mVertices[navFace.mIndices[j]].x;
-			zSum += mNavMesh->mVertices[navFace.mIndices[j]].y;
+			zSum += mNavMesh->mVertices[navFace.mIndices[j]].z;
 		}
 		nodeGraph.push_back(NavNode(xSum, zSum, &navFace));
 	}
-
 	for (int i = 0; i < nodeGraph.size(); i++)
 	{
 		NavNode& aNode = nodeGraph[i];
@@ -65,3 +66,39 @@ void NavMesh::process()
 		}
 	}
 }
+py::list NavMesh::getSimpleGraph() {
+	float x, z, nX, nZ;
+	int numNeighbors;
+	int numNodes = static_cast<int>(nodeGraph.size());
+	py::list simple = py::list();
+	for (int i = 0; i < numNodes; i++) {
+		x = nodeGraph[i].centerX;
+		z = nodeGraph[i].centerZ;
+		numNeighbors = static_cast<int>(nodeGraph[i].neighbours.size());
+		py::list neighbors = py::list();
+		for (int j = 0; j < numNeighbors; j++) {
+			nX = nodeGraph[i].neighbours[j]->centerX;
+			nZ = nodeGraph[i].neighbours[j]->centerZ;
+			py::tuple neighbor = py::make_tuple(nX, nZ);
+			neighbors.append(neighbor);
+		}
+		py::tuple node = py::make_tuple(x, z, neighbors);
+		simple.append(node);
+	}
+
+	return simple;
+}
+
+/*py::list NavMesh::getSimpleNeighbors(py::tuple node) {
+	float x, z;
+	int numNeighbors = static_cast<int>(nodeGraph[nodeNum].neighbours.size());
+	py::list neighbors = py::list();
+	for (int i = 0; i < numNeighbors; i++) {
+		x = nodeGraph[nodeNum].neighbours[i]->centerX;
+		z = nodeGraph[nodeNum].neighbours[i]->centerZ;
+		py::tuple node = py::make_tuple(x, z);
+		neighbors.append(node);
+	}
+	return neighbors;
+
+}*/

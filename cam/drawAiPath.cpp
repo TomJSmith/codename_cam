@@ -88,7 +88,7 @@ std::vector<Renderer::MeshData> drawAiPath::GetDebugMeshData()
 		aiPathToDraw.push_back(vec3(0.0f, 2.0f, -20.0f));
 		setupDraw(aiPathToDraw, carPos);
 
-		std::cout << "Path to draw array size"<< pathToDraw.size() << std::endl;
+		//std::cout << "Path to draw array size"<< pathToDraw.size() << std::endl;
 		GLuint vertexBuffer = 0;
 		glGenBuffers(1, &vertexBuffer);
 		glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);

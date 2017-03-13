@@ -4,6 +4,14 @@ import controller
 import aicontroller
 import vehicle
 import math
+import navmesh
+import sys
+import os
+
+# there might be a better way to do this... needed a_star in path but dont know where to tell Visual Studio that
+sys.path.insert(0, os.getcwd() + "\..\..\cam")
+from a_star import *
+
 v = None
 
 time = 0
@@ -44,6 +52,24 @@ def init(self):
     v = vehicle.Vehicle(self.physics(), _controller, config)
     self.entity().add_component(v)
     # self.entity().register_destroyed_handler(destroyed)
+
+    # THIS CREATES
+    map = create_nav_mesh()
+    astar = A_star()
+    # Usage: astar.find_path(map[(startX, startZ)], map[(targetX, targetZ)])
+    # returns a list of nodes
+
+def create_nav_mesh():
+    _navmesh = navmesh.NavMesh('nav_mesh.fbx')
+    graph = _navmesh.getSimpleGraph()
+    map = {}
+    for node in graph:
+        map[(node[0], node[1])] = Node(node[0], node[1])
+    for node in graph:
+        for neighbor in node[2]:
+            map[(node[0], node[1])].add_neighbor(map[neighbor])
+    return map
+
 
 def drive_at(self):
 	global v
