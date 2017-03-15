@@ -7,7 +7,9 @@
 
 #include "Camera.h"
 #include "Entity.h"
+#include "Image.h"
 #include "Mesh.h"
+#include "ModelShader.h"
 #include "NavMesh.h"
 #include "Physics.h"
 #include "Renderer.h"
@@ -29,7 +31,15 @@ int main() {
 			e.data.insert(e.data.end(), d.begin(), d.end());
 		};
 
-		root->GetEvents().RegisterEventHandler(&handler);
+		root->RegisterEventHandler(&handler);
+
+		//drawAiPath drawPath;
+
+		//std::function<void(Events::Render)> pathHandle = [&drawPath](Events::Render b) {
+		//	auto d = drawPath.GetDebugMeshData();
+		//	b.data.insert(b.data.end(), d.begin(), d.end());
+		//};
+		//root->RegisterEventHandler(&pathHandle);
 #endif // #ifdef DEBUG
 
 		Audio audio;
@@ -41,14 +51,14 @@ int main() {
 
 		{
 			auto plane = Entity::Create(root.get()).lock();
-			std::shared_ptr<Component> planemesh(new Mesh(Shader::Load("passthrough.vert", "passthrough.frag"), "map_mesh.fbx", vec3(0.2, 0.4, 0.2), 1.0f, GL_TRIANGLES));
+			std::shared_ptr<Component> planemesh(new Mesh(std::unique_ptr<Shader>(new ModelShader), "map_mesh.fbx", vec3(0.2, 0.4, 0.2), 1.0f, GL_TRIANGLES));
 			std::shared_ptr<Component> planebody(new RigidBody(physics, *physics.GetPhysics()->createMaterial(1.0f, 1.0f, 1.0f), "map_mesh.fbx", 1.0f, false));
 			plane->AddComponent(std::move(planemesh));
 			plane->AddComponent(std::move(planebody));
 
 			auto vehicle = Entity::Create(root.get()).lock();
 
-			std::shared_ptr<Component> mesh(new Mesh(Shader::Load("passthrough.vert", "passthrough.frag"), "chaser_mesh.obj", vec3(0.1, 0.1, 0.6), 1.0f, GL_TRIANGLES));
+			std::shared_ptr<Component> mesh(new Mesh(std::unique_ptr<Shader>(new ModelShader), "chaser_mesh.obj", vec3(0.1, 0.1, 0.6), 1.0f, GL_TRIANGLES));
 			std::shared_ptr<Component> v(new ScriptComponent("vehicle", physics));
 			std::shared_ptr<Component> c(new ScriptComponent("collision", physics));
 			vehicle->AddComponent(std::move(mesh));
@@ -57,12 +67,16 @@ int main() {
 			vehicle->AddComponent(std::make_unique<ScriptComponent>("chaser", physics));
 
 			auto aiVehicle = Entity::Create(root.get()).lock();
-			std::shared_ptr<Component> aiMesh(new Mesh(Shader::Load("passthrough.vert", "passthrough.frag"), "runner_mesh.obj", vec3(1.0, 0.84, 0.0), 1.5, GL_TRIANGLES));//debug seems to work better was 2.5
+			std::shared_ptr<Component> aiMesh(new Mesh(std::unique_ptr<Shader>(new ModelShader), "runner_mesh.obj", vec3(1.0, 0.84, 0.0), 1.5, GL_TRIANGLES));//debug seems to work better was 2.5
 			std::shared_ptr<Component> aiV(new ScriptComponent("chaser_ai", physics));
 			aiVehicle->AddComponent(std::move(aiMesh));
 			aiVehicle->AddComponent(std::move(aiV));
 
 			aiVehicle->AddComponent(std::make_unique<ScriptComponent>("runner", physics));
+
+			auto smiley = Entity::Create(root.get()).lock();
+			std::shared_ptr<Component> image(new Image("smiley.png"));
+			smiley->AddComponent(std::move(image));
 		}
 
 		NavMesh levelNavMesh = NavMesh("nav_mesh.fbx");

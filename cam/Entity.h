@@ -66,20 +66,26 @@ class Entity {
 	vec3 GetGlobalPosition() const;
 
 	template <class T>
-	void RegisterEventHandler(std::function<void(T)> handler)
+	void RegisterEventHandler(T handler)
 	{
 		events_.RegisterEventHandler(handler);
 	}
 
 	template <class T>
-	void BroadcastEvent(T &event)
+	void UnregisterEventHandler(T handler)
+	{
+		events_.UnregisterEventHandler(handler);
+	}
+
+	template <class T>
+	void BroadcastEvent(T event)
 	{
 		FireEvent(event);
 		for (auto &child : children_) child->BroadcastEvent(event);
 	}
 
 	template <class T>
-	void FireEvent(T &event)
+	void FireEvent(T event)
 	{
 		events_.FireEvent(event);
 	}

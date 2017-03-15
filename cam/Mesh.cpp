@@ -11,12 +11,12 @@
 #include <assimp\material.h>
 #include <assimp\Importer.hpp>
 
-Mesh::Mesh(Shader &shader,
+Mesh::Mesh(std::unique_ptr<Shader> shader,
 		   const char* objFileName,	
 		   glm::vec3 colour,
 		   float scale,
 		   GLuint type) :
-	shader_(shader),
+	shader_(std::move(shader)),
 	type_(type)
 {
 	Assimp::Importer importer;
@@ -86,19 +86,14 @@ Mesh::Mesh(Shader &shader,
 	glBindVertexArray(0);
 }
 
-Mesh::~Mesh()
-{
-	entity_->GetEvents().UnregisterEventHandler(&handler_);
-}
-
 void Mesh::GetMeshData(Events::Render event)
 {
 	event.data.push_back({
 		vao_,
-		shader_.Program(),
 		count_,
 		type_,
-		entity_->GetGlobalTransform()
+		entity_->GetGlobalTransform(),
+		shader_.get()
 	});
 }
 
@@ -108,7 +103,10 @@ void Mesh::RegisterHandlers()
 		GetMeshData(e);
 	};
 
-	// TODO We really need an UnregisterHandlers for when these things
-	// are being destroyed or moved between entities
-	entity_->GetEvents().RegisterEventHandler(&handler_);
+	entity_->RegisterEventHandler(&handler_);
+}
+
+void Mesh::Destroy()
+{
+	entity_->UnregisterEventHandler(&handler_);
 }
