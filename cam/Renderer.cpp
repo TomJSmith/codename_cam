@@ -78,6 +78,7 @@ void Renderer::Render(Entity &entity)
 		glUseProgram(0);
 		
 	}
+
 	glEnable(0);
 	glfwSwapBuffers(window_);
 }

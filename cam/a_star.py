@@ -109,7 +109,7 @@ class A_star():
         while next_node != (start):
             next_node = came_from[next_node]
             total_path.append(next_node)
-        return (total_path)
+        return (total_path[::-1])
 
     def create_neighbors(self, x, y, grid):
         """
@@ -123,7 +123,7 @@ class A_star():
             if (new_x < len(grid)) and (new_y < len(grid)) and (new_x >= 0) and (new_y >= 0):
                 if grid[new_x][new_y]:
                     neighbors.append((new_x, new_y))
-        return neighbors
+        return neighbors[::-1]
 
 
 # EXAMPLE... Run this python file separately to run the example

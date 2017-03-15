@@ -15,6 +15,8 @@
 #include "ScriptComponent.h"
 #include "Shader.h"
 #include "Vehicle.h"
+/*Not sure where to put this afterwards just for testing*/
+#include "drawAiPath.h"
 
 int main() {
 	try {
@@ -24,17 +26,28 @@ int main() {
 		auto root = Entity::Create();
 
 #ifdef DEBUG
+
 		std::function<void(Events::Render)> handler = [&physics](Events::Render e) {
 			auto d = physics.GetDebugMeshData();
 			e.data.insert(e.data.end(), d.begin(), d.end());
 		};
 
 		root->GetEvents().RegisterEventHandler(&handler);
+
+		drawAiPath drawPath;
+
+		std::function<void(Events::Render)> pathHandle = [&drawPath](Events::Render b) {
+			auto d = drawPath.GetDebugMeshData();
+			b.data.insert(b.data.end(), d.begin(), d.end());
+		};
+		root->GetEvents().RegisterEventHandler(&pathHandle);
+
 #endif // #ifdef DEBUG
+
 
 		Audio audio;
 
-		audio.initAudio();
+		//audio.initAudio();
 		//audio.playAudio(4); //1,2,3,4 for Audio atm can play more than one at a time
 
 
@@ -65,7 +78,6 @@ int main() {
 			aiVehicle->AddComponent(std::make_unique<ScriptComponent>("runner", physics));
 		}
 
-		NavMesh levelNavMesh = NavMesh("nav_mesh.fbx");
 
 
 		auto lastTime = timer::now();
@@ -79,7 +91,7 @@ int main() {
 			physics.Update(dt);
 			root->Update(dt);
 			renderer.Render(*root);
-			audio.playAudio(4);
+			//audio.playAudio(4);
 			Entity::DeleteDestroyed();
 
 			glfwPollEvents();
