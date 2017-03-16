@@ -19,6 +19,6 @@ public:
 	void setAccel(int dir);
 
 private:
-	bool right = false, left = false, none = false, brake = false, reverse = false, accel = false;
+	bool right = false, left = false, none = false, brake = false, reverse = false, accel = false, doOnce = false;
 };
 

@@ -52,6 +52,7 @@ void aiController::setBrake(int dir)
 }
 void aiController::setAccel(int dir)
 {
+	doOnce = false;
 	if (dir == 1)
 		accel = true;
 	else
@@ -62,7 +63,29 @@ void aiController::setAccel(int dir)
 void aiController::setReverse(int dir)
 {
 	if (dir == 1)
+	{
 		reverse = true;
+		if (!doOnce)
+		{
+			if (left && right)
+			{
+				left = false;
+				right = false;
+			}
+			else if (left && !right)
+			{
+				left = false;
+				right = true;
+			}
+			else
+			{
+				right = false;
+				left = true;
+			}
+			doOnce = true;
+		}
+	}
 	else
 		reverse = false;
+	
 }

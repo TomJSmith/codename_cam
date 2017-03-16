@@ -79,15 +79,17 @@ std::vector<Renderer::MeshData> drawAiPath::GetDebugMeshData()
 		pathToDraw.clear();
 		colorPath.clear();
 
-		vec3 carPos = vec3(0.0f, 2.0f, -10.0f);
-
+		vec3 carPos = vec3(0.0f, 2.0f, -10.0f); 
+		//Circle path through a few obstacles
 		aiPathToDraw.push_back(vec3(0.0f, 2.0f, 20.0f));
 		aiPathToDraw.push_back(vec3(-70.0f, 2.0f, 20.0f));
 		aiPathToDraw.push_back(vec3(-70.0f, 2.0f, -60.0f));
 		aiPathToDraw.push_back(vec3(-20.0f, 2.0f, -60.0f));
 		aiPathToDraw.push_back(vec3(0.0f, 2.0f, -20.0f));
 		setupDraw(aiPathToDraw, carPos);
+		
 
+		setupDraw(aiPathToDraw, carPos);
 		//std::cout << "Path to draw array size"<< pathToDraw.size() << std::endl;
 		GLuint vertexBuffer = 0;
 		glGenBuffers(1, &vertexBuffer);
