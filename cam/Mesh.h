@@ -3,6 +3,7 @@
 #include "System.h"
 
 #include <functional>
+#include <memory>
 #include <vector>
 
 #include "Component.h"
@@ -13,14 +14,14 @@ class Shader;
 
 class Mesh : public Component {
 public:
-	Mesh(Shader &shader,
+	Mesh(std::unique_ptr<Shader> shader,
 		 const char* objFileName,
 		 glm::vec3 colour,
 		 float scale,
 		 GLuint type);
-	~Mesh();
 
 	void GetMeshData(Events::Render event);
+	void Destroy() override;
 
 protected:
 	void RegisterHandlers() override;
@@ -30,7 +31,7 @@ private:
 	GLuint type_;
 	GLuint count_;
 
-	Shader &shader_;
+	std::unique_ptr<Shader> shader_;
 
 	std::function<void(Events::Render)> handler_;
 };

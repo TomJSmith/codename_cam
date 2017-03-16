@@ -1,70 +1,79 @@
 #include "System.h"
 
+#include <vector>
+
 #include "Shader.h"
 #include "Util.h"
 
-std::map<std::pair<std::string, std::string>, Shader> Shader::shaders_;
+std::map<std::string, std::weak_ptr<GLuint>> Shader::shaderlist_;
+std::map<std::set<std::shared_ptr<GLuint>>, std::weak_ptr<GLuint>> Shader::programlist_;
 
-static GLuint CompileShader(GLenum type, std::string &source)
+std::shared_ptr<GLuint> Shader::Compile(GLenum type, const std::string &source)
 {
-	GLuint shader = glCreateShader(type);
-	const GLchar *src = source.c_str();
-	glShaderSource(shader, 1, &src, 0);
-	glCompileShader(shader);
+	auto existing = shaderlist_[source];
+	if (!existing.expired()) return existing.lock();
+
+	auto del = [](GLuint *s) { glDeleteShader(*s); delete s; };
+	auto shader = std::shared_ptr<GLuint>(new GLuint(glCreateShader(type)), del);
+
+	shaderlist_[source] = shader;
+
+	std::string contents = Util::ReadFile(source);
+	const GLchar *src = contents.c_str();
+	glShaderSource(*shader, 1, &src, 0);
+	glCompileShader(*shader);
 
 	GLint status = GL_FALSE;
-	glGetShaderiv(shader, GL_COMPILE_STATUS, &status);
-	if (status == GL_FALSE) throw std::runtime_error("failed to compile shader"); // TODO real error here
+	glGetShaderiv(*shader, GL_COMPILE_STATUS, &status);
+	if (status == GL_FALSE) {
+		GLint length;
+		glGetShaderiv(*shader, GL_INFO_LOG_LENGTH, &length);
+		std::string log(length, ' ');
+		glGetShaderInfoLog(*shader, length, &length, &log[0]);
+
+		std::string err("failed to compile shader: \n");
+		throw std::runtime_error(err + log);
+	}
 
 	return shader;
 }
 
-static GLuint LinkProgram(GLuint vertex, GLuint fragment)
+std::shared_ptr<GLuint> Shader::Link(std::set<shader_type> shaders)
 {
-	GLuint program = glCreateProgram();
+	auto existing = programlist_[shaders];
+	if (!existing.expired()) return existing.lock();
 
-	if (vertex) glAttachShader(program, vertex);
-	if (fragment) glAttachShader(program, fragment);
+	auto del = [](GLuint *p) { glDeleteProgram(*p); delete p; };
+	auto program = std::shared_ptr<GLuint>(new GLuint(glCreateProgram()), del);
 
-	glLinkProgram(program);
+	programlist_[shaders] = program;
+
+	for (const auto &shader : shaders) {
+		glAttachShader(*program, *shader);
+	}
+
+	glLinkProgram(*program);
 
 	GLint status = GL_FALSE;
-	glGetProgramiv(program, GL_LINK_STATUS, &status);
-	if (status == GL_FALSE) throw std::runtime_error("failed to link shader"); // TODO real error here
+	glGetProgramiv(*program, GL_LINK_STATUS, &status);
+
+	if (status == GL_FALSE) {
+		GLint length;
+		glGetProgramiv(*program, GL_INFO_LOG_LENGTH, &length);
+		std::string log(length, ' ');
+		glGetProgramInfoLog(*program, length, &length, &log[0]);
+
+		std::string err("failed to link program: \n");
+		throw std::runtime_error(err + log);
+	}
 
 	return program;
 }
 
-Shader &Shader::Load(const std::string &vertex, const std::string &fragment)
-{
-	auto key = std::make_pair(vertex, fragment);
-	if (shaders_.count(key) == 0) {
-		shaders_.emplace(std::make_pair(key, Shader(vertex, fragment)));
+Shader::Shader(const std::map<GLenum, std::string> &shaders) {
+	for (const auto &it : shaders) {
+		shaders_.insert(Compile(it.first, it.second));
 	}
 
-	return shaders_[key];
-}
-
-Shader::Shader() : program_(0) {}
-Shader::Shader(Shader &&other) {std::swap(program_, other.program_);}
-
-Shader::Shader(const std::string &vertex, const std::string &fragment)
-{
-	GLuint v = CompileShader(GL_VERTEX_SHADER, Util::ReadFile(vertex));
-	GLuint f = CompileShader(GL_FRAGMENT_SHADER, Util::ReadFile(fragment));
-
-	program_ = LinkProgram(v, f);
-
-	glDeleteShader(v);
-	glDeleteShader(f);
-}
-
-Shader::~Shader()
-{
-	glDeleteProgram(program_);
-}
-
-GLuint Shader::Program()
-{
-	return program_;
+	program_ = Link(shaders_);
 }
