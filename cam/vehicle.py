@@ -4,6 +4,7 @@ import vehicle
 import types
 import controller
 import math
+import runner
 
 def init(self):
     _controller = controller.Controller(0)
@@ -12,7 +13,7 @@ def init(self):
     dims = physics.PxVec3(3, 1, 5)
 
 
-    c.position = physics.PxVec3(0, 2, -20)
+    c.position = physics.PxVec3(0, 2, 30)
     c.chassis_dimensions = dims
     c.steer_angle = math.pi * .05
     c.torque = 100000
@@ -38,5 +39,7 @@ def init(self):
 
     v = vehicle.Vehicle(self.physics(),_controller, c)
     cam = camera.Camera(v)
+    r = runner.Runner()
     self.entity().add_component(v)
     self.entity().add_component(cam)
+    self.entity().add_component(r)
