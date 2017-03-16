@@ -3,9 +3,9 @@
 #include "Renderer.h"
 
 #include "Entity.h"
+#include "Shader.h"
 
 GLFWwindow *Renderer::window_ = nullptr;
-
 
 GLFWwindow* Renderer::getWindow()
 {
@@ -62,21 +62,10 @@ void Renderer::Render(Entity &entity)
 	auto vp = perspective * view;
 	glEnable(GL_DEPTH_TEST);
 	for (auto &d : e.data) {
-		auto mvp =  vp * d.modelMatrix;
-		auto modelMatrix = d.modelMatrix;
-		
-		glUseProgram(d.shader);
+		d.shader->Setup(d, vp);
 
-		glUniformMatrix4fv(glGetUniformLocation(d.shader, "mvp"), 1, GL_FALSE, &mvp[0][0]);
-		glUniformMatrix4fv(glGetUniformLocation(d.shader, "projection"), 1, GL_FALSE, &vp[0][0]);
-		glUniformMatrix4fv(glGetUniformLocation(d.shader, "modelview"), 1, GL_FALSE, &modelMatrix[0][0]);
-		//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 		glBindVertexArray(d.vao);
 		glDrawArrays(d.type, 0, d.count);
-
-		glBindVertexArray(0);
-		glUseProgram(0);
-		
 	}
 
 	glEnable(0);
