@@ -5,7 +5,7 @@
 #include <stdexcept>
 
 #include "Entity.h"
-#include "Shader.h"
+#include "ModelShader.h"
 #include "Transform.h"
 
 class SimulationCallback : public PxSimulationEventCallback {
@@ -22,14 +22,8 @@ class SimulationCallback : public PxSimulationEventCallback {
 			auto e0 = static_cast<Entity *>(header.actors[0]->userData);
 			auto e1 = static_cast<Entity *>(header.actors[1]->userData);
 
-			if (e0->Id() > 5 || e1->Id() > 5) {
-				std::cout << "hmmm...\n";
-			}
-			else {
-				e0->FireEvent(Events::Collided{ e1 });
-				e1->FireEvent(Events::Collided{ e0 });
-				//std::cout << "colliding objects\n";
-			}
+			e0->FireEvent(Events::Collided{ e1 });
+			e1->FireEvent(Events::Collided{ e0 });
 		}
 		else {
 			std::cout << "deleted object collision...\n";
@@ -110,6 +104,9 @@ Physics::~Physics()
 
 	cooking_->release();
 	scene_->release();
+
+	PxCloseExtensions();
+
 	physics_->release();
 	foundation_->release();
 }
@@ -127,6 +124,7 @@ void Physics::Update(seconds dt)
 	for (PxU32 i = 0; i < ntransforms; ++i) {
 		auto entity = static_cast<Entity *>(transforms[i].userData);
 		if (!entity->GetParent()) {
+			// TODO is this actually a problem or should we silently continue here?
 			std::cout << "hmmm...\n";
 			continue;
 		}
@@ -143,7 +141,7 @@ void Physics::Update(seconds dt)
 #ifdef DEBUG
 std::vector<Renderer::MeshData> Physics::GetDebugMeshData()
 {
-	static Shader &shader = Shader::Load("passthrough.vert", "passthrough.frag");
+	static ModelShader shader;
 
 	static std::vector<GLuint> vertexVbos;
 	static std::vector<GLuint> colourVbos;
@@ -209,10 +207,10 @@ std::vector<Renderer::MeshData> Physics::GetDebugMeshData()
 
 		ret.push_back(Renderer::MeshData{
 			vao,
-			shader.Program(),
 			2,
 			GL_LINES,
-			mat4(1.0)
+			mat4(1.0),
+			&shader
 		});
 	}
 

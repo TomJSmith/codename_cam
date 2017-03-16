@@ -4,32 +4,34 @@
 
 #include <map>
 #include <memory>
+#include <set>
 #include <string>
 #include <tuple>
 
+#include "Renderer.h"
 #include "Util.h"
 
 class Shader
 {
 public:
-	static Shader &Load(const std::string &vertex, const std::string &fragment);
+	virtual void Setup(const Renderer::MeshData &data, const mat4 &projection) = 0;
+	virtual ~Shader() = default;
 
-	// disable copy and assignment so we only delete program once
-	Shader(Shader &other) = delete;
-	Shader &operator=(Shader &other) = delete;
+protected:
+	Shader(const std::map<GLenum, std::string> &shaders);
 
-	// allow move construction so we can store these in a map
-	Shader(Shader &&other);
+	// shader_type is a shared_ptr that uses either glDeleteProgram or glDeleteShader
+	// as its deleter, depending on whether it points to a program or a shader
+	using shader_type = std::shared_ptr<GLuint>;
 
-	GLuint Program();
+	shader_type Compile(GLenum type, const std::string &source);
+	shader_type Link(std::set<shader_type> shaders);
 
-	Shader();
-	~Shader();
+	std::set<shader_type> shaders_;
+	shader_type program_;
+
 private:
-	Shader(const std::string &vertex, const std::string &fragment);
-
-	GLuint program_;
-
-	static std::map<std::pair<std::string, std::string>, Shader> shaders_;
+	static std::map<std::string, std::weak_ptr<GLuint>> shaderlist_;
+	static std::map<std::set<shader_type>, std::weak_ptr<GLuint>> programlist_;
 };
 
