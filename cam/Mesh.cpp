@@ -14,7 +14,7 @@
 Mesh::Mesh(Shader &shader,
 		   const char* objFileName,	
 		   glm::vec3 colour,
-		   float scale,
+		   glm::vec3 scale,
 		   GLuint type) :
 	shader_(shader),
 	type_(type)
@@ -26,13 +26,17 @@ Mesh::Mesh(Shader &shader,
 		std::cerr << "could not load file " << objFileName << ": " << importer.GetErrorString() << std::endl;
 	}
 	std::cout << objFileName << std::endl;
+	std::cout << "num of textures: " << objFile->mNumMaterials << std::endl;
 	std::cout << "num of meshes: " << objFile->mNumMeshes << std::endl;
 	std::vector<aiVector3D> vertices;
 	std::vector<aiVector3D> normals;
+	std::vector<aiVector2D> texCoords;
 	std::vector<glm::vec3> colours;
 	aiMesh* objMesh = objFile->mMeshes[0];
+	aiMaterial* objMaterial = objFile->mMaterials[objMesh->mMaterialIndex];
 	std::cout << "num of faces: " << objMesh->mNumFaces << std::endl;
 	std::cout << "num of verts: " << objMesh->mNumVertices << std::endl;
+	std::cout << "num materials: " << objFile->mNumMaterials << std::endl;
 	for (std::uint32_t i = 0u; i < objMesh->mNumFaces; i++)
 	{
 		const aiFace& face = objMesh->mFaces[i];
@@ -40,16 +44,31 @@ Mesh::Mesh(Shader &shader,
 		{
 
 			aiVector3D vert = objMesh->mVertices[face.mIndices[j]];
-			aiVector3D faceVert(vert.x * scale, vert.y * scale, vert.z * scale);
+			aiVector3D faceVert(vert.x * scale.x, vert.y * scale.y, vert.z * scale.z);
 			vertices.push_back(faceVert);
 
 			aiVector3D norm = objMesh->mNormals[face.mIndices[j]];
-			aiVector3D faceNormal(norm.x * scale, norm.y * scale, norm.z * scale);
+			aiVector3D faceNormal(norm.x * scale.x, norm.y * scale.y, norm.z * scale.z);
 			normals.push_back(faceNormal);
 
+			aiVector3D texCoord = objMesh->mTextureCoords[0][face.mIndices[j]];
+			texCoords.push_back(aiVector2D(texCoord.x, texCoord.y));
 			colours.push_back(colour);
 		}
 	}
+
+	const aiMaterial* m_material = objFile->mMaterials[0];
+	if (m_material->GetTextureCount(aiTextureType_DIFFUSE) > 0)
+	{
+		aiString relTexPath;
+		if (m_material->GetTexture(aiTextureType_DIFFUSE, 0, &relTexPath, NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS)
+		{
+			
+			std::cout << "success!" << std::endl;
+		}
+	}
+
+
 	count_ = objMesh->mNumFaces * 3;
 
 	GLuint vertexBuffer = 0;

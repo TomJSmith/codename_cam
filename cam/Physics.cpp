@@ -28,7 +28,7 @@ class SimulationCallback : public PxSimulationEventCallback {
 			else {
 				e0->FireEvent(Events::Collided{ e1 });
 				e1->FireEvent(Events::Collided{ e0 });
-				std::cout << "colliding objects\n";
+				//std::cout << "colliding objects\n";
 			}
 		}
 		else {

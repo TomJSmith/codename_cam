@@ -16,7 +16,7 @@ public:
 	Mesh(Shader &shader,
 		 const char* objFileName,
 		 glm::vec3 colour,
-		 float scale,
+		 glm::vec3 scale,
 		 GLuint type);
 	~Mesh();
 
