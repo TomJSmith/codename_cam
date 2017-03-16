@@ -24,6 +24,9 @@ prevPos = None
 
 targets = [Vec3(0, 2, 20), Vec3(-70, 0, 20), Vec3(-70, 0, -60), Vec3(-20, 2, -60), Vec3(0, 0, -20)]
 target = 0
+currNodeTarget = 0
+map = None
+astar = None
 
 def destroyed(event):
     pass
@@ -35,7 +38,8 @@ def init(self):
 
     global v
     global _controller
-
+    global map
+    global astar
     _controller = aicontroller.aiController()
     config = vehicle.Configuration()
 
@@ -60,6 +64,7 @@ def init(self):
     # THIS CREATES
     map = create_nav_mesh()
     astar = A_star()
+
     # Usage: astar.find_path(map[(startX, startZ)], map[(targetX, targetZ)])
     # returns a list of nodes
 
@@ -78,7 +83,7 @@ def checkStuck(self):
 	global prevPos
 	global currPos
 	currPos = self.entity().transform().global_position()
-	if prevPos not None:
+	if prevPos is not None:
 		if Vec3.dot(currPos,prevPos) == 0:
 			prevPos = curPos
 			return True;
@@ -86,15 +91,28 @@ def checkStuck(self):
 	else:
 		prevPos = currPos
 		return False;
+
+def getNodePathToVec(closestPathNodes):
+	arrayVecs = []
+	for node in closestPathNodes:
+		vectorToAdd = Vec3(node.x, 0, node.z)
+		arrayVecs.append(vectorToAdd)
 		
-def drive_at(self):
+	return arrayVecs
+	
+def drive_at(self, closeNodeTarget, closeNodeSelf):
 	global v
 	global _controller
 	global reachedGoal
 	global targets
 	global target
+	global currNodeTarget
 
-	direction = targets[target] - self.entity().transform().global_position() #transform().position
+	closestPathNodes = astar.find_path(closeNodeSelf, closeNodeTarget)
+	closestPathVectors = getNodePathToVec(closestPathNodes)
+	
+	
+	direction = closestPathVectors[currNodeTarget] - self.entity().transform().global_position() #transform().position
 	forward = self.entity().transform().forward()
 	right = self.entity().transform().right()
 	test = self.entity().transform().position
@@ -133,8 +151,8 @@ def drive_at(self):
 				_controller.setAccel(0)
 				#_controller.setLeft(0)
 				#_controller.setRight(0)
-				target += 1
-				target = target % len(targets)
+				currNodeTarget += 1
+				currNodeTarget = currNodeTarget % len(closestPathVectors)
 			else:
 				_controller.setAccel(1)
 				_controller.setRight(0)
@@ -157,11 +175,17 @@ def drive_at(self):
 
 
 def update(self, dt): 
-    global time
-    global target
-    global v
+	global time
+	global target
+	global v
+	global map
 
-    time += dt
-    if time > 5:
-        time = 0
-    drive_at(self)
+	time += dt
+	if time > 5:
+		time = 0
+	targetPosNode = (targets[target].x, targets[target].z)
+	selfPos = self.entity().transform().global_position()
+	selfPosNode = (selfPos.x, selfPos.z)
+	closeNodeTarget = astar.findClosestNode(map, targetPosNode)
+	closeNodeSelf = astar.findClosestNode(map, selfPosNode)
+	drive_at(self, map[closeNodeTarget], map[closeNodeSelf])

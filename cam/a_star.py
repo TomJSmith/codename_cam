@@ -45,85 +45,102 @@ class Node():
 
 
 class A_star():
-    """
+	"""
     A * class with functions to calculate shortest path
     """
-    def calculate_h(self, x, z, targetX, targetZ):
-        """
-        Calculate Heuristic(estimated) value between to points using manhatten method
+	def calculate_h(self, x, z, targetX, targetZ):
+		"""
+		Calculate Heuristic(estimated) value between to points using manhatten method
         :param x:
         :param z:
         :param targetX:
         :param targetZ:
         :return:
-        """
-        H_score = 10 * (abs(x - targetX) + abs(z - targetZ))
-        return H_score
-
-    def find_path(self, start, target):
-        """
+		"""
+		H_score = 10 * (abs(x - targetX) + abs(z - targetZ))
+		return H_score
+	def findClosestNode(self, map, start):
+	
+		xCoor = 0
+		zCoor = 0
+		distToTest = 0
+		closestDist = 10000
+		
+		closeNode = None
+		for node in map:
+			xCoor = node[0] - start[0]
+			zCoor = node[1] - start[1]
+			distToTest = math.sqrt((xCoor*xCoor) + (zCoor * zCoor))
+			if(distToTest < closestDist):
+				closeNode = node
+				closestDist = distToTest
+				
+		return closeNode
+	
+	def find_path(self, start, target):
+		"""
         Find shortest path between 2 points.
         :param start: starting node
         :param target: target node
         :return: a list of nodes which represents the shortest path
-        """
-        open_set = [start]
-        closed_set = []
-        came_from = {}
-        G_score = {}
-        G_score[start] = 0
-        H_score = {}
-        H_score[start] = self.calculate_h(start.x, start.z, target.x, target.z)
+		"""
+		open_set = [start]
+		closed_set = []
+		came_from = {}
+		G_score = {}
+		G_score[start] = 0
+		H_score = {}
+		H_score[start] = self.calculate_h(start.x, start.z, target.x, target.z)
 
-        while open is not None:
-            #Make the current node the lowest G_score in the open set(IE shortest neighbor from last current)
-            current = open_set[0]
-            for each in open_set:
-                if G_score[each] < G_score[current]:
-                    current = each
-            if (current.x == target.x) and (current.z == target.z):
-                return self.construct_path(start, target, came_from)
+		while open is not None:
+			#Make the current node the lowest G_score in the open set(IE shortest neighbor from last current)
+			current = open_set[0]
+			for each in open_set:
+				if G_score[each] < G_score[current]:
+					current = each
+			if (current.x == target.x) and (current.z == target.z):
+				return self.construct_path(start, target, came_from)
 
-            # Add current node to closed, mark it has been evaluated
-            open_set.remove(current)
-            closed_set.append(current)
+			# Add current node to closed, mark it has been evaluated
+			open_set.remove(current)
+			closed_set.append(current)
 
-            neighbors = current.neighbors
-            for neighbor in neighbors:
-                if neighbor in closed_set:
-                    continue
-                distance = current.distance(neighbor)
-                tentative_G_score = G_score[current] + distance
-                if neighbor not in open_set:
-                    open_set.append(neighbor)
-                elif tentative_G_score >= G_score[neighbor]:
-                    continue
+			neighbors = current.neighbors
+			for neighbor in neighbors:
+				if neighbor in closed_set:
+					continue
+				distance = current.distance(neighbor)
+				tentative_G_score = G_score[current] + distance
+				if neighbor not in open_set:
+					open_set.append(neighbor)
+				elif tentative_G_score >= G_score[neighbor]:
+					continue
 
-                came_from[neighbor] = current
-                G_score[neighbor] = tentative_G_score
-                H_score[neighbor] = G_score[neighbor] + self.calculate_h(neighbor.x, neighbor.z, target.x, target.z)
+				came_from[neighbor] = current
+				G_score[neighbor] = tentative_G_score
+				H_score[neighbor] = G_score[neighbor] + self.calculate_h(neighbor.x, neighbor.z, target.x, target.z)
 
-    def construct_path(self,start,  target, came_from):
-        total_path = [target]
-        next_node = target
-        while next_node != (start):
-            next_node = came_from[next_node]
-            total_path.append(next_node)
-        return (total_path[::-1])
+	def construct_path(self,start,  target, came_from):
+		total_path = [target]
+		next_node = target
+		while next_node != (start):
+			next_node = came_from[next_node]
+			total_path.append(next_node)
+		return (total_path[::-1])
 
-    def create_neighbors(self, x, y, grid):
-        """
-        OLD, POSSIBLY OF NO USE
-        """
-        dxy = [(1, -1), (1, 0), (1, 1), (0, 1), (-1, 1), (-1, 0), (-1, -1), (0, -1)]
-        neighbors = []
-        for XY in dxy:
-            new_x = x + XY[0]
-            new_y = y + XY[1]
-            if (new_x < len(grid)) and (new_y < len(grid)) and (new_x >= 0) and (new_y >= 0):
-                if grid[new_x][new_y]:
-                    neighbors.append((new_x, new_y))
-        return neighbors[::-1]
+	def create_neighbors(self, x, y, grid):
+		"""
+		OLD, POSSIBLY OF NO USE
+		"""
+		dxy = [(1, -1), (1, 0), (1, 1), (0, 1), (-1, 1), (-1, 0), (-1, -1), (0, -1)]
+		neighbors = []
+		for XY in dxy:
+			new_x = x + XY[0]
+			new_y = y + XY[1]
+			if (new_x < len(grid)) and (new_y < len(grid)) and (new_x >= 0) and (new_y >= 0):
+				if grid[new_x][new_y]:
+					neighbors.append((new_x, new_y))
+		return neighbors[::-1]
 
 
 # EXAMPLE... Run this python file separately to run the example
