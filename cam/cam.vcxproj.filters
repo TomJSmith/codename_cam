@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="Source Files">
@@ -100,6 +100,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Image.h">
+       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="drawAiPath.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -170,6 +173,9 @@
     <ClCompile Include="Image.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="drawAiPath.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="passthrough.frag">
@@ -203,6 +209,9 @@
     <None Include="chaser_mesh.obj" />
     <None Include="runner_mesh.obj" />
     <None Include="map_mesh.fbx" />
-    <None Include="nav_mesh.obj" />
+    <None Include="chaser.py" />
+    <None Include="runner.py" />
+    <None Include="nav_mesh.fbx" />
+    <None Include="test_nav_mesh.fbx" />
   </ItemGroup>
 </Project>

@@ -67,6 +67,7 @@ void Renderer::Render(Entity &entity)
 		glBindVertexArray(d.vao);
 		glDrawArrays(d.type, 0, d.count);
 	}
+
 	glEnable(0);
 	glfwSwapBuffers(window_);
 }
