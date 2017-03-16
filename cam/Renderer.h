@@ -7,6 +7,7 @@
 #include "Transform.h"
 
 class Entity;
+class Shader;
 
 class Renderer
 {
@@ -17,14 +18,10 @@ public:
 
 	struct MeshData {
 		GLuint vao;
-		GLuint shader;
 		GLuint count;
 		GLenum type;
 		mat4 modelMatrix;
-	};
-
-	struct GetMeshDataEvent {
-		std::vector<MeshData> &data;
+		Shader *shader;
 	};
 
 	GLFWwindow* getWindow();

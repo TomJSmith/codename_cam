@@ -10,23 +10,24 @@
 #include "Component.h"
 #include "Physics.h"
 #include "Controller.h"
+#include "aiController.h"
 
 class Vehicle : public Component
 {
 public:
 	struct Configuration {
 		// Starting position of the vehicle
-		PxVec3 position = PxVec3(0.0f, 2.0f, -10.0f);
+		PxVec3 position = PxVec3(0.0f, 10.0f, -10.0f);
 
 		// Wheel parameters
 		PxF32 wheelMass = 20.0f;
 		PxF32 wheelRadius = 0.5f;
 		PxF32 wheelWidth = 0.4f;
-		PxU32 nWheels = 4;
+		PxU32 nWheels = 6;
 
 		// Not certain we really want to be setting this tbh, we might want to just
 		// derive it from the wheel mass and radius?...
-		PxF32 wheelMOI = 0.5f * 20.0f * 5.0f * 5.0f;
+		PxF32 wheelMOI = 0.5f * 20.0f * 5.0f * 5.0f; //Wheel mass was 20f
 
 		// Chassis parameters
 		PxVec3 chassisOffset = PxVec3(0.0f, -1.0f + 0.65f, 0.25f);
@@ -52,14 +53,14 @@ public:
 		// Has something to do with the angle of the wheels at different suspension travel
 		// distances?
 		PxF32 camberAtRest = 0.0f;
-		PxF32 camberAtMaxDroop = 0.01f;
-		PxF32 camberAtMaxCompression = -0.01f;
+		PxF32 camberAtMaxDroop = 0.1f;
+		PxF32 camberAtMaxCompression = -0.1f;
 
 		// Engine parameters
-		PxF32 torque = 500.0f;
+		PxF32 torque = 3000.0f;
 
 		// Also not certain what this is, something engine-related
-		PxF32 maxOmega = 600.0f;
+		PxF32 maxOmega = 1000.0f; //INCREASE THIS TO INCREASE OUR SPEED I BELIEVE
 
 		// Not meant to be set externally - just something that needs to be passed around
 		// internally within Vehicle()
@@ -67,14 +68,23 @@ public:
 	};
 
 	Vehicle(Physics &physics, std::shared_ptr<Controller> controller, Configuration &config = Configuration());
-	~Vehicle();
 
+	// For python's sake
+	// It can't make shared_ptr<Controller>s out of AiControllers so this ctor converts for us
+	Vehicle(Physics &physics, std::shared_ptr<aiController> aicontroller, Configuration &config = Configuration());
+
+	~Vehicle();
+	
 	void Update(seconds dt);
+	PxRigidDynamic *GetActor() { return actor_; }
+	Physics &GetPhysics() { return physics_; } // TODO we probably shouldn't need this....
 
 protected:
 	void RegisterHandlers() override;
 
 private:
+	void Drive();
+
 	Physics &physics_;
 	std::shared_ptr<Controller> controller_;
 

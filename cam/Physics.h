@@ -37,9 +37,10 @@ public:
 
 	enum CollidesWithFlags : PxU32 {
 		WHEEL_COLLISIONS = CollisionFlags::CHASSIS | CollisionFlags::WHEEL, // wheels don't hit the ground, raycasts do that
-		GROUND_COLLISIONS = CollisionFlags::CHASSIS, // ground doesn't hit wheels either
+		GROUND_COLLISIONS = CollisionFlags::CHASSIS | CollisionFlags::GROUND, // ground doesn't hit wheels either
 		CHASSIS_COLLISIONS = CollisionFlags::GROUND | CollisionFlags::WHEEL | CollisionFlags::CHASSIS // chassis hits everything!
 	};
+
 private:
 	PxFoundation *foundation_;
 	PxPhysics *physics_;

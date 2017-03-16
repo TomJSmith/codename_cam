@@ -95,18 +95,21 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(ProjectDir)Include\openAL;$(ProjectDir)Include;$(ProjectDir)Include\Python;$(ProjectDir)Include\SDL;$(ProjectDir)Include\PhysX;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
-      <PreprocessorDefinitions>SDL_MAIN_HANDLED;DEBUG;BOOST_PYTHON_STATIC_LIB;GLEW_STATIC;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(ProjectDir)Include\assimp;$(ProjectDir)Include\openAL;$(ProjectDir)Include;$(ProjectDir)Include\Python;$(ProjectDir)Include\SDL;$(ProjectDir)Include\PhysX;%(AdditionalIncludeDirectories);$(ProjectDir)Include\assimp</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <PreprocessorDefinitions>PX_CHECKED;SDL_MAIN_HANDLED;BOOST_PYTHON_STATIC_LIB;DEBUG;NDEBUG;GLEW_STATIC;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <DisableSpecificWarnings>4244;</DisableSpecificWarnings>
       <TreatWarningAsError>true</TreatWarningAsError>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>EFX-Util.lib;OpenAL32.lib;winmm.lib;SDL2.lib;SDL2main.lib;SDL2test.lib;SDL2_mixer.lib;PhysX3CommonDEBUG_x64.lib;PhysX3CookingDEBUG_x64.lib;LowLevelClothDEBUG.lib;LowLevelDEBUG.lib;PhysX3CharacterKinematicDEBUG_x64.lib;PhysX3ExtensionsDEBUG.lib;PhysX3VehicleDEBUG.lib;PhysXProfileSDKDEBUG.lib;PhysXVisualDebuggerSDKDEBUG.lib;PvdRuntimeDEBUG.lib;PxTaskDEBUG.lib;SceneQueryDEBUG.lib;SimulationControllerDEBUG.lib;PhysX3DEBUG_x64.lib;opengl32.lib;glfw3.lib;glew32sd.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;Xinput9_1_0.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(ProjectDir)Libraries\openAL;$(ProjectDir)Libraries\SDL;$(ProjectDir)Libraries\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Xinput9_1_0.lib;assimp.lib;EFX-Util.lib;OpenAL32.lib;winmm.lib;PhysX3CommonCHECKED_x64.lib;PhysX3CookingCHECKED_x64.lib;LowLevelClothCHECKED.lib;LowLevelCHECKED.lib;PhysX3CharacterKinematicCHECKED_x64.lib;PhysX3ExtensionsCHECKED.lib;PhysX3VehicleCHECKED.lib;PhysXProfileSDKCHECKED.lib;PhysXVisualDebuggerSDKCHECKED.lib;PvdRuntimeCHECKED.lib;PxTaskCHECKED.lib;SceneQueryCHECKED.lib;SimulationControllerCHECKED.lib;PhysX3CHECKED_x64.lib;opengl32.lib;glfw3.lib;glew32s.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(ProjectDir)Libraries\openAL;$(ProjectDir)Libraries\SDL;$(ProjectDir)Libraries\Debug;%(AdditionalLibraryDirectories);$(ProjectDir)Libraries\assimp\64</AdditionalLibraryDirectories>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <EntryPointSymbol>
       </EntryPointSymbol>
+      <IgnoreSpecificDefaultLibraries>
+      </IgnoreSpecificDefaultLibraries>
     </Link>
     <CustomBuildStep>
       <Command>
@@ -143,7 +146,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(ProjectDir)Include\openAL;$(ProjectDir)Include;$(ProjectDir)Include\Python;$(ProjectDir)Include\SDL;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Include\assimp;$(ProjectDir)Include\openAL;$(ProjectDir)Include;$(ProjectDir)Include\Python;$(ProjectDir)Include\SDL;%(AdditionalIncludeDirectories);$(ProjectDir)Include\assimp</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <PreprocessorDefinitions>SDL_MAIN_HANDLED;BOOST_PYTHON_STATIC_LIB;GLEW_STATIC;NDEBUG;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <DisableSpecificWarnings>4244;</DisableSpecificWarnings>
@@ -152,21 +155,33 @@
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>$(ProjectDir)Libraries\openAL;$(ProjectDir)Libraries\SDL;$(ProjectDir)Libraries\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>EFX-Util.lib;OpenAL32.lib;winmm.lib;SDL2.lib;SDL2main.lib;SDL2test.lib;SDL2_mixer.lib;LowLevel.lib;LowLevelCLoth.lib;PhysX3_x64.lib;PhysX3CharacterKinematic_x64.lib;PhysX3Common_x64.lib;PhysX3Cooking_x64.lib;PhysX3Extensions.lib;PhysX3Vehicle.lib;PhysXProfileSDK.lib;PhysXVisualDebuggerSDK.lib;PvdRuntime.lib;PxTask.lib;SceneQuery.lib;SimulationController.lib;glfw3.lib;opengl32.lib;glew32s.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(ProjectDir)Libraries\openAL;$(ProjectDir)Libraries\SDL;$(ProjectDir)Libraries\Release;%(AdditionalLibraryDirectories);$(ProjectDir)Libraries\assimp\64</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Xinput9_1_0.lib;assimp.lib;EFX-Util.lib;OpenAL32.lib;winmm.lib;LowLevel.lib;LowLevelCLoth.lib;PhysX3_x64.lib;PhysX3CharacterKinematic_x64.lib;PhysX3Common_x64.lib;PhysX3Cooking_x64.lib;PhysX3Extensions.lib;PhysX3Vehicle.lib;PhysXProfileSDK.lib;PhysXVisualDebuggerSDK.lib;PvdRuntime.lib;PxTask.lib;SceneQuery.lib;SimulationController.lib;glfw3.lib;opengl32.lib;glew32s.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <EntryPointSymbol>
       </EntryPointSymbol>
+      <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
     </Link>
     <PostBuildEvent>
       <Command>xcopy /S /Y /D "$(SolutionDir)cam\Python27" "$(TargetDir)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="aiController.h" />
     <ClInclude Include="Audio.h" />
+    <ClInclude Include="Camera.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="Controller.h" />
+    <ClInclude Include="drawAiPath.h" />
     <ClInclude Include="Entity.h" />
+    <ClInclude Include="Events.h" />
     <ClInclude Include="EventSystem.h" />
+    <ClInclude Include="Image.h" />
+    <ClInclude Include="ImageShader.h" />
+    <ClInclude Include="Runner.h" />
+    <ClInclude Include="Texture.h" />
+    <ClInclude Include="ModelShader.h" />
+    <ClInclude Include="NavMesh.h" />
+    <ClInclude Include="NavNode.h" />
     <ClInclude Include="Physics.h" />
     <ClInclude Include="RigidBody.h" />
     <ClInclude Include="System.h" />
@@ -181,12 +196,22 @@
     <ClInclude Include="Vehicle.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="aiController.cpp" />
     <ClCompile Include="Audio.cpp" />
+    <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="Controller.cpp" />
+    <ClCompile Include="drawAiPath.cpp" />
     <ClCompile Include="Entity.cpp" />
+    <ClCompile Include="Image.cpp" />
+    <ClCompile Include="ImageShader.cpp" />
+    <ClCompile Include="Runner.cpp" />
+    <ClCompile Include="Texture.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Mesh.cpp" />
+    <ClCompile Include="ModelShader.cpp" />
+    <ClCompile Include="NavMesh.cpp" />
+    <ClCompile Include="NavNode.cpp" />
     <ClCompile Include="Physics.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="RigidBody.cpp" />
@@ -205,12 +230,49 @@
     <Copy DestinationFolder="$(OutputPath)/Python27" SourceFiles="@(Python27)" SkipUnchangedFiles="true" />
   </Target>
   <ItemGroup>
+    <None Include="car_ai.py" />
+    <None Include="a_star.py" />
     <None Include="component.py">
       <FileType>Document</FileType>
       <DeploymentContent>true</DeploymentContent>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="smiley.png">
+      <FileType>Document</FileType>
+      <DeploymentContent>true</DeploymentContent>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="image.vert">
+      <FileType>Document</FileType>
+      <DeploymentContent>true</DeploymentContent>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="image.frag">
+      <FileType>Document</FileType>
+      <DeploymentContent>true</DeploymentContent>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="chaser.py">
+      <FileType>Document</FileType>
+      <DeploymentContent>true</DeploymentContent>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="runner.py">
+      <FileType>Document</FileType>
+      <DeploymentContent>true</DeploymentContent>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="collision.py">
+      <FileType>Document</FileType>
+      <DeploymentContent>true</DeploymentContent>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="vehicle.py">
+      <FileType>Document</FileType>
+      <DeploymentContent>true</DeploymentContent>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="chaser_ai.py">
       <FileType>Document</FileType>
       <DeploymentContent>true</DeploymentContent>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -235,25 +297,35 @@
       <DeploymentContent>true</DeploymentContent>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="camera_control.py">
+      <FileType>Document</FileType>
+      <DeploymentContent>true</DeploymentContent>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <ContentWithTargetPath Include="Libraries\Release\python27.dll">
       <DeploymentContent>true</DeploymentContent>
       <CopyToOutputDirectory Condition="'$(Configuration)|$(Platform)'=='Release|x64'">PreserveNewest</CopyToOutputDirectory>
       <TargetPath>python27.dll</TargetPath>
     </ContentWithTargetPath>
-    <ContentWithTargetPath Include="Libraries\SDL\SDL2.dll">
+    <ContentWithTargetPath Include="Libraries\assimp\64\assimp.dll">
       <DeploymentContent>true</DeploymentContent>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <TargetPath>SDL2.dll</TargetPath>
+      <CopyToOutputDirectory Condition="'$(Platform)'=='x64'">PreserveNewest</CopyToOutputDirectory>
+      <TargetPath>assimp.dll</TargetPath>
     </ContentWithTargetPath>
-    <ContentWithTargetPath Include="Libraries\SDL\SDL2_mixer.dll">
+    <ContentWithTargetPath Include="Libraries\assimp\32\assimp.dll">
       <DeploymentContent>true</DeploymentContent>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <TargetPath>SDL2_mixer.dll</TargetPath>
+      <CopyToOutputDirectory Condition="'$(Platform)'=='x86'">PreserveNewest</CopyToOutputDirectory>
+      <TargetPath>assimp.dll</TargetPath>
     </ContentWithTargetPath>
     <ContentWithTargetPath Include="Libraries\openAL\OpenAL32.dll">
       <DeploymentContent>true</DeploymentContent>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <TargetPath>OpenAL32.dll</TargetPath>
+    </ContentWithTargetPath>
+    <ContentWithTargetPath Include="Libraries\openAL\wrap_oal.dll">
+      <DeploymentContent>true</DeploymentContent>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <TargetPath>wrap_oal.dll</TargetPath>
     </ContentWithTargetPath>
     <ContentWithTargetPath Include="Libraries\Release\glut32.dll">
       <DeploymentContent>true</DeploymentContent>
@@ -300,25 +372,25 @@
       <CopyToOutputDirectory Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">PreserveNewest</CopyToOutputDirectory>
       <TargetPath>nvToolsExt64_1.dll</TargetPath>
     </ContentWithTargetPath>
-    <ContentWithTargetPath Include="Libraries\Debug\PhysX3CharacterKinematicDEBUG_x64.dll">
+    <ContentWithTargetPath Include="Libraries\Debug\PhysX3CharacterKinematicCHECKED_x64.dll">
       <DeploymentContent>true</DeploymentContent>
       <CopyToOutputDirectory Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">PreserveNewest</CopyToOutputDirectory>
-      <TargetPath>PhysX3CharacterKinematicDEBUG_x64.dll</TargetPath>
+      <TargetPath>PhysX3CharacterKinematicCHECKED_x64.dll</TargetPath>
     </ContentWithTargetPath>
-    <ContentWithTargetPath Include="Libraries\Debug\PhysX3CommonDEBUG_x64.dll">
+    <ContentWithTargetPath Include="Libraries\Debug\PhysX3CommonCHECKED_x64.dll">
       <DeploymentContent>true</DeploymentContent>
       <CopyToOutputDirectory Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">PreserveNewest</CopyToOutputDirectory>
-      <TargetPath>PhysX3CommonDEBUG_x64.dll</TargetPath>
+      <TargetPath>PhysX3CommonCHECKED_x64.dll</TargetPath>
     </ContentWithTargetPath>
-    <ContentWithTargetPath Include="Libraries\Debug\PhysX3CookingDEBUG_x64.dll">
+    <ContentWithTargetPath Include="Libraries\Debug\PhysX3CookingCHECKED_x64.dll">
       <DeploymentContent>true</DeploymentContent>
       <CopyToOutputDirectory Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">PreserveNewest</CopyToOutputDirectory>
-      <TargetPath>PhysX3CookingDEBUG_x64.dll</TargetPath>
+      <TargetPath>PhysX3CookingCHECKED_x64.dll</TargetPath>
     </ContentWithTargetPath>
-    <ContentWithTargetPath Include="Libraries\Debug\PhysX3DEBUG_x64.dll">
+    <ContentWithTargetPath Include="Libraries\Debug\PhysX3CHECKED_x64.dll">
       <DeploymentContent>true</DeploymentContent>
       <CopyToOutputDirectory Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">PreserveNewest</CopyToOutputDirectory>
-      <TargetPath>PhysX3DEBUG_x64.dll</TargetPath>
+      <TargetPath>PhysX3CHECKED_x64.dll</TargetPath>
     </ContentWithTargetPath>
     <None Include="passthrough.frag">
       <FileType>Document</FileType>
@@ -326,6 +398,41 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="passthrough.vert">
+      <FileType>Document</FileType>
+      <DeploymentContent>true</DeploymentContent>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="chaser_mesh.obj">
+      <FileType>Document</FileType>
+      <DeploymentContent>true</DeploymentContent>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="runner_mesh.fbx">
+      <FileType>Document</FileType>
+      <DeploymentContent>true</DeploymentContent>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="runner_texture.jpg">
+      <FileType>Document</FileType>
+      <DeploymentContent>true</DeploymentContent>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="test_map_mesh.obj">
+      <FileType>Document</FileType>
+      <DeploymentContent>true</DeploymentContent>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="map_mesh.fbx">
+      <FileType>Document</FileType>
+      <DeploymentContent>true</DeploymentContent>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="nav_mesh.fbx">
+      <FileType>Document</FileType>
+      <DeploymentContent>true</DeploymentContent>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="test_nav_mesh.fbx">
       <FileType>Document</FileType>
       <DeploymentContent>true</DeploymentContent>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

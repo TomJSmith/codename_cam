@@ -3,23 +3,28 @@
 #include "System.h"
 
 #include <functional>
+#include <memory>
 #include <vector>
 
 #include "Component.h"
-#include "Renderer.h"
+#include "Events.h"
 #include "Transform.h"
+#include "Texture.h"
 
 class Shader;
 
 class Mesh : public Component {
 public:
-	Mesh(Shader &shader,
-		 GLuint nvertices,
-		 GLfloat **vertices,
-		 GLfloat **colours,
+	Mesh(std::unique_ptr<Shader> shader,
+		 const char* objFileName,
+		 const char* texFileName,
+		 glm::vec3 colour,
+		 glm::vec3 scale,
 		 GLuint type);
 
-	void GetMeshData(Renderer::GetMeshDataEvent event);
+	void GetMeshData(Events::Render event);
+	void Destroy() override;
+
 protected:
 	void RegisterHandlers() override;
 
@@ -27,10 +32,9 @@ private:
 	GLuint vao_;
 	GLuint type_;
 	GLuint count_;
+	Texture texture_;
 
-	Shader &shader_;
+	std::unique_ptr<Shader> shader_;
 
-	std::function<void(Renderer::GetMeshDataEvent)> handler_;
-
-	mat4 ModelMatrix();
+	std::function<void(Events::Render)> handler_;
 };
