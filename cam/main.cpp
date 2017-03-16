@@ -79,9 +79,11 @@ int main() {
 
 			aiVehicle->AddComponent(std::make_unique<ScriptComponent>("runner", physics));
 
+
 			/*auto smiley = Entity::Create(root.get()).lock();
 			std::shared_ptr<Component> image(new Image("runner_texture.jpg"));
 			smiley->AddComponent(std::move(image));*/
+
 		}
 
 
