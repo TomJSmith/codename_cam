@@ -18,4 +18,5 @@ void ModelShader::Setup(const Renderer::MeshData &data, const mat4 &projection)
 	glUniformMatrix4fv(glGetUniformLocation(*program_, "mvp"), 1, GL_FALSE, &mvp[0][0]);
 	glUniformMatrix4fv(glGetUniformLocation(*program_, "projection"), 1, GL_FALSE, &projection[0][0]);
 	glUniformMatrix4fv(glGetUniformLocation(*program_, "modelview"), 1, GL_FALSE, &data.modelMatrix[0][0]);
+	glUniform1i(glGetUniformLocation(*program_, "model_texture"), 0);
 }

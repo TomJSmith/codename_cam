@@ -207,7 +207,8 @@
     <None Include="collision.py" />
     <None Include="a_star.py" />
     <None Include="chaser_mesh.obj" />
-    <None Include="runner_mesh.obj" />
+    <None Include="runner_mesh.fbx" />
+    <None Include="runner_texture.jpg" />
     <None Include="map_mesh.fbx" />
     <None Include="chaser.py" />
     <None Include="runner.py" />

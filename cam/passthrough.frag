@@ -1,5 +1,8 @@
 #version 410
 
+uniform sampler2D model_texture;
+
+in vec2 TexCoord0;
 in vec3 v_colour;
 in vec3 N;
 in vec3 L;
@@ -24,7 +27,9 @@ void main() {
 	vec3 specular = v_colour * spec;
 	vec3 ambient = v_colour * 0.2f;
 
-	colour = vec4(ambient + diffuse + specular, 1.0f);
+	//colour = vec4(ambient + diffuse + specular, 1.0f);
+
+	colour = texture(model_texture, TexCoord0);
 
    // colour = vec4(v_colour, 1.0);
  

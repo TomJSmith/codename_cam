@@ -13,12 +13,15 @@
 
 Mesh::Mesh(std::unique_ptr<Shader> shader,
 		   const char* objFileName,	
+		   const char* texFileName,
 		   glm::vec3 colour,
 		   glm::vec3 scale,
 		   GLuint type) :
 	shader_(std::move(shader)),
-	type_(type)
+	type_(type),
+	texture_("runner_texture.jpg")
 {
+
 	Assimp::Importer importer;
 	const aiScene* objFile = importer.ReadFile(objFileName, aiProcessPreset_TargetRealtime_MaxQuality);
 	if (!objFile)
@@ -86,6 +89,14 @@ Mesh::Mesh(std::unique_ptr<Shader> shader,
 	glBindBuffer(GL_ARRAY_BUFFER, normalBuffer);
 	glBufferData(GL_ARRAY_BUFFER, count_ * sizeof(aiVector3D), normals.data(), GL_STATIC_DRAW);
 
+	GLuint texCoordBuffer = 0;
+	glGenBuffers(1, &texCoordBuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, texCoordBuffer);
+	glBufferData(GL_ARRAY_BUFFER, count_ * sizeof(aiVector2D), texCoords.data(), GL_STATIC_DRAW);
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, texture_.GetTexture());
+
 	glGenVertexArrays(1, &vao_);
 	glBindVertexArray(vao_);
 
@@ -100,6 +111,10 @@ Mesh::Mesh(std::unique_ptr<Shader> shader,
 	glBindBuffer(GL_ARRAY_BUFFER, normalBuffer);
 	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, 0);
 	glEnableVertexAttribArray(2);
+
+	glBindBuffer(GL_ARRAY_BUFFER, texCoordBuffer);
+	glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, 0, 0);
+	glEnableVertexAttribArray(3);
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
