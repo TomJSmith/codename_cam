@@ -114,15 +114,23 @@ Physics::~Physics()
 void Physics::Update(seconds dt)
 {
 	if (dt.count() == 0) return;
-	/*
+	
 	const float substep = 1.0f / 60.0f;
 	float frametime = dt.count();
 	frametime += extraFrameTime;
-	while (frametime > substep)
+	float test = frametime * (1+substep);
+
+	//test = floor(test);
+
+	
+	//extraFrameTime = frametime - test;
+	/*
+	while (frametime >= substep)
 	{
+		//std::cout << "SUBSTEP" << std::endl;
 		scene_->simulate(substep);
 		scene_->fetchResults(true);
-		extraFrameTime = frametime;
+
 		frametime -= substep;
 	}
 	*/
