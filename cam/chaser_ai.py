@@ -27,15 +27,24 @@ target = 0
 currNodeTarget = 0
 map = None
 astar = None
+
 closestPathNodes = None
 closeNodeSelf = None
 closeNodeTarget = None
+
+runner_e = None
+
 
 def destroyed(event):
     pass
     global v
     v = None
     print "chaser ai collided"
+
+def runnercreated(event):
+    pass
+    global runner_e
+    runner_e = event.get_runner()
 
 def init(self):
 
@@ -62,6 +71,7 @@ def init(self):
 
     v = vehicle.Vehicle(self.physics(), _controller, config)
     self.entity().add_component(v)
+    self.entity().register_runnercreated_handler(runnercreated)
     # self.entity().register_destroyed_handler(destroyed)
 
     # THIS CREATES
@@ -161,7 +171,7 @@ def drive_at(self, closeNodeTarget, closeNodeSelf):
 				print "target index : ", target
 				#reachedGoal = False
 				#_controller.setBrake(1)
-				print "We're there!"
+				#print "We're there!"
 				_controller.setAccel(0)
 				#_controller.setLeft(0)
 				#_controller.setRight(0)
@@ -205,10 +215,17 @@ def update(self, dt):
 	time += dt
 	if time > 5:
 		time = 0
+
 	if closestPathNodes is None or currNodeTarget >= len(closestPathNodes):
-		targetPosNode = (targets[target].x, targets[target].z)
+		#targetPosNode = (targets[target].x, targets[target].z)
+		#selfPos = self.entity().transform().global_position()
+		#selfPosNode = (selfPos.x, selfPos.z)
+		#closeNodeTarget = astar.findClosestNode(map, targetPosNode)
+		#closeNodeSelf = astar.findClosestNode(map, selfPosNode)
+		targetPosNode = (runner_e.transform().global_position().x, runner_e.transform().global_position().z)
 		selfPos = self.entity().transform().global_position()
 		selfPosNode = (selfPos.x, selfPos.z)
 		closeNodeTarget = astar.findClosestNode(map, targetPosNode)
 		closeNodeSelf = astar.findClosestNode(map, selfPosNode)
+
 	drive_at(self, map[closeNodeTarget], map[closeNodeSelf])

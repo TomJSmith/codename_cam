@@ -177,6 +177,7 @@
     <ClInclude Include="EventSystem.h" />
     <ClInclude Include="Image.h" />
     <ClInclude Include="ImageShader.h" />
+    <ClInclude Include="Runner.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="ModelShader.h" />
     <ClInclude Include="NavMesh.h" />
@@ -204,6 +205,7 @@
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="Image.cpp" />
     <ClCompile Include="ImageShader.cpp" />
+    <ClCompile Include="Runner.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Mesh.cpp" />
