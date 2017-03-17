@@ -78,24 +78,26 @@ int main() {
 			vehicle->AddComponent(std::make_unique<ScriptComponent>("runner", physics));
 
 
+
 			/*auto smiley = Entity::Create(root.get()).lock();
 			std::shared_ptr<Component> image(new Image("runner_texture.jpg"));
 			smiley->AddComponent(std::move(image));*/
+
 		}
 
 
-
+	
 		auto lastTime = timer::now();
 
-		bool soundT = true;
+		//bool soundT = true;
 		while (!glfwWindowShouldClose(renderer.getWindow())) {
 			auto currentTime = timer::now();
 			auto dt = seconds(currentTime - lastTime);
 			lastTime = currentTime;
 			
-			physics.Update(dt);
 			root->Update(dt);
 			renderer.Render(*root);
+			physics.Update(dt);
 			//audio.playAudio(4);
 			Entity::DeleteDestroyed();
 
