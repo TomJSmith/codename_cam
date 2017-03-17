@@ -87,15 +87,14 @@ int main() {
 		}
 
 
-
+	
 		auto lastTime = timer::now();
 
-		bool soundT = true;
+		//bool soundT = true;
 		while (!glfwWindowShouldClose(renderer.getWindow())) {
 			auto currentTime = timer::now();
 			auto dt = seconds(currentTime - lastTime);
 			lastTime = currentTime;
-			
 			physics.Update(dt);
 			root->Update(dt);
 			renderer.Render(*root);

@@ -115,9 +115,20 @@ void Physics::Update(seconds dt)
 {
 	if (dt.count() == 0) return;
 
-	scene_->simulate(dt.count());
-	scene_->fetchResults(true);
-
+	const float substep = 1.0f / 60.0f;
+	float frametime = dt.count();
+	frametime += extraFrameTime;
+	while (frametime > substep)
+	{
+		scene_->simulate(substep);
+		scene_->fetchResults(true);
+		extraFrameTime = frametime;
+		frametime -= substep;
+		
+		//scene_->simulate(dt.count());
+		//scene_->fetchResults(true);
+	}
+	
 	PxU32 ntransforms;
 	const auto transforms = scene_->getActiveTransforms(ntransforms);
 
@@ -136,6 +147,7 @@ void Physics::Update(seconds dt)
 		transform.rotation = glm::inverse(parentrot) * quaternion(pxtransform.q.w, pxtransform.q.x, pxtransform.q.y, pxtransform.q.z);
 		transform.position = vec3(pxtransform.p.x, pxtransform.p.y, pxtransform.p.z) - parentpos;
 	}
+
 }
 
 #ifdef DEBUG

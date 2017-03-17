@@ -122,9 +122,9 @@ def drive_at(self, closeNodeTarget, closeNodeSelf):
 	right = self.entity().transform().right()
 	test = self.entity().transform().position
 	
-	print "Current Target X: ", currTarget.x
-	print "Current Target Y: ", currTarget.y
-	print "Current Target Z: ", currTarget.z
+	#print "Current Target X: ", currTarget.x
+	#print "Current Target Y: ", currTarget.y
+	#print "Current Target Z: ", currTarget.z
 	targets[target].y = 0
 	test.y = 0
 	direction.y = 0
