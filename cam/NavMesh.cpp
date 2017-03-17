@@ -42,7 +42,7 @@ void NavMesh::process()
 			xSum += mNavMesh->mVertices[navFace.mIndices[j]].x;
 			zSum += mNavMesh->mVertices[navFace.mIndices[j]].z;
 		}
-		nodeGraph.push_back(NavNode(xSum, zSum, &navFace));
+		nodeGraph.push_back(NavNode(xSum/ navFace.mNumIndices, zSum/ navFace.mNumIndices, &navFace));
 	}
 	for (int i = 0; i < nodeGraph.size(); i++)
 	{

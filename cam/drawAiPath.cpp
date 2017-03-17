@@ -53,7 +53,7 @@ void drawAiPath::setupDraw(vector<vec3> aiPath, vec3 carPos)
 #ifdef DEBUG
 std::vector<Renderer::MeshData> drawAiPath::GetDebugMeshData()
 {
-	static Shader &shader = Shader::Load("passthrough.vert", "passthrough.frag");
+	//static Shader &shader = Shader::Load("passthrough.vert", "passthrough.frag");
 
 	static std::vector<GLuint> vertexVbos;
 	static std::vector<GLuint> colourVbos;
@@ -116,13 +116,13 @@ std::vector<Renderer::MeshData> drawAiPath::GetDebugMeshData()
 		vertexVbos.push_back(vertexBuffer);
 		colourVbos.push_back(colourBuffer);
 
-		ret.push_back(Renderer::MeshData{
+		/*ret.push_back(Renderer::MeshData{
 			vao,
 			shader.Program(),
 			(GLuint)pathToDraw.size(),
 			GL_LINES,
 			mat4(1.0)
-		});
+		});*/
 	
 
 	return ret;

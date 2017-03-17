@@ -5,7 +5,7 @@
 #include <stdexcept>
 
 #include "Entity.h"
-#include "Shader.h"
+#include "ModelShader.h"
 #include "Transform.h"
 
 class SimulationCallback : public PxSimulationEventCallback {
@@ -104,6 +104,9 @@ Physics::~Physics()
 
 	cooking_->release();
 	scene_->release();
+
+	PxCloseExtensions();
+
 	physics_->release();
 	foundation_->release();
 }
@@ -138,7 +141,7 @@ void Physics::Update(seconds dt)
 #ifdef DEBUG
 std::vector<Renderer::MeshData> Physics::GetDebugMeshData()
 {
-	static Shader &shader = Shader::Load("passthrough.vert", "passthrough.frag");
+	static ModelShader shader;
 
 	static std::vector<GLuint> vertexVbos;
 	static std::vector<GLuint> colourVbos;
@@ -204,10 +207,10 @@ std::vector<Renderer::MeshData> Physics::GetDebugMeshData()
 
 		ret.push_back(Renderer::MeshData{
 			vao,
-			shader.Program(),
 			2,
 			GL_LINES,
-			mat4(1.0)
+			mat4(1.0),
+			&shader
 		});
 	}
 

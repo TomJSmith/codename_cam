@@ -8,6 +8,10 @@ class Entity;
 namespace Events {
 	struct Infected {};
 	struct Destroyed {};
+	struct RunnerCreated {
+		Entity *runner;
+		Entity *GetRunner() { return runner; }
+	};
 
 	struct Render {
 		std::vector<Renderer::MeshData> &data;
@@ -28,5 +32,6 @@ using EventSystem = EventSystem_<
 	Events::Render,
 	Events::Collided, 
 	Events::Destroyed, 
-	Events::Infected
+	Events::Infected,
+	Events::RunnerCreated
 >;

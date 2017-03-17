@@ -90,7 +90,22 @@
     <ClInclude Include="NavNode.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ModelShader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ImageShader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Image.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="drawAiPath.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Runner.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -140,16 +155,31 @@
     <ClCompile Include="Controller.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="aiController.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="NavMesh.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="NavNode.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ModelShader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ImageShader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Image.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="drawAiPath.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="aiController.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Runner.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -183,11 +213,17 @@
     <None Include="collision.py" />
     <None Include="a_star.py" />
     <None Include="chaser_mesh.obj" />
-    <None Include="runner_mesh.obj" />
+    <None Include="runner_mesh.fbx" />
+    <None Include="runner_texture.jpg" />
     <None Include="map_mesh.fbx" />
     <None Include="chaser.py" />
     <None Include="runner.py" />
     <None Include="nav_mesh.fbx" />
     <None Include="test_nav_mesh.fbx" />
+    <None Include="smiley.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="image.vert" />
+    <None Include="image.frag" />
   </ItemGroup>
 </Project>

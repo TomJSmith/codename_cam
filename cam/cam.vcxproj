@@ -175,6 +175,11 @@
     <ClInclude Include="Entity.h" />
     <ClInclude Include="Events.h" />
     <ClInclude Include="EventSystem.h" />
+    <ClInclude Include="Image.h" />
+    <ClInclude Include="ImageShader.h" />
+    <ClInclude Include="Runner.h" />
+    <ClInclude Include="Texture.h" />
+    <ClInclude Include="ModelShader.h" />
     <ClInclude Include="NavMesh.h" />
     <ClInclude Include="NavNode.h" />
     <ClInclude Include="Physics.h" />
@@ -198,8 +203,13 @@
     <ClCompile Include="Controller.cpp" />
     <ClCompile Include="drawAiPath.cpp" />
     <ClCompile Include="Entity.cpp" />
+    <ClCompile Include="Image.cpp" />
+    <ClCompile Include="ImageShader.cpp" />
+    <ClCompile Include="Runner.cpp" />
+    <ClCompile Include="Texture.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Mesh.cpp" />
+    <ClCompile Include="ModelShader.cpp" />
     <ClCompile Include="NavMesh.cpp" />
     <ClCompile Include="NavNode.cpp" />
     <ClCompile Include="Physics.cpp" />
@@ -223,6 +233,21 @@
     <None Include="car_ai.py" />
     <None Include="a_star.py" />
     <None Include="component.py">
+      <FileType>Document</FileType>
+      <DeploymentContent>true</DeploymentContent>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="smiley.png">
+      <FileType>Document</FileType>
+      <DeploymentContent>true</DeploymentContent>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="image.vert">
+      <FileType>Document</FileType>
+      <DeploymentContent>true</DeploymentContent>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="image.frag">
       <FileType>Document</FileType>
       <DeploymentContent>true</DeploymentContent>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -382,7 +407,12 @@
       <DeploymentContent>true</DeploymentContent>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="runner_mesh.obj">
+    <None Include="runner_mesh.fbx">
+      <FileType>Document</FileType>
+      <DeploymentContent>true</DeploymentContent>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="runner_texture.jpg">
       <FileType>Document</FileType>
       <DeploymentContent>true</DeploymentContent>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
