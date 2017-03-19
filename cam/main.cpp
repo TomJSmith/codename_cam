@@ -19,6 +19,7 @@
 #include "Vehicle.h"
 /*Not sure where to put this afterwards just for testing*/
 #include "drawAiPath.h"
+#include "NavNode.h"
 
 int main() {
 	try {

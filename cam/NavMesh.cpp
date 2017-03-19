@@ -43,7 +43,7 @@ void NavMesh::process()
 			zSum += mNavMesh->mVertices[navFace.mIndices[j]].z;
 		}
 
-		nodeGraph.push_back(NavNode((xSum / navFace.mNumIndices), (zSum / navFace.mNumIndices), &navFace));
+		nodeGraph.push_back(NavNode((xSum / navFace.mNumIndices), (zSum / navFace.mNumIndices), &navFace, mNavMesh->mVertices));
 
 	}
 	for (int i = 0; i < nodeGraph.size(); i++)
