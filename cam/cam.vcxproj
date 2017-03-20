@@ -432,7 +432,7 @@
       <DeploymentContent>true</DeploymentContent>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="test_nav_mesh.fbx">
+    <None Include="test_nav.fbx">
       <FileType>Document</FileType>
       <DeploymentContent>true</DeploymentContent>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

@@ -49,6 +49,7 @@ private:
 	PxScene *scene_;
 	PxCooking *cooking_;
 
+	float extraFrameTime = 0;
 #ifdef DEBUG
 public:
 	std::vector<Renderer::MeshData> GetDebugMeshData();

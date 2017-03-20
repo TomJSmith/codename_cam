@@ -116,7 +116,6 @@ Physics::~Physics()
 void Physics::Update(seconds dt)
 {
 	if (dt.count() == 0) return;
-
 	static float accumulator = 0.0f;
 	accumulator += dt.count();
 

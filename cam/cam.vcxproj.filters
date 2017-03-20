@@ -219,7 +219,7 @@
     <None Include="chaser.py" />
     <None Include="runner.py" />
     <None Include="nav_mesh.fbx" />
-    <None Include="test_nav_mesh.fbx" />
+    <None Include="test_nav.fbx" />
     <None Include="smiley.png">
       <Filter>Resource Files</Filter>
     </None>
