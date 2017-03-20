@@ -75,7 +75,7 @@ int main() {
 			vehicle->AddComponent(std::move(mesh));
 			vehicle->AddComponent(std::move(v));
 			vehicle->AddComponent(std::move(c));
-			vehicle->AddComponent(std::make_unique<ScriptComponent>("runner", physics));
+			//vehicle->AddComponent(std::make_unique<ScriptComponent>("runner", physics));
 
 
 			/*auto smiley = Entity::Create(root.get()).lock();
@@ -101,6 +101,7 @@ int main() {
 
 			glfwPollEvents();
 
+			std::cout << "frame time: " << dt.count() << " seconds\n";
 		}
 
 		return 0;

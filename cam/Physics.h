@@ -41,6 +41,8 @@ public:
 		CHASSIS_COLLISIONS = CollisionFlags::GROUND | CollisionFlags::WHEEL | CollisionFlags::CHASSIS // chassis hits everything!
 	};
 
+	static const float Timestep;
+
 private:
 	PxFoundation *foundation_;
 	PxPhysics *physics_;

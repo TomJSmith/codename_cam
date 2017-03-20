@@ -426,34 +426,41 @@ void Vehicle::Update(seconds dt)
 
 	Drive();
 
-	PxVehicleSuspensionRaycasts(
-		batchquery_,
-		1,
-		vehicles,
-		(PxU32)querybuffer_.size(),
-		querybuffer_.data()
-	);
+	static float accumulator = 0.0f;
+	accumulator += dt.count();
 
-	std::vector<PxWheelQueryResult> wheelresults(vehicle_->mWheelsSimData.getNbWheels());
-	PxVehicleWheelQueryResult vehicleresults[1] = {
-		{wheelresults.data(), vehicle_->mWheelsSimData.getNbWheels()}
-	};
+	while (accumulator > Physics::Timestep) {
+		PxVehicleSuspensionRaycasts(
+			batchquery_,
+			1,
+			vehicles,
+			(PxU32)querybuffer_.size(),
+			querybuffer_.data()
+		);
 
-	PxVehicleDrive4WSmoothDigitalRawInputsAndSetAnalogInputs(
-		keySmoothingData,
-		steerVsForwardSpeedTable,
-		input_,
-		dt.count(),
-		PxVehicleIsInAir(vehicleresults[0]),
-		*vehicle_
-	);
+		std::vector<PxWheelQueryResult> wheelresults(vehicle_->mWheelsSimData.getNbWheels());
+		PxVehicleWheelQueryResult vehicleresults[1] = {
+			{wheelresults.data(), vehicle_->mWheelsSimData.getNbWheels()}
+		};
 
-	PxVehicleUpdates(
-		dt.count(),
-		physics_.GetScene()->getGravity(),
-		*frictionpairs_,
-		1,
-		vehicles,
-		nullptr
-	);
+		PxVehicleDrive4WSmoothDigitalRawInputsAndSetAnalogInputs(
+			keySmoothingData,
+			steerVsForwardSpeedTable,
+			input_,
+			dt.count(),
+			PxVehicleIsInAir(vehicleresults[0]),
+			*vehicle_
+		);
+
+		PxVehicleUpdates(
+			Physics::Timestep,
+			physics_.GetScene()->getGravity(),
+			*frictionpairs_,
+			1,
+			vehicles,
+			nullptr
+		);
+
+		accumulator -= Physics::Timestep;
+	}
 }
