@@ -23,12 +23,13 @@ Mesh::Mesh(std::unique_ptr<Shader> shader,
 {
 
 	Assimp::Importer importer;
-	const aiScene* objFile = importer.ReadFile(objFileName, aiProcessPreset_TargetRealtime_MaxQuality);
+	auto fullobjfilename = Util::ModelDirectory + objFileName;
+	const aiScene* objFile = importer.ReadFile(fullobjfilename, aiProcessPreset_TargetRealtime_MaxQuality);
 	if (!objFile)
 	{
-		std::cerr << "could not load file " << objFileName << ": " << importer.GetErrorString() << std::endl;
+		std::cerr << "could not load file " << fullobjfilename << ": " << importer.GetErrorString() << std::endl;
 	}
-	std::cout << objFileName << std::endl;
+	std::cout << fullobjfilename << std::endl;
 	std::cout << "num of textures: " << objFile->mNumMaterials << std::endl;
 	std::cout << "num of meshes: " << objFile->mNumMeshes << std::endl;
 	std::vector<aiVector3D> vertices;

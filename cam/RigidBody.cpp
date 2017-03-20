@@ -2,14 +2,14 @@
 
 #include "RigidBody.h"
 
-#include "Entity.h"
-
 #include <assimp\scene.h>
 #include <assimp\postprocess.h>
 #include <assimp\material.h>
 #include <assimp\Importer.hpp>
-
 #include <iostream>
+
+#include "Entity.h"
+#include "Util.h"
 
 using namespace physx;
 
@@ -71,7 +71,8 @@ static PxTriangleMeshGeometry CreateGeometry(const char *objfile, Physics &physi
 {
 	// TODO stolen from Mesh.cpp make this not duplicated
 	Assimp::Importer importer;
-	const aiScene* objFile = importer.ReadFile(objfile, aiProcess_Triangulate | aiProcess_JoinIdenticalVertices);
+	auto fullfilename = Util::ModelDirectory + objfile;
+	const aiScene* objFile = importer.ReadFile(fullfilename.c_str(), aiProcess_Triangulate | aiProcess_JoinIdenticalVertices);
 	if (!objFile)
 	{
 		std::cerr << "could not load file " << objFile << ": " << importer.GetErrorString() << std::endl;

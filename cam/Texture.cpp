@@ -3,9 +3,12 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb/stb_image.h>
 
+#include "Util.h"
+
 Texture::Texture(const char *filename)
 {
-	auto data = stbi_load(filename, &width_, &height_, &ncomponents_, 4);
+	auto fullfilename = Util::TextureDirectory + filename;
+	auto data = stbi_load(fullfilename.c_str(), &width_, &height_, &ncomponents_, 4);
 
 	glGenTextures(1, &texture_);
 	glActiveTexture(GL_TEXTURE0);

@@ -8,13 +8,15 @@
 #include <assimp\Importer.hpp>
 #include <algorithm>
 
-namespace py = boost::python;
+#include "Util.h"
 
+namespace py = boost::python;
 
 NavMesh::NavMesh(const char* navMeshFileName)
 {
 	Assimp::Importer importer;
-	const aiScene* navMeshScene = importer.ReadFile(navMeshFileName, aiProcess_JoinIdenticalVertices);
+	auto fullfilename = Util::ModelDirectory + navMeshFileName;
+	const aiScene* navMeshScene = importer.ReadFile(fullfilename, aiProcess_JoinIdenticalVertices);
 	if (!navMeshScene) {
 		std::cerr << "could not load nav mesh: " << navMeshFileName << "\n" << importer.GetErrorString() << std::endl;
 	}

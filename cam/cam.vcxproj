@@ -70,12 +70,16 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ExtensionsToDeleteOnClean>*.dll;*.py;*.frag;*.vert;*.cdf;*.cache;*.obj;*.obj.enc;*.ilk;*.ipdb;*.iobj;*.resources;*.tlb;*.tli;*.tlh;*.tmp;*.rsp;*.pgc;*.pgd;*.meta;*.tlog;*.manifest;*.res;*.pch;*.exp;*.idb;*.rep;*.xdc;*.pdb;*_manifest.rc;*.bsc;*.sbr;*.xml;*.metagen;*.bi</ExtensionsToDeleteOnClean>
-    <CustomBuildAfterTargets>BuildLink</CustomBuildAfterTargets>
     <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(NETFXKitsDir)Lib\um\x64;</IncludePath>
     <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64;</LibraryPath>
+    <PreBuildEventUseInBuild>false</PreBuildEventUseInBuild>
+    <PreLinkEventUseInBuild>false</PreLinkEventUseInBuild>
+    <PostBuildEventUseInBuild>true</PostBuildEventUseInBuild>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ExtensionsToDeleteOnClean>*.dll;*.py;*.frag;*.vert;*.cdf;*.cache;*.obj;*.obj.enc;*.ilk;*.ipdb;*.iobj;*.resources;*.tlb;*.tli;*.tlh;*.tmp;*.rsp;*.pgc;*.pgd;*.meta;*.tlog;*.manifest;*.res;*.pch;*.exp;*.idb;*.rep;*.xdc;*.pdb;*_manifest.rc;*.bsc;*.sbr;*.xml;*.metagen;*.bi</ExtensionsToDeleteOnClean>
+    <PreBuildEventUseInBuild>false</PreBuildEventUseInBuild>
+    <PreLinkEventUseInBuild>false</PreLinkEventUseInBuild>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -111,15 +115,13 @@
       <IgnoreSpecificDefaultLibraries>
       </IgnoreSpecificDefaultLibraries>
     </Link>
-    <CustomBuildStep>
-      <Command>
-      </Command>
-      <Inputs>%(Inputs);</Inputs>
-      <Outputs>
-      </Outputs>
-    </CustomBuildStep>
     <PostBuildEvent>
-      <Command>xcopy /S /Y /D "$(SolutionDir)cam\Python27" "$(TargetDir)"</Command>
+      <Command>xcopy /S /Y /D "$(SolutionDir)cam\Python27" "$(TargetDir)\Python27\"
+xcopy /S /Y /D "$(SolutionDir)cam\Audio" "$(TargetDir)\Audio\"
+xcopy /S /Y /D "$(SolutionDir)cam\Textures" "$(TargetDir)\Textures\"
+xcopy /S /Y /D "$(SolutionDir)cam\Models" "$(TargetDir)\Models\"
+xcopy /S /Y /D "$(SolutionDir)cam\Scripts" "$(TargetDir)\Scripts\"
+xcopy /S /Y /D "$(SolutionDir)cam\Shaders" "$(TargetDir)\Shaders\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -162,7 +164,12 @@
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy /S /Y /D "$(SolutionDir)cam\Python27" "$(TargetDir)"</Command>
+      <Command>xcopy /S /Y /D "$(SolutionDir)cam\Python27" "$(TargetDir)\Python27\"
+xcopy /S /Y /D "$(SolutionDir)cam\Audio" "$(TargetDir)\Audio\"
+xcopy /S /Y /D "$(SolutionDir)cam\Textures" "$(TargetDir)\Textures\"
+xcopy /S /Y /D "$(SolutionDir)cam\Models" "$(TargetDir)\Models\"
+xcopy /S /Y /D "$(SolutionDir)cam\Scripts" "$(TargetDir)\Scripts\"
+xcopy /S /Y /D "$(SolutionDir)cam\Shaders" "$(TargetDir)\Shaders\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -222,86 +229,6 @@
     <ClCompile Include="Vehicle.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <AvailableItemName Include="Python27">
-      <Visible>false</Visible>
-    </AvailableItemName>
-  </ItemGroup>
-  <Target Name="AfterBuild">
-    <Copy DestinationFolder="$(OutputPath)/Python27" SourceFiles="@(Python27)" SkipUnchangedFiles="true" />
-  </Target>
-  <ItemGroup>
-    <None Include="car_ai.py" />
-    <None Include="a_star.py" />
-    <None Include="component.py">
-      <FileType>Document</FileType>
-      <DeploymentContent>true</DeploymentContent>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="smiley.png">
-      <FileType>Document</FileType>
-      <DeploymentContent>true</DeploymentContent>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="image.vert">
-      <FileType>Document</FileType>
-      <DeploymentContent>true</DeploymentContent>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="image.frag">
-      <FileType>Document</FileType>
-      <DeploymentContent>true</DeploymentContent>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="chaser.py">
-      <FileType>Document</FileType>
-      <DeploymentContent>true</DeploymentContent>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="runner.py">
-      <FileType>Document</FileType>
-      <DeploymentContent>true</DeploymentContent>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="collision.py">
-      <FileType>Document</FileType>
-      <DeploymentContent>true</DeploymentContent>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="vehicle.py">
-      <FileType>Document</FileType>
-      <DeploymentContent>true</DeploymentContent>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="chaser_ai.py">
-      <FileType>Document</FileType>
-      <DeploymentContent>true</DeploymentContent>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="test.wav">
-      <FileType>Document</FileType>
-      <DeploymentContent>true</DeploymentContent>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="test2.wav">
-      <FileType>Document</FileType>
-      <DeploymentContent>true</DeploymentContent>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Bats.wav">
-      <FileType>Document</FileType>
-      <DeploymentContent>true</DeploymentContent>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Inferno.wav">
-      <FileType>Document</FileType>
-      <DeploymentContent>true</DeploymentContent>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="camera_control.py">
-      <FileType>Document</FileType>
-      <DeploymentContent>true</DeploymentContent>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <ContentWithTargetPath Include="Libraries\Release\python27.dll">
       <DeploymentContent>true</DeploymentContent>
       <CopyToOutputDirectory Condition="'$(Configuration)|$(Platform)'=='Release|x64'">PreserveNewest</CopyToOutputDirectory>
@@ -392,51 +319,6 @@
       <CopyToOutputDirectory Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">PreserveNewest</CopyToOutputDirectory>
       <TargetPath>PhysX3CHECKED_x64.dll</TargetPath>
     </ContentWithTargetPath>
-    <None Include="passthrough.frag">
-      <FileType>Document</FileType>
-      <DeploymentContent>true</DeploymentContent>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="passthrough.vert">
-      <FileType>Document</FileType>
-      <DeploymentContent>true</DeploymentContent>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="chaser_mesh.obj">
-      <FileType>Document</FileType>
-      <DeploymentContent>true</DeploymentContent>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="runner_mesh.fbx">
-      <FileType>Document</FileType>
-      <DeploymentContent>true</DeploymentContent>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="runner_texture.jpg">
-      <FileType>Document</FileType>
-      <DeploymentContent>true</DeploymentContent>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="test_map_mesh.obj">
-      <FileType>Document</FileType>
-      <DeploymentContent>true</DeploymentContent>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="map_mesh.fbx">
-      <FileType>Document</FileType>
-      <DeploymentContent>true</DeploymentContent>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="nav_mesh.fbx">
-      <FileType>Document</FileType>
-      <DeploymentContent>true</DeploymentContent>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="test_nav.fbx">
-      <FileType>Document</FileType>
-      <DeploymentContent>true</DeploymentContent>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

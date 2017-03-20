@@ -18,7 +18,7 @@ std::shared_ptr<GLuint> Shader::Compile(GLenum type, const std::string &source)
 
 	shaderlist_[source] = shader;
 
-	std::string contents = Util::ReadFile(source);
+	std::string contents = Util::ReadFile(Util::ShaderDirectory + source);
 	const GLchar *src = contents.c_str();
 	glShaderSource(*shader, 1, &src, 0);
 	glCompileShader(*shader);

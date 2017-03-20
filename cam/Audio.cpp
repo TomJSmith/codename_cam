@@ -1,8 +1,6 @@
 #include "Audio.h"
 
-
-
-
+#include "Util.h"
 
 Audio::Audio()
 {
@@ -123,10 +121,10 @@ void Audio::initAudio()
 	alGenBuffers(1, &wav4.buffer);
 	checkError();
 
-	string firstWav = "\\test.wav";
-	string secondWav = "\\test2.wav";
-	string thirdWav = "\\Bats.wav";
-	string fourthWav = "\\Inferno.wav";
+	string firstWav = Util::AudioDirectory + "\\test.wav";
+	string secondWav = Util::AudioDirectory + "\\test2.wav";
+	string thirdWav = Util::AudioDirectory + "\\Bats.wav";
+	string fourthWav = Util::AudioDirectory + "\\Inferno.wav";
 
 	firstWav = pathToWav + firstWav;
 	secondWav = pathToWav + secondWav;

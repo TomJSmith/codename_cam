@@ -11,6 +11,7 @@
 #include "Camera.h"
 #include "NavMesh.h"
 #include "Runner.h"
+#include "Util.h"
 
 using namespace boost;
 
@@ -243,7 +244,7 @@ void ScriptComponent::InitPython()
 
 	if (!initialized) {
 		try {
-			Py_SetPythonHome(".");
+			Py_SetPythonHome("Python27/");
 			Py_Initialize();
 
 			initcomponent();
@@ -267,7 +268,7 @@ void ScriptComponent::InitPython()
 void ScriptComponent::InitScript(const std::string &type)
 {
 	try {
-		std::string filename = type + ".py";
+		std::string filename = Util::ScriptDirectory + type + ".py";
 
 		auto module = python::borrowed(PyImport_AddModule("__main__"));
 		auto handle = python::handle<>(module);
