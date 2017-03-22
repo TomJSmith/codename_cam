@@ -94,7 +94,7 @@ static PxTriangleMeshGeometry CreateGeometry(const char *objfile, Physics &physi
 			aiVector3D vert = objMesh->mVertices[face.mIndices[j]];
 			if (objfile == "test_map_mesh.fbx")
 			{
-				std::cout << vert.x << " " << vert.y << " " << vert.z << std::endl;
+				//std::cout << vert.x << " " << vert.y << " " << vert.z << std::endl;
 			}
 			vec3 vertice(vert.x * scale, vert.y * scale, vert.z * scale);
 			//vec3 normal(norm.x, norm.y, norm.z);

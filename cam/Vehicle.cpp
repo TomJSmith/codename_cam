@@ -230,7 +230,7 @@ static PxRigidDynamic *CreateVehicleActor(Vehicle::Configuration config, PxPhysi
 		wheelMeshes.push_back(CreateWheelMesh(config.wheelWidth, config.wheelRadius, physics, cooking));
 	}
 
-	auto ret = physics->createRigidDynamic(PxTransform(config.position, PxQuat(PxIdentity)));
+	auto ret = physics->createRigidDynamic(PxTransform(config.position, config.rotation));
 
 	PxFilterData wheelSimFilter { Physics::WHEEL, Physics::WHEEL_COLLISIONS, 0, 0 };
 	PxFilterData chassisSimFilter { Physics::CHASSIS, Physics::CHASSIS_COLLISIONS, 0, 0 };

@@ -10,7 +10,7 @@ NavNode::NavNode(float x, float z, const aiFace* aFace, const aiVector3D* verts)
 	mVerts = verts;
 	for (uint32_t i = 0; i < mFace->mNumIndices; i++)
 	{
-		std::cout << mFace->mIndices[i] << std::endl;
+		//std::cout << mFace->mIndices[i] << std::endl;
 		/*vertIndices.push_back(aiVector2D(aMesh->mVertices[aFace->mIndices[i]].x,
 			aMesh->mVertices[aFace->mIndices[i]].z));*/
 		vertIndices.push_back(mFace->mIndices[i]);
