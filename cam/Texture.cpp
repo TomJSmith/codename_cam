@@ -5,6 +5,9 @@
 
 #include "Util.h"
 
+Texture::Texture()
+{}
+
 Texture::Texture(const char *filename)
 {
 	auto fullfilename = Util::TextureDirectory + filename;

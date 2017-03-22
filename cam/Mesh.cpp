@@ -13,15 +13,14 @@
 
 Mesh::Mesh(std::unique_ptr<Shader> shader,
 		   const char* objFileName,	
-		   const char* texFileName,
+		   /*const char* texFileName,*/
 		   glm::vec3 colour,
 		   glm::vec3 scale,
 		   GLuint type) :
 	shader_(std::move(shader)),
-	type_(type),
-	texture_("runner_texture.jpg")
+	type_(type)
+	/*texture_(texFileName)*/
 {
-
 	Assimp::Importer importer;
 	auto fullobjfilename = Util::ModelDirectory + objFileName;
 	const aiScene* objFile = importer.ReadFile(fullobjfilename, aiProcessPreset_TargetRealtime_MaxQuality);
@@ -95,8 +94,8 @@ Mesh::Mesh(std::unique_ptr<Shader> shader,
 	glBindBuffer(GL_ARRAY_BUFFER, texCoordBuffer);
 	glBufferData(GL_ARRAY_BUFFER, count_ * sizeof(aiVector2D), texCoords.data(), GL_STATIC_DRAW);
 
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, texture_.GetTexture());
+	/*glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, texture_.GetTexture());*/
 
 	glGenVertexArrays(1, &vao_);
 	glBindVertexArray(vao_);

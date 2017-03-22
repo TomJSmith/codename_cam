@@ -57,20 +57,20 @@ int main() {
 
 		{
 			auto plane = Entity::Create(root.get()).lock();
-			std::shared_ptr<Component> planemesh(new Mesh(std::unique_ptr<Shader>(new ModelShader), "map_mesh.fbx", NULL, vec3(0.2, 0.4, 0.2), vec3(1.0f, 1.0f, 1.0f), GL_TRIANGLES));
+			std::shared_ptr<Component> planemesh(new Mesh(std::unique_ptr<Shader>(new ModelShader("test.jpg")), "map_mesh.fbx", vec3(0.2, 0.4, 0.2), vec3(1.0f, 1.0f, 1.0f), GL_TRIANGLES));
 			std::shared_ptr<Component> planebody(new RigidBody(physics, *physics.GetPhysics()->createMaterial(1.0f, 1.0f, 1.0f), "map_mesh.fbx", 1.0f, false));
 			plane->AddComponent(std::move(planemesh));
 			plane->AddComponent(std::move(planebody));
 
 			auto aiVehicle = Entity::Create(root.get()).lock();
-			std::shared_ptr<Component> aiMesh(new Mesh(std::unique_ptr<Shader>(new ModelShader), "runner_mesh.fbx", NULL, vec3(1.0, 0.84, 0.0), vec3(4.427f, 2.426f, 12.935f), GL_TRIANGLES));//debug seems to work better was 2.5
+			std::shared_ptr<Component> aiMesh(new Mesh(std::unique_ptr<Shader>(new ModelShader("runner_texture.jpg")), "runner_mesh.fbx", vec3(1.0, 0.84, 0.0), vec3(4.427f, 2.426f, 12.935f), GL_TRIANGLES));//debug seems to work better was 2.5
 			std::shared_ptr<Component> aiV(new ScriptComponent("chaser_ai", physics));
 			aiVehicle->AddComponent(std::move(aiMesh));
 			aiVehicle->AddComponent(std::move(aiV));
 			aiVehicle->AddComponent(std::make_unique<ScriptComponent>("chaser", physics));
 
 			auto vehicle = Entity::Create(root.get()).lock();
-			std::shared_ptr<Component> mesh(new Mesh(std::unique_ptr<Shader>(new ModelShader), "runner_mesh.fbx", NULL, vec3(0.1, 0.1, 0.6), vec3(4.427f, 2.426f, 12.935f), GL_TRIANGLES));
+			std::shared_ptr<Component> mesh(new Mesh(std::unique_ptr<Shader>(new ModelShader("runner_texture.jpg")), "runner_mesh.fbx", vec3(0.1, 0.1, 0.6), vec3(4.427f, 2.426f, 12.935f), GL_TRIANGLES));
 			std::shared_ptr<Component> v(new ScriptComponent("vehicle", physics));
 			std::shared_ptr<Component> c(new ScriptComponent("collision", physics));
 			vehicle->AddComponent(std::move(mesh));

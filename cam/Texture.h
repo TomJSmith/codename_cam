@@ -7,6 +7,7 @@
 class Texture : public Component
 {
 public:
+	Texture();
 	Texture(const char *filename);
 	~Texture();
 
