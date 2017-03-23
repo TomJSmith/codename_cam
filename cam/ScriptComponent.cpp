@@ -47,6 +47,13 @@ BOOST_PYTHON_MODULE(physics) {
 		.def("axis_angle", &glm::angleAxis<float, glm::defaultp>)
 		.staticmethod("axis_angle");
 
+	python::class_<PxQuat>("PxQuat")
+		.def(python::init<float, float, float, float>())
+		.def_readwrite("x", &PxQuat::x)
+		.def_readwrite("y", &PxQuat::y)
+		.def_readwrite("z", &PxQuat::z)
+		.def_readwrite("w", &PxQuat::w);
+
 	python::class_<Transform>("Transform")
 		.def_readwrite("position", &Transform::position)
 		.def_readwrite("rotation", &Transform::rotation)
@@ -169,6 +176,7 @@ BOOST_PYTHON_MODULE(vehicle) {
 
 	python::class_<Vehicle::Configuration>("Configuration")
 		.def_readwrite("position", &Vehicle::Configuration::position)
+		.def_readwrite("rotation", &Vehicle::Configuration::rotation)
 		.def_readwrite("wheel_mass", &Vehicle::Configuration::wheelMass)
 		.def_readwrite("wheel_moi", &Vehicle::Configuration::wheelMOI)
 		.def_readwrite("wheel_radius", &Vehicle::Configuration::wheelRadius)

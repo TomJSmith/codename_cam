@@ -71,6 +71,7 @@ void NavMesh::process()
 		}
 	}
 }
+
 py::list NavMesh::getSimpleGraph() {
 	float x, z, nX, nZ;
 	int numNeighbors;
@@ -87,12 +88,21 @@ py::list NavMesh::getSimpleGraph() {
 			py::tuple neighbor = py::make_tuple(nX, nZ);
 			neighbors.append(neighbor);
 		}
-		py::tuple node = py::make_tuple(x, z, neighbors);
+		py::list vertices = py::list();
+		for (int k = 0; k < nodeGraph[i].vertIndices.size(); k++) {
+			float kx = nodeGraph[i].mVerts[nodeGraph[i].vertIndices[k]].x;
+			float kz = nodeGraph[i].mVerts[nodeGraph[i].vertIndices[k]].z;
+			py::tuple vert = py::make_tuple(kx, kz);
+			vertices.append(vert);
+		}
+		py::tuple node = py::make_tuple(x, z, neighbors, vertices);
 		simple.append(node);
 	}
 
 	return simple;
 }
+
+
 
 /*py::list NavMesh::getSimpleNeighbors(py::tuple node) {
 	float x, z;

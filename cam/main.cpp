@@ -105,7 +105,7 @@ int main() {
 
 			glfwPollEvents();
 
-			std::cout << "frame time: " << dt.count() << " seconds\n";
+			//std::cout << "frame time: " << dt.count() << " seconds\n";
 		}
 
 		return 0;

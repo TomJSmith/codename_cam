@@ -9,22 +9,19 @@ import sys
 import os
 
 # there might be a better way to do this... needed a_star in path but dont know where to tell Visual Studio that
-sys.path.insert(0, os.getcwd() + "\..\..\cam")
+sys.path.insert(0, os.getcwd() + "\..\..\cam\Scripts")
 from a_star import *
 
 v = None
 
 time = 0
 _controller = None
-reachedGoal = True
+reachedGoal = False
 backUp = False
 
 currPos = None
 prevPos = None
 
-targets = [Vec3(-70, 0, 20), Vec3(0, 2, 20), Vec3(-70, 0, -60), Vec3(-20, 2, -60), Vec3(0, 0, -20)]
-target = 0
-currNodeTarget = 0
 map = None
 astar = None
 
@@ -33,7 +30,8 @@ closeNodeSelf = None
 closeNodeTarget = None
 
 runner_e = None
-
+frame_count = -1
+stuck = False
 
 def destroyed(event):
     pass
@@ -41,22 +39,29 @@ def destroyed(event):
     v = None
     print "chaser ai collided"
 
+
 def runnercreated(event):
     pass
     global runner_e
+    global targetNodeXZ
     runner_e = event.get_runner()
+    targetNodeXZ = astar.findCurrentNode((runner_e.transform().global_position().x, runner_e.transform().global_position().z))
+
 
 def init(self):
-
     global v
     global _controller
     global map
     global astar
+    global currentNodeXZ
     _controller = aicontroller.aiController()
     config = vehicle.Configuration()
+    map = create_nav_mesh()
+    astar = A_star(map)
 
     dims = PxVec3(3, 1, 5)
-    config.position = PxVec3(0, 2, -10)
+    config.position = PxVec3(-5, 2, 60)
+    config.rotation = PxQuat(0, 1, 0, 0)
     config.chassis_dimensions = dims
     config.steer_angle = math.pi * .05
     config.torque = 10000
@@ -74,158 +79,182 @@ def init(self):
     self.entity().register_runnercreated_handler(runnercreated)
     # self.entity().register_destroyed_handler(destroyed)
 
-    # THIS CREATES
-    map = create_nav_mesh()
-    astar = A_star()
+    currentNodeXZ = astar.findCurrentNode(
+        (self.entity().transform().global_position().x, self.entity().transform().global_position().z))
 
-    # Usage: astar.find_path(map[(startX, startZ)], map[(targetX, targetZ)])
-    # returns a list of nodes
+
+
+
 
 def create_nav_mesh():
     _navmesh = navmesh.NavMesh('nav_mesh.fbx', physics.Vec3(2.0, 2.0, 2.0))
     graph = _navmesh.getSimpleGraph()
     map = {}
     for node in graph:
-        map[(node[0], node[1])] = Node(node[0], node[1])
+        map[(node[0], node[1])] = Node(node[0], node[1], node[3])
     for node in graph:
         for neighbor in node[2]:
             map[(node[0], node[1])].add_neighbor(map[neighbor])
     return map
 
-def checkStuck(self):
-	global prevPos
-	global currPos
-	currPos = self.entity().transform().global_position()
-	
 
-	if prevPos is not None:
-		if Vec3.dot(currPos,prevPos) < 0.4:
-			prevPos = currPos
-			return True;
-		
-	else:
-		prevPos = currPos
-		return False;
+def checkStuck(self):
+    global prevPos
+    currPos = self.entity().transform().global_position()
+
+    if prevPos is not None:
+        if (math.sqrt((currPos.x - prevPos.x)**2.0 + (currPos.z - prevPos.z)**2.0) < 1):
+            prevPos = currPos
+            return True
+        else:
+            prevPos = currPos
+            return False
+
+    prevPos = currPos
+    return False
 
 def getNodePathToVec(closestPathNodes):
-	arrayVecs = []
-	for node in closestPathNodes:
-		vectorToAdd = Vec3(node.x, 0, node.z)
-		arrayVecs.append(vectorToAdd)
-		
-	return arrayVecs
-	
-def drive_at(self, closeNodeTarget, closeNodeSelf):
-	global v
-	global _controller
-	global reachedGoal
-	global targets
-	global target
-	global currNodeTarget
-	global closestPathNodes
-	closestPathNodes = astar.find_path(closeNodeSelf, closeNodeTarget)
-	closestPathVectors = getNodePathToVec(closestPathNodes)
-	currNodeTarget = currNodeTarget % len(closestPathVectors)
-	currTarget = closestPathVectors[currNodeTarget]
-	direction = currTarget - self.entity().transform().global_position() #transform().position
-	forward = self.entity().transform().forward()
-	right = self.entity().transform().right()
-	test = self.entity().transform().position
-	
-	#print "Current Target X: ", currTarget.x
-	#print "Current Target Y: ", currTarget.y
-	#print "Current Target Z: ", currTarget.z
-	targets[target].y = 0
-	test.y = 0
-	direction.y = 0
-	right.y = 0
-	forward.y = 0
-	distanceToGoal = direction.length()
+    arrayVecs = []
+    for node in closestPathNodes:
+        vectorToAdd = Vec3(node.x, 0, node.z)
+        arrayVecs.append(vectorToAdd)
+
+    return arrayVecs
 
 
-	direction.x = direction.x / direction.length()
-	direction.y = direction.y / direction.length()
-	direction.z = direction.z / direction.length()
-
-	forward.x = forward.x / forward.length()
-	forward.y = forward.y / forward.length()
-	forward.z = forward.z / forward.length()
-	
-	right.x = right.x / right.length()
-	right.y = right.y / right.length()
-	right.z = right.z / right.length()
-
-	dot = Vec3.dot( right, direction)
-
-	
-	if reachedGoal:
-		if checkStuck(self):
-			_controller.setReverse(1)
-		else:
-			_controller.setReverse(0)
-			if distanceToGoal < 19.0:
-				print "distance to goal : ", distanceToGoal
-				print "currNodeTarget : ", currNodeTarget
-				print "size of closestPathVectors : ", len(closestPathVectors)
-				print "size of targets : ", len(targets)
-				print "target index : ", target
-				#reachedGoal = False
-				#_controller.setBrake(1)
-				#print "We're there!"
-				_controller.setAccel(0)
-				#_controller.setLeft(0)
-				#_controller.setRight(0)
-				currNodeTarget += 1
-				if currNodeTarget == len(closestPathVectors):
-					target += 1
-					target = target % len(targets)
-					
-				currNodeTarget = currNodeTarget % len(closestPathVectors)
-			else:
-				_controller.setAccel(1)
-				_controller.setRight(0)
-				_controller.setLeft(0)
+def getCurrentCoor(ent):
+    return (ent.transform().global_position().x, ent.transform().global_position().z)
 
 
-				if dot < -0.1:
-					_controller.setLeft(1)
-					_controller.setRight(0)
-				else:
-					_controller.setLeft(0)
-					_controller.setBrake(0)
+def drive(self):
+    global _controller
+    global reachedGoal
+    global currentNodeIndex
+    global currentPath
 
-				if dot > 0.1:
-					_controller.setRight(1)
-					_controller.setLeft(0)
-				else:
-					_controller.setRight(0)
-					_controller.setBrake(0)
+    if not reachedGoal:
+        currTarget = currentPath[currentNodeIndex]
+        currPosition = self.entity().transform().global_position()
+        direction = currTarget - currPosition  # transform().position
+        forward = self.entity().transform().forward()
+        right = self.entity().transform().right()
+        test = self.entity().transform().position
 
+        # print "Current Target X: ", currTarget.x
+        # print "Current Target Y: ", currTarget.y
+        # print "Current Target Z: ", currTarget.z
+        test.y = 0
+        direction.y = 0
+        right.y = 0
+        forward.y = 0
+        distanceToGoal = direction.length()
 
-def update(self, dt): 
-	global time
-	global target
-	global v
-	global map
-	global currNodeTarget
-	global closestPathNodes
-	global closeNodeSelf
-	global closeNodeTarget
-	
-	time += dt
-	if time > 5:
-		time = 0
+        direction.x = direction.x / direction.length()
+        direction.y = direction.y / direction.length()
+        direction.z = direction.z / direction.length()
 
-	if closestPathNodes is None or currNodeTarget >= len(closestPathNodes):
-		#targetPosNode = (targets[target].x, targets[target].z)
-		#selfPos = self.entity().transform().global_position()
-		#selfPosNode = (selfPos.x, selfPos.z)
-		#closeNodeTarget = astar.findClosestNode(map, targetPosNode)
-		#closeNodeSelf = astar.findClosestNode(map, selfPosNode)
-		targetPosNode = (runner_e.transform().global_position().x, runner_e.transform().global_position().z)
-		selfPos = self.entity().transform().global_position()
-		selfPosNode = (selfPos.x, selfPos.z)
-		closeNodeTarget = astar.findClosestNode(map, targetPosNode)
-		closeNodeSelf = astar.findClosestNode(map, selfPosNode)
+        forward.x = forward.x / forward.length()
+        forward.y = forward.y / forward.length()
+        forward.z = forward.z / forward.length()
 
-	drive_at(self, map[closeNodeTarget], map[closeNodeSelf])
+        right.x = right.x / right.length()
+        right.y = right.y / right.length()
+        right.z = right.z / right.length()
+
+        dot = Vec3.dot(right, direction)
+
+        if stuck:
+            _controller.setBrake(0)
+            _controller.setRight(0)
+            _controller.setLeft(0)
+            _controller.setAccel(1)
+            _controller.setReverse(1)
+        else:
+            #print("Goal : " + str((currTarget.x, currTarget.z)))
+            #print("Chaser Position : " + str((self.entity().transform().global_position().x, self.entity().transform().global_position().z)))
+            _controller.setReverse(0)
+            if astar.map[(currTarget.x, currTarget.z)].inNode((currPosition.x, currPosition.z)):
+                # print("Reached Node " + str(currentNodeIndex))
+                #print "distance to goal : ", distanceToGoal
+                #print "size of closestPathVectors : ", len(closestPathVectors)
+                #print "size of targets : ", len(targets)
+                #print "target index : ", target
+                # reachedGoal = False
+                # _controller.setBrake(1)
+                # print "We're there!"
+                _controller.setAccel(0)
+                # _controller.setLeft(0)
+                # _controller.setRight(0)
+                currentNodeIndex += 1
+                if currentNodeIndex >= len(currentPath):
+                    currentNodeIndex == len(currentPath) - 1
+                    print "Reached the Target"
+                    reachedGoal = True
+            else:
+                _controller.setAccel(1)
+                _controller.setRight(0)
+                _controller.setLeft(0)
+
+                if dot < -.2:
+                    _controller.setLeft(1)
+                    _controller.setRight(0)
+                else:
+                    _controller.setLeft(0)
+                    _controller.setBrake(0)
+
+                if dot > .2:
+                    _controller.setRight(1)
+                    _controller.setLeft(0)
+                else:
+                    _controller.setRight(0)
+                    _controller.setBrake(0)
+
+    else:
+        _controller.setAccel(0)
+        _controller.setBrake(1)
+
+def update(self, dt):
+    global currentNodeXZ
+    global targetNodeXZ
+    global frame_count
+    global currentNodeIndex
+    global currentPath
+    global reachedGoal
+    global stuck
+
+    runnerPos = (runner_e.transform().global_position().x, runner_e.transform().global_position().z)
+    chaserPos = (self.entity().transform().global_position().x, self.entity().transform().global_position().z)
+    if frame_count%30 == 0 or frame_count == -1:
+        if not map[currentNodeXZ].inNode(chaserPos):
+            currentNodeXZ = astar.findNextNode(map[currentNodeXZ], chaserPos)
+
+        if not map[targetNodeXZ].inNode(runnerPos):
+            targetNodeXZ = astar.findNextNode(map[targetNodeXZ],runnerPos)
+
+    if frame_count%180 == 0:
+        stuck = checkStuck(self)
+
+    if frame_count > 360 or frame_count == -1:
+        frame_count = 0
+        currentNodeIndex = 0
+        currentPath = getNodePathToVec(astar.find_path(map[targetNodeXZ], map[currentNodeXZ]))
+        reachedGoal = False
+        # print("Updated Path")
+
+    drive(self)
+
+    frame_count += 1
+
+    """if closestPathNodes is None or currNodeTarget >= len(closestPathNodes):
+        # targetPosNode = (targets[target].x, targets[target].z)
+        # selfPos = self.entity().transform().global_position()
+        # selfPosNode = (selfPos.x, selfPos.z)
+        # closeNodeTarget = astar.findClosestNode(map, targetPosNode)
+        # closeNodeSelf = astar.findClosestNode(map, selfPosNode)
+        targetPosNode = (runner_e.transform().global_position().x, runner_e.transform().global_position().z)
+        selfPos = self.entity().transform().global_position()
+        selfPosNode = (selfPos.x, selfPos.z)
+        closeNodeTarget = astar.findNextNode(map, targetPosNode)
+        closeNodeSelf = astar.findClosestNode(map, selfPosNode)
+
+        drive_at(self, map[closeNodeTarget], map[closeNodeSelf])"""
