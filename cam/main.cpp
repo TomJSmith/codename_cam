@@ -37,6 +37,7 @@ int main() {
 
 		root->RegisterEventHandler(&handler);
 
+		NavMesh testMesh = NavMesh("test_nav.fbx", glm::vec3(2.0f, 2.0f, 2.0f));
 		//drawAiPath drawPath;
 
 		//std::function<void(Events::Render)> pathHandle = [&drawPath](Events::Render b) {
@@ -57,8 +58,8 @@ int main() {
 
 		{
 			auto plane = Entity::Create(root.get()).lock();
-			std::shared_ptr<Component> planemesh(new Mesh(std::unique_ptr<Shader>(new ModelShader("test.jpg")), "map_mesh.fbx", vec3(0.2, 0.4, 0.2), vec3(1.0f, 1.0f, 1.0f), GL_TRIANGLES));
-			std::shared_ptr<Component> planebody(new RigidBody(physics, *physics.GetPhysics()->createMaterial(1.0f, 1.0f, 1.0f), "map_mesh.fbx", 1.0f, false));
+			std::shared_ptr<Component> planemesh(new Mesh(std::unique_ptr<Shader>(new ModelShader("test.jpg")), "map_mesh.fbx", vec3(0.2, 0.4, 0.2), vec3(2.0f, 2.0f, 2.0f), GL_TRIANGLES));
+			std::shared_ptr<Component> planebody(new RigidBody(physics, *physics.GetPhysics()->createMaterial(1.0f, 1.0f, 1.0f), "map_mesh.fbx", 2.0f, false));
 			plane->AddComponent(std::move(planemesh));
 			plane->AddComponent(std::move(planebody));
 

@@ -82,7 +82,7 @@ def init(self):
     # returns a list of nodes
 
 def create_nav_mesh():
-    _navmesh = navmesh.NavMesh('nav_mesh.fbx')
+    _navmesh = navmesh.NavMesh('nav_mesh.fbx', physics.Vec3(2.0, 2.0, 2.0))
     graph = _navmesh.getSimpleGraph()
     map = {}
     for node in graph:

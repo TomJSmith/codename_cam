@@ -77,7 +77,7 @@ BOOST_PYTHON_MODULE(runner) {
 
 
 BOOST_PYTHON_MODULE(navmesh) {
-	python::class_<NavMesh, std::shared_ptr<NavMesh>>("NavMesh", python::init<const char*>())
+	python::class_<NavMesh, std::shared_ptr<NavMesh>>("NavMesh", python::init<const char*, vec3>())
 		.def("getSimpleGraph", &NavMesh::getSimpleGraph);
 		//.def("getSimpleNeighbors", &NavMesh::getSimpleNeighbors, args("node"))
 }
