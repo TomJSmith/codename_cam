@@ -48,6 +48,6 @@ bool NavNode::isInside(float xPos, float zPos)
 			result = !result;
 		}
 	}
-	std::cout << xPos << ",   " << zPos << "    " << result << std::endl;
+	/*std::cout << xPos << ",   " << zPos << "    " << result << std::endl;*/
 	return result;
 }

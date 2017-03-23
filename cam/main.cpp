@@ -37,7 +37,14 @@ int main() {
 
 		root->RegisterEventHandler(&handler);
 
-		NavMesh testMesh = NavMesh("test_nav.fbx", glm::vec3(2.0f, 2.0f, 2.0f));
+		//NavMesh testMesh = NavMesh("test_nav.fbx", glm::vec3(2.0f, 2.0f, 2.0f));
+		//testMesh.nodeGraph[0].isInside(0, 0);
+		//testMesh.nodeGraph[0].isInside(0.9f, 0);
+		//testMesh.nodeGraph[0].isInside(1, 0);
+		//testMesh.nodeGraph[0].isInside(1.1f, 0);
+		//testMesh.nodeGraph[0].isInside(-1.1f, 0);
+		//testMesh.nodeGraph[0].isInside(0, 1);
+		//testMesh.nodeGraph[0].isInside(0, -1.1f);
 		//drawAiPath drawPath;
 
 		//std::function<void(Events::Render)> pathHandle = [&drawPath](Events::Render b) {
