@@ -90,8 +90,8 @@ py::list NavMesh::getSimpleGraph() {
 		}
 		py::list vertices = py::list();
 		for (int k = 0; k < nodeGraph[i].vertIndices.size(); k++) {
-			float kx = nodeGraph[i].mVerts[nodeGraph[i].vertIndices[k]].x;
-			float kz = nodeGraph[i].mVerts[nodeGraph[i].vertIndices[k]].z;
+			float kx = nodeGraph[i].mVerts[nodeGraph[i].vertIndices[k]].x * nodeGraph[i].scale->x;
+			float kz = nodeGraph[i].mVerts[nodeGraph[i].vertIndices[k]].z * nodeGraph[i].scale->z;
 			py::tuple vert = py::make_tuple(kx, kz);
 			vertices.append(vert);
 		}

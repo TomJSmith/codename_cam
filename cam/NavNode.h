@@ -15,11 +15,11 @@ public:
 	const aiFace* mFace;
 	const aiVector3D* mVerts;
 	std::vector<uint32_t> vertIndices;
+	const glm::vec3* scale;
 
 	void addNeighbour(NavNode* neighbour);
 	bool isInside(float xPos, float zPos);
 	float distance(NavNode* aNode);
 private:
-	const glm::vec3* scale;
 
 };
