@@ -33,11 +33,6 @@ void Renderer::Initialize()
 {
 	InitializeGLFW();
 
-	glEnable(GL_DEPTH_TEST);
-
-	//glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-	//glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
-
 	window_ = glfwCreateWindow(1024, 1024, "Title", nullptr, nullptr);
 
 	if (!window_) throw std::runtime_error("unable to create OpenGL window"); // TODO specific exception here?
@@ -60,7 +55,9 @@ void Renderer::Render(Entity &entity)
 	auto view = glm::inverse(cam);
 	auto perspective = glm::perspective(45.0f, 1.0f, 0.1f, 400.0f);
 	auto vp = perspective * view;
+
 	glEnable(GL_DEPTH_TEST);
+
 	for (auto &d : e.data) {
 		d.shader->Setup(d, vp);
 

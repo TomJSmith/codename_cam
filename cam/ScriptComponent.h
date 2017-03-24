@@ -5,6 +5,7 @@
 #include <map>
 
 #include "Component.h"
+#include "Events.h"
 
 class Physics;
 

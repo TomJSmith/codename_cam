@@ -7,9 +7,11 @@ import math
 import navmesh
 import sys
 import os
+print(os.getcwd())
 
 # there might be a better way to do this... needed a_star in path but dont know where to tell Visual Studio that
-sys.path.insert(0, os.getcwd() + "\..\..\cam")
+sys.path.insert(0, os.getcwd() + "\\Scripts")
+from start_game import *
 from a_star import *
 
 v = None
@@ -33,25 +35,27 @@ closeNodeSelf = None
 closeNodeTarget = None
 
 runner_e = None
-
+started = False
 
 def destroyed(event):
-    pass
     global v
     v = None
     print "chaser ai collided"
 
 def runnercreated(event):
-    pass
     global runner_e
     runner_e = event.get_runner()
 
-def init(self):
+def start_game(event):
+    global started
+    started = True
 
+def init(self):
     global v
     global _controller
     global map
     global astar
+
     _controller = aicontroller.aiController()
     config = vehicle.Configuration()
 
@@ -72,6 +76,7 @@ def init(self):
     v = vehicle.Vehicle(self.physics(), _controller, config)
     self.entity().add_component(v)
     self.entity().register_runnercreated_handler(runnercreated)
+    self.entity().register_handler(StartGame, start_game)
     # self.entity().register_destroyed_handler(destroyed)
 
     # THIS CREATES
@@ -211,7 +216,10 @@ def update(self, dt):
 	global closestPathNodes
 	global closeNodeSelf
 	global closeNodeTarget
-	
+        global started
+        if not started:
+            return
+
 	time += dt
 	if time > 5:
 		time = 0

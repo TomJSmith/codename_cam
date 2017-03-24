@@ -1,21 +1,31 @@
+#include "ScriptComponent.h"
+
 #include <boost/python.hpp>
 
 #include <iostream>
 #include <string>
 
-#include "Entity.h"
-#include "Physics.h"
-#include "ScriptComponent.h"
-#include "Vehicle.h"
-#include "Controller.h"
 #include "Camera.h"
+#include "Controller.h"
+#include "Entity.h"
+#include "Image.h"
+#include "ImageShader.h"
+#include "Mesh.h"
+#include "ModelShader.h"
 #include "NavMesh.h"
+#include "Physics.h"
+#include "RigidBody.h"
 #include "Runner.h"
 #include "Util.h"
+#include "Vehicle.h"
 
 using namespace boost;
 
-float dot(const vec3 &a, const vec3 &b) {
+float dot3(const vec3 &a, const vec3 &b) {
+	return glm::dot(a, b);
+}
+
+float dot2(const vec2 &a, const vec2 &b) {
 	return glm::dot(a, b);
 }
 
@@ -40,7 +50,19 @@ BOOST_PYTHON_MODULE(physics) {
 		.def(python::self - python::self)
 		.def(python::self += python::self)
 		.def(python::self -= python::self)
-		.def("dot", &dot)
+		.def("dot", &dot3)
+		.staticmethod("dot");
+
+	python::class_<vec2>("Vec2")
+		.def(python::init<float, float>())
+		.def_readwrite("x", &vec2::x)
+		.def_readwrite("y", &vec2::y)
+		.def("length", &length)
+		.def(python::self + python::self)
+		.def(python::self - python::self)
+		.def(python::self += python::self)
+		.def(python::self -= python::self)
+		.def("dot", &dot2)
 		.staticmethod("dot");
 
 	python::class_<quaternion>("Quaternion")
@@ -59,7 +81,12 @@ BOOST_PYTHON_MODULE(physics) {
 }
 
 BOOST_PYTHON_MODULE(controller) {
-	python::class_<Controller, std::shared_ptr<Controller>>("Controller", python::init<int>());
+	python::class_<Controller, std::shared_ptr<Controller>>("Controller", python::init<int>())
+		.add_property("acceleration", &Controller::getAcceleration)
+		.add_property("brake", &Controller::getBrake)
+		.add_property("direction", &Controller::getDirectional)
+		.add_property("select", &Controller::getSelect)
+		.def("update", &Controller::UpdateState);
 }
 
 BOOST_PYTHON_MODULE(aicontroller) {
@@ -80,6 +107,13 @@ BOOST_PYTHON_MODULE(navmesh) {
 	python::class_<NavMesh, std::shared_ptr<NavMesh>>("NavMesh", python::init<const char*>())
 		.def("getSimpleGraph", &NavMesh::getSimpleGraph);
 		//.def("getSimpleNeighbors", &NavMesh::getSimpleNeighbors, args("node"))
+}
+
+BOOST_PYTHON_MODULE(ui) {
+	python::class_<Image, std::shared_ptr<Image>>("Image", python::init<const char *, const vec2 &, const vec2 &, size_t>())
+		.add_property("size", &Image::GetSize, &Image::SetSize)
+		.add_property("position", &Image::GetPosition, &Image::SetPosition)
+		.def("set_layer", &Image::SetLayer);
 }
 
 // boost::python won't let us use shared_ptr<Component> for subclasses of Component by
@@ -111,8 +145,35 @@ void RegisterEventHandler(Entity &e, python::object pyhandler) {
 	};
 
 	handlers.push_back(handler);
+	e.RegisterEventHandler(&handlers.back());
+}
 
-	e.GetEvents().RegisterEventHandler(&handlers.back());
+void RegisterScriptEventHandler(Entity &e, python::object type, python::object pyhandler) {
+	// TODO this is some grease right hurrrrr
+	static std::vector<std::function<void(Events::ScriptEvent)>> handlers;
+	auto name = type.attr("__name__");
+
+	auto handler = [=](Events::ScriptEvent event) {
+		if (event.pyevent.attr("__class__").attr("__name__") == name) {
+			try {
+				pyhandler(event.pyevent);
+			}
+			catch (const python::error_already_set &) {
+				PyErr_Print();
+			}
+		}
+	};
+
+	handlers.push_back(handler);
+	e.RegisterEventHandler(&handlers.back());
+}
+
+void BroadcastScriptEvent(Entity &e, python::object event) {
+	e.BroadcastEvent(Events::ScriptEvent{ event });
+}
+
+void FireScriptEvent(Entity &e, python::object event) {
+	e.FireEvent(Events::ScriptEvent{ event });
 }
 
 BOOST_PYTHON_MODULE(events) {
@@ -120,10 +181,14 @@ BOOST_PYTHON_MODULE(events) {
 		.def("get_runner", &Events::RunnerCreated::GetRunner, python::return_internal_reference<>());
 	python::class_<Events::Infected>("Infected");
 	python::class_<Events::Destroyed>("Destroyed");
+	python::class_<Events::StartGame>("StartGame");
 	python::class_<Events::Collided>("Collided")
 		.def("other", &Events::Collided::GetOther, python::return_internal_reference<>());
 }
 
+std::weak_ptr<Entity> Create(Entity *parent) {
+	return Entity::Create(parent);
+}
 
 BOOST_PYTHON_MODULE(entity) {
 	python::class_<Entity, std::shared_ptr<Entity>>("Entity")
@@ -134,25 +199,54 @@ BOOST_PYTHON_MODULE(entity) {
 		.def("add_component", AddComponent<Vehicle>)
 		.def("add_component", AddComponent<Camera>)
 		.def("add_component", AddComponent<Runner>)
-		.def("broadcast_event", &Entity::BroadcastEvent<Events::RunnerCreated>)
+		.def("add_component", AddComponent<Image>)
+		.def("add_component", AddComponent<Mesh>)
+		.def("add_component", AddComponent<RigidBody>)
+		.def("add_component", AddComponent<ScriptComponent>)
 		.def("fire_event", &Entity::FireEvent<Events::Infected>)
 		.def("fire_event", &Entity::FireEvent<Events::Destroyed>)
 		.def("fire_event", &Entity::FireEvent<Events::Collided>)
+		.def("fire_event", &Entity::FireEvent<Events::StartGame>)
+		.def("fire_event", FireScriptEvent)
+		.def("broadcast_event", &Entity::BroadcastEvent<Events::RunnerCreated>)
+		.def("broadcast_event", &Entity::BroadcastEvent<Events::Infected>)
+		.def("broadcast_event", &Entity::BroadcastEvent<Events::Destroyed>)
+		.def("broadcast_event", &Entity::BroadcastEvent<Events::Collided>)
+		.def("broadcast_event", &Entity::BroadcastEvent<Events::StartGame>)
+		.def("broadcast_event", BroadcastScriptEvent)
 		.def("register_runnercreated_handler", RegisterEventHandler<Events::RunnerCreated>)
 		.def("register_infected_handler", RegisterEventHandler<Events::Infected>)
 		.def("register_destroyed_handler", RegisterEventHandler<Events::Destroyed>)
 		.def("register_collided_handler", RegisterEventHandler<Events::Collided>)
+		.def("register_start_game_handler", RegisterEventHandler<Events::StartGame>)
+		.def("register_handler", RegisterScriptEventHandler)
 		.def("destroy", &Entity::Destroy)
-		.def("transform", &Entity::GetTransform, python::return_internal_reference<>());
+		.def("transform", &Entity::GetTransform, python::return_internal_reference<>())
+		.def("create", &Create)
+		.staticmethod("create");
+
+	python::class_<std::weak_ptr<Entity>>("EntityPtr")
+		.def("lock", &std::weak_ptr<Entity>::lock);
 }
 
 BOOST_PYTHON_MODULE(component) {
 	python::class_<Component>("Component");
 
-	python::class_<ScriptComponent, python::bases<Component>>("ScriptComponent", python::init<std::string, Physics &>())
+	python::class_<ModelShader, std::shared_ptr<ModelShader>>("ModelShader");
+	python::class_<ImageShader, std::shared_ptr<ImageShader>>("ImageShader", python::init<const char *>());
+
+	python::class_<ScriptComponent, python::bases<Component>, std::shared_ptr<ScriptComponent>>("ScriptComponent", python::init<std::string, Physics &>())
 		.add_property("id", &Component::Id)
 		.def("entity", &Component::entity, python::return_internal_reference<>())
 		.def("physics", &ScriptComponent::GetPhysics, python::return_internal_reference<>());
+
+	python::class_<Mesh, python::bases<Component>, std::shared_ptr<Mesh>>
+		("Mesh", python::init<std::shared_ptr<Shader>, const char *, const char *, vec3, vec3, GLuint>())
+		.def(python::init<std::shared_ptr<ImageShader>, const char *, const char *, vec3, vec3, GLuint>())
+		.def(python::init<std::shared_ptr<ModelShader>, const char *, const char *, vec3, vec3, GLuint>());
+
+	python::class_<RigidBody, python::bases<Component>, std::shared_ptr<RigidBody>>
+		("RigidBody", python::init<Physics &, const char *, float, bool>());
 }
 
 BOOST_PYTHON_MODULE(vehicle) {
@@ -164,8 +258,8 @@ BOOST_PYTHON_MODULE(vehicle) {
 
 	python::class_<Vehicle, std::shared_ptr<Vehicle>, python::bases<Component>>
 		("Vehicle", python::init<Physics &, std::shared_ptr<Controller>, Vehicle::Configuration &>())
-		.def(python::init<Physics &, std::shared_ptr<aiController>, Vehicle::Configuration &>());
-		//.def("aiController_", &Vehicle::getAiController);
+		.def(python::init<Physics &, std::shared_ptr<aiController>, Vehicle::Configuration &>())
+		.def("set_active", &Vehicle::SetActive);
 
 	python::class_<Vehicle::Configuration>("Configuration")
 		.def_readwrite("position", &Vehicle::Configuration::position)
@@ -257,6 +351,7 @@ void ScriptComponent::InitPython()
 			initcamera();
 			initnavmesh();
 			initrunner();
+			initui();
 
 			initialized = true;
 		} catch (const python::error_already_set &) {
@@ -352,8 +447,43 @@ namespace boost {
 	}
 
 	template <>
+	Mesh const volatile * get_pointer<class Mesh const volatile>(
+		class Mesh const volatile *c
+		) {
+		return c;
+	}
+
+	template <>
+	ImageShader const volatile * get_pointer<class ImageShader const volatile>(
+		class ImageShader const volatile *c
+		) {
+		return c;
+	}
+
+	template <>
+	ModelShader const volatile * get_pointer<class ModelShader const volatile>(
+		class ModelShader const volatile *c
+		) {
+		return c;
+	}
+
+	template <>
 	PxVehicleDrive4WRawInputData const volatile * get_pointer<class PxVehicleDrive4WRawInputData const volatile>(
 		class PxVehicleDrive4WRawInputData const volatile *c
+		) {
+		return c;
+	}
+
+	template <>
+	Image const volatile * get_pointer<class Image const volatile>(
+		class Image const volatile *c
+		) {
+		return c;
+	}
+
+	template <>
+	RigidBody const volatile * get_pointer<class RigidBody const volatile>(
+		class RigidBody const volatile *c
 		) {
 		return c;
 	}

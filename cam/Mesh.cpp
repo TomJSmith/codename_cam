@@ -11,7 +11,7 @@
 #include <assimp\material.h>
 #include <assimp\Importer.hpp>
 
-Mesh::Mesh(std::unique_ptr<Shader> shader,
+Mesh::Mesh(std::shared_ptr<Shader> shader,
 		   const char* objFileName,	
 		   const char* texFileName,
 		   glm::vec3 colour,
@@ -71,7 +71,6 @@ Mesh::Mesh(std::unique_ptr<Shader> shader,
 			std::cout << "success!" << std::endl;
 		}
 	}
-
 
 	count_ = objMesh->mNumFaces * 3;
 

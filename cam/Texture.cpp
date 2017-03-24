@@ -8,7 +8,7 @@
 Texture::Texture(const char *filename)
 {
 	auto fullfilename = Util::TextureDirectory + filename;
-	auto data = stbi_load(fullfilename.c_str(), &width_, &height_, &ncomponents_, 4);
+	auto data = stbi_load(fullfilename.c_str(), &width_, &height_, &ncomponents_, STBI_rgb_alpha);
 
 	glGenTextures(1, &texture_);
 	glActiveTexture(GL_TEXTURE0);

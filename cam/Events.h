@@ -1,9 +1,13 @@
 #pragma once
 
+#include <boost/python.hpp>
+
 #include "EventSystem.h"
 #include "Renderer.h"
 
 class Entity;
+
+using namespace boost;
 
 namespace Events {
 	struct Infected {};
@@ -22,6 +26,12 @@ namespace Events {
 		Entity *other;
 		Entity *GetOther() { return other; } // for python
 	};
+
+	struct StartGame {};
+
+	struct ScriptEvent {
+		python::object pyevent;
+	};
 };
 
 // Expose the template class with all event types as EventSystem (so we don't have to
@@ -33,5 +43,7 @@ using EventSystem = EventSystem_<
 	Events::Collided, 
 	Events::Destroyed, 
 	Events::Infected,
-	Events::RunnerCreated
+	Events::RunnerCreated,
+	Events::StartGame,
+	Events::ScriptEvent
 >;

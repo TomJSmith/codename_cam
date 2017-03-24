@@ -2,6 +2,8 @@
 
 #include "System.h"
 
+#define C_DOWN 7
+#define C_UP 6
 #define C_RIGHT 5
 #define C_LEFT 4
 #define C_NO_DIRECTION 3
@@ -9,7 +11,6 @@
 #define C_SLOW 1
 #define C_NEUTRAL 0
 #define C_REVERSE -1
-
 
 class Controller {
 public:
@@ -20,7 +21,7 @@ public:
 	virtual int getAcceleration();
 	virtual bool getBrake();
 	virtual int getDirectional();
-
+	virtual bool getSelect();
 private:
 	int i;
 	XINPUT_STATE state;

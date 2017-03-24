@@ -8,6 +8,8 @@
 
 #include "Component.h"
 #include "Events.h"
+#include "ImageShader.h"
+#include "ModelShader.h"
 #include "Transform.h"
 #include "Texture.h"
 
@@ -15,12 +17,26 @@ class Shader;
 
 class Mesh : public Component {
 public:
-	Mesh(std::unique_ptr<Shader> shader,
+	Mesh(std::shared_ptr<Shader> shader,
 		 const char* objFileName,
 		 const char* texFileName,
 		 glm::vec3 colour,
 		 glm::vec3 scale,
 		 GLuint type);
+
+	// For Python... it can't handle the shared_ptr<Shader> from a ModelShader
+	Mesh(std::shared_ptr<ModelShader> shader,
+		const char* objFileName,
+		const char* texFileName,
+		glm::vec3 colour,
+		glm::vec3 scale,
+		GLuint type) : Mesh(std::shared_ptr<Shader>(shader), objFileName, texFileName, colour, scale, type) {}
+	Mesh(std::shared_ptr<ImageShader> shader,
+		const char* objFileName,
+		const char* texFileName,
+		glm::vec3 colour,
+		glm::vec3 scale,
+		GLuint type) : Mesh(std::shared_ptr<Shader>(shader), objFileName, texFileName, colour, scale, type) {}
 
 	void GetMeshData(Events::Render event);
 	void Destroy() override;
@@ -34,7 +50,7 @@ private:
 	GLuint count_;
 	Texture texture_;
 
-	std::unique_ptr<Shader> shader_;
+	std::shared_ptr<Shader> shader_;
 
 	std::function<void(Events::Render)> handler_;
 };

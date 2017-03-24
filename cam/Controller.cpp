@@ -6,7 +6,6 @@
 #include "windows.h"
 #include "Xinput.h"
 
-
 Controller::Controller(int currContIndex) {
 	//ZeroMemory(&state, sizeof(XINPUT_STATE));
 	//for (int i = 0; i < MAX_NUM_CONTROL; i++)
@@ -61,7 +60,17 @@ int Controller::getDirectional() {
 	else if (state.Gamepad.sThumbLX > 10000) {
 		return C_LEFT;
 	}
+	else if (state.Gamepad.sThumbLY < -10000) {
+		return C_DOWN;
+	}
+	else if (state.Gamepad.sThumbLY > 10000) {
+		return C_UP;
+	}
 	else {
 		return C_NO_DIRECTION;
 	}
+}
+
+bool Controller::getSelect() {
+	return (state.Gamepad.wButtons & XINPUT_GAMEPAD_A) != 0;
 }

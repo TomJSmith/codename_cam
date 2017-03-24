@@ -55,19 +55,6 @@ void Camera::RegisterHandlers()
 			rb,
 			PxTransform(-PxVec3(offset.x, offset.y, offset.z))
 		);
-
-		//// THESE SETTING PRETTY MUCH DONT MAKE SENSE.
-		//d6->setConstraintFlag(PxConstraintFlag::eCOLLISION_ENABLED, false);
-		//d6->setConstraintFlag(PxConstraintFlag::ePROJECTION, true);
-		////d6->setMotion(PxD6Axis::eX, PxD6Motion::eLIMITED);
-		//d6->setMotion(PxD6Axis::eZ, PxD6Motion::eLIMITED);
-		//d6->setMotion(PxD6Axis::eSWING1, PxD6Motion::eLIMITED);
-		////d6->setMotion(PxD6Axis::eSWING2, PxD6Motion::eLIMITED);
-		//d6->setMotion(PxD6Axis::eTWIST, PxD6Motion::eLIMITED);
-		////d6->setDrive(PxD6Drive::eSLERP, PxD6JointDrive(10000000.0f, 10000.0f, FLT_MAX));
-		//d6->setTwistLimit(PxJointAngularLimitPair(.01f, 0.2f, PxSpring(1000.0f, 500.0f)));
-		//d6->setSwingLimit(PxJointLimitCone::PxJointLimitCone(.3f, 1.0f, PxSpring(10000000.0f, 10000000.0f)));
-		//d6->setLinearLimit(PxJointLinearLimit(3.0f, PxSpring(1000.0f, 500.0f)));
 	}
 }
 

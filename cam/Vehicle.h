@@ -79,6 +79,7 @@ public:
 	PxRigidDynamic *GetActor() { return actor_; }
 	Physics &GetPhysics() { return physics_; } // TODO we probably shouldn't need this....
 
+	void SetActive(bool active) { active_ = active; }
 protected:
 	void RegisterHandlers() override;
 
@@ -97,5 +98,6 @@ private:
 	PxVehicleDrive4W *vehicle_;
 	PxVehicleDrive4WRawInputData input_;
 	PxVehicleDrivableSurfaceToTireFrictionPairs *frictionpairs_;
+	bool active_;
 };
 
