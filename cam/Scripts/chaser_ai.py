@@ -87,7 +87,8 @@ def init(self):
 
 
 def create_nav_mesh():
-    _navmesh = navmesh.NavMesh('nav_mesh.fbx', physics.Vec3(2.0, 2.0, 2.0))
+    #global physics
+    _navmesh = navmesh.NavMesh('nav_mesh.fbx', Vec3(2.0, 2.0, 2.0))
     graph = _navmesh.getSimpleGraph()
     map = {}
     for node in graph:
@@ -221,29 +222,32 @@ def update(self, dt):
     global currentPath
     global reachedGoal
     global stuck
+    global runner_e
 
-    runnerPos = (runner_e.transform().global_position().x, runner_e.transform().global_position().z)
-    chaserPos = (self.entity().transform().global_position().x, self.entity().transform().global_position().z)
-    if frame_count%30 == 0 or frame_count == -1:
-        if not map[currentNodeXZ].inNode(chaserPos):
-            currentNodeXZ = astar.findNextNode(map[currentNodeXZ], chaserPos)
+    if runner_e is not None:
+        runnerPos = (runner_e.transform().global_position().x, runner_e.transform().global_position().z)
+    
+        chaserPos = (self.entity().transform().global_position().x, self.entity().transform().global_position().z)
+        if frame_count%30 == 0 or frame_count == -1:
+            if not map[currentNodeXZ].inNode(chaserPos):
+                currentNodeXZ = astar.findNextNode(map[currentNodeXZ], chaserPos)
 
-        if not map[targetNodeXZ].inNode(runnerPos):
-            targetNodeXZ = astar.findNextNode(map[targetNodeXZ],runnerPos)
+            if not map[targetNodeXZ].inNode(runnerPos):
+                targetNodeXZ = astar.findNextNode(map[targetNodeXZ],runnerPos)
 
-    if frame_count%180 == 0:
-        stuck = checkStuck(self)
+        if frame_count%180 == 0:
+            stuck = checkStuck(self)
 
-    if frame_count > 360 or frame_count == -1:
-        frame_count = 0
-        currentNodeIndex = 0
-        currentPath = getNodePathToVec(astar.find_path(map[targetNodeXZ], map[currentNodeXZ]))
-        reachedGoal = False
+        if frame_count > 360 or frame_count == -1:
+            frame_count = 0
+            currentNodeIndex = 0
+            currentPath = getNodePathToVec(astar.find_path(map[targetNodeXZ], map[currentNodeXZ]))
+            reachedGoal = False
         # print("Updated Path")
 
-    drive(self)
+        drive(self)
 
-    frame_count += 1
+        frame_count += 1
 
     """if closestPathNodes is None or currNodeTarget >= len(closestPathNodes):
         # targetPosNode = (targets[target].x, targets[target].z)
