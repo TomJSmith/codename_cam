@@ -32,6 +32,7 @@ closeNodeTarget = None
 runner_e = None
 frame_count = -1
 stuck = False
+stuck_flag = False
 
 def destroyed(event):
     pass
@@ -60,7 +61,7 @@ def init(self):
     astar = A_star(map)
 
     dims = PxVec3(3, 1, 5)
-    config.position = PxVec3(-5, 2, 60)
+    config.position = PxVec3(-5, 5, 60)
     config.rotation = PxQuat(0, 1, 0, 0)
     config.chassis_dimensions = dims
     config.steer_angle = math.pi * .05
@@ -103,7 +104,7 @@ def checkStuck(self):
     currPos = self.entity().transform().global_position()
 
     if prevPos is not None:
-        if (math.sqrt((currPos.x - prevPos.x)**2.0 + (currPos.z - prevPos.z)**2.0) < 1):
+        if (math.sqrt((currPos.x - prevPos.x)**2.0 + (currPos.z - prevPos.z)**2.0) < .1):
             prevPos = currPos
             return True
         else:
@@ -131,6 +132,7 @@ def drive(self):
     global reachedGoal
     global currentNodeIndex
     global currentPath
+    global frame_count
 
     if not reachedGoal:
         currTarget = currentPath[currentNodeIndex]
@@ -162,11 +164,22 @@ def drive(self):
         right.z = right.z / right.length()
 
         dot = Vec3.dot(right, direction)
+        if frame_count%120 == 0:
+            print("dot = " + str(dot))
+            #print("Dx = " + str(direction.x))
+            #print("Dx = " + str(direction.z))
 
         if stuck:
+            if dot < -.5:
+                _controller.setLeft(1)
+                _controller.setRight(0)
+            elif dot > .5:
+                _controller.setRight(1)
+                _controller.setLeft(0)
+            else:
+                _controller.setRight(0)
+
             _controller.setBrake(0)
-            _controller.setRight(0)
-            _controller.setLeft(0)
             _controller.setAccel(1)
             _controller.setReverse(1)
         else:
@@ -174,7 +187,7 @@ def drive(self):
             #print("Chaser Position : " + str((self.entity().transform().global_position().x, self.entity().transform().global_position().z)))
             _controller.setReverse(0)
             if astar.map[(currTarget.x, currTarget.z)].inNode((currPosition.x, currPosition.z)):
-                # print("Reached Node " + str(currentNodeIndex))
+                print("Reached Node " + str(currentNodeIndex))
                 #print "distance to goal : ", distanceToGoal
                 #print "size of closestPathVectors : ", len(closestPathVectors)
                 #print "size of targets : ", len(targets)
@@ -192,22 +205,17 @@ def drive(self):
                     reachedGoal = True
             else:
                 _controller.setAccel(1)
-                _controller.setRight(0)
-                _controller.setLeft(0)
+                _controller.setBrake(0)
 
-                if dot < -.2:
+                if dot < -.37:
                     _controller.setLeft(1)
                     _controller.setRight(0)
-                else:
-                    _controller.setLeft(0)
-                    _controller.setBrake(0)
-
-                if dot > .2:
+                elif dot > .37:
                     _controller.setRight(1)
                     _controller.setLeft(0)
                 else:
                     _controller.setRight(0)
-                    _controller.setBrake(0)
+                    _controller.setLeft(0)
 
     else:
         _controller.setAccel(0)
@@ -221,6 +229,7 @@ def update(self, dt):
     global currentPath
     global reachedGoal
     global stuck
+    global stuck_flag
 
     runnerPos = (runner_e.transform().global_position().x, runner_e.transform().global_position().z)
     chaserPos = (self.entity().transform().global_position().x, self.entity().transform().global_position().z)
@@ -231,19 +240,29 @@ def update(self, dt):
         if not map[targetNodeXZ].inNode(runnerPos):
             targetNodeXZ = astar.findNextNode(map[targetNodeXZ],runnerPos)
 
-    if frame_count%180 == 0:
-        stuck = checkStuck(self)
+    if frame_count%120 == 0:
+        if stuck:
+            print("Stuck!")
+        if stuck_flag:
+            stuck_flag = False
+        else:
+            stuck = checkStuck(self)
+            stuck_flag = stuck
 
-    if frame_count > 360 or frame_count == -1:
-        frame_count = 0
+    if frame_count % 600 == 0 or frame_count == -1:
         currentNodeIndex = 0
         currentPath = getNodePathToVec(astar.find_path(map[targetNodeXZ], map[currentNodeXZ]))
         reachedGoal = False
-        # print("Updated Path")
+        print("Updated Path")
+        #print("Path: ")
+        #for path in currentPath:
+        #    print(path.x, path.z)
 
     drive(self)
 
     frame_count += 1
+    if frame_count >= 60000:
+        frame_count = 0
 
     """if closestPathNodes is None or currNodeTarget >= len(closestPathNodes):
         # targetPosNode = (targets[target].x, targets[target].z)
