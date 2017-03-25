@@ -12,8 +12,9 @@
 
 namespace py = boost::python;
 
-NavMesh::NavMesh(const char* navMeshFileName)
+NavMesh::NavMesh(const char* navMeshFileName, glm::vec3 aScale)
 {
+	scale = aScale;
 	Assimp::Importer importer;
 	auto fullfilename = Util::ModelDirectory + navMeshFileName;
 	const aiScene* navMeshScene = importer.ReadFile(fullfilename, aiProcess_JoinIdenticalVertices);
@@ -41,11 +42,11 @@ void NavMesh::process()
 		float zSum = 0;
 		for (uint32_t j = 0; j < navFace.mNumIndices; j++)
 		{
-			xSum += mNavMesh->mVertices[navFace.mIndices[j]].x;
-			zSum += mNavMesh->mVertices[navFace.mIndices[j]].z;
+			xSum += mNavMesh->mVertices[navFace.mIndices[j]].x * scale.x;
+			zSum += mNavMesh->mVertices[navFace.mIndices[j]].z * scale.z;
 		}
 
-		nodeGraph.push_back(NavNode((xSum / navFace.mNumIndices), (zSum / navFace.mNumIndices), &navFace, mNavMesh->mVertices));
+		nodeGraph.push_back(NavNode((xSum / navFace.mNumIndices), (zSum / navFace.mNumIndices), &navFace, mNavMesh->mVertices, &scale));
 
 	}
 	for (int i = 0; i < nodeGraph.size(); i++)
@@ -89,8 +90,8 @@ py::list NavMesh::getSimpleGraph() {
 		}
 		py::list vertices = py::list();
 		for (int k = 0; k < nodeGraph[i].vertIndices.size(); k++) {
-			float kx = nodeGraph[i].mVerts[nodeGraph[i].vertIndices[k]].x;
-			float kz = nodeGraph[i].mVerts[nodeGraph[i].vertIndices[k]].z;
+			float kx = nodeGraph[i].mVerts[nodeGraph[i].vertIndices[k]].x * nodeGraph[i].scale->x;
+			float kz = nodeGraph[i].mVerts[nodeGraph[i].vertIndices[k]].z * nodeGraph[i].scale->z;
 			py::tuple vert = py::make_tuple(kx, kz);
 			vertices.append(vert);
 		}

@@ -2,11 +2,12 @@
 
 #include <vector>
 #include "assimp\scene.h"
+#include "glm\glm.hpp"
 
 class NavNode
 {
 public:
-	NavNode(float x, float y, const aiFace* aFace, const aiVector3D* verts);
+	NavNode(float x, float y, const aiFace* aFace, const aiVector3D* verts, const glm::vec3* aScale);
 	~NavNode();
 	std::vector<NavNode*> neighbours;
 	float centerX;
@@ -14,6 +15,7 @@ public:
 	const aiFace* mFace;
 	const aiVector3D* mVerts;
 	std::vector<uint32_t> vertIndices;
+	const glm::vec3* scale;
 
 	void addNeighbour(NavNode* neighbour);
 	bool isInside(float xPos, float zPos);
