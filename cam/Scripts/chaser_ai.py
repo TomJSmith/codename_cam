@@ -54,7 +54,7 @@ def init(self):
     global map
     global astar
     global currentNodeXZ
-    _controller = aicontroller.aiController()
+    _controller = aicontroller.aiController(4)
     config = vehicle.Configuration()
     map = create_nav_mesh()
     astar = A_star(map)
@@ -168,8 +168,9 @@ def drive(self):
             _controller.setBrake(0)
             _controller.setRight(0)
             _controller.setLeft(0)
-            _controller.setAccel(1)
             _controller.setReverse(1)
+            _controller.setAccel(1)
+
         else:
             #print("Goal : " + str((currTarget.x, currTarget.z)))
             #print("Chaser Position : " + str((self.entity().transform().global_position().x, self.entity().transform().global_position().z)))
@@ -189,6 +190,8 @@ def drive(self):
                 currentNodeIndex += 1
                 if currentNodeIndex >= len(currentPath):
                     currentNodeIndex == len(currentPath) - 1
+                    currTarget.x = runner_e.transform().global_position().x
+                    currTarget.z = runner_e.transform().global_position().z
                     print "Reached the Target"
                     reachedGoal = True
             else:
@@ -196,23 +199,24 @@ def drive(self):
                 _controller.setRight(0)
                 _controller.setLeft(0)
 
-                if dot < -.2:
+                if dot < -.3:
                     _controller.setLeft(1)
                     _controller.setRight(0)
                 else:
                     _controller.setLeft(0)
                     _controller.setBrake(0)
 
-                if dot > .2:
+                if dot > .3:
                     _controller.setRight(1)
                     _controller.setLeft(0)
                 else:
                     _controller.setRight(0)
                     _controller.setBrake(0)
 
-    else:
-        _controller.setAccel(0)
-        _controller.setBrake(1)
+   # else:
+        # reachedGoal = False;      
+       # _controller.setAccel(0)
+   #     _controller.setBrake(1)
 
 def update(self, dt):
     global currentNodeXZ
