@@ -95,7 +95,7 @@ int main() {
 			std::shared_ptr<Component> aiVRun(new ScriptComponent("runner_ai", physics));
 			aiVehicleRun->AddComponent(std::move(aiMeshRun));
 			aiVehicleRun->AddComponent(std::move(aiVRun));
-			aiVehicleRun->AddComponent(std::make_unique<ScriptComponent>("runner", physics));
+			//aiVehicleRun->AddComponent(std::make_unique<ScriptComponent>("runner", physics));
 			
 
 			/*auto smiley = Entity::Create(root.get()).lock();

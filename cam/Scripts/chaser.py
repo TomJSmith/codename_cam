@@ -1,7 +1,9 @@
 import events
 
+
 def collided(event):
-    pass
+	pass
+
 
 def init(self):
-    self.entity().register_collided_handler(collided)
+	self.entity().register_collided_handler(collided)
