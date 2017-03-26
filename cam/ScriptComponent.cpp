@@ -248,9 +248,9 @@ BOOST_PYTHON_MODULE(component) {
 		.def("physics", &ScriptComponent::GetPhysics, python::return_internal_reference<>());
 
 	python::class_<Mesh, python::bases<Component>, std::shared_ptr<Mesh>>
-		("Mesh", python::init<std::shared_ptr<Shader>, const char *, const char *, vec3, vec3, GLuint>())
-		.def(python::init<std::shared_ptr<ImageShader>, const char *, const char *, vec3, vec3, GLuint>())
-		.def(python::init<std::shared_ptr<ModelShader>, const char *, const char *, vec3, vec3, GLuint>());
+		("Mesh", python::init<std::shared_ptr<Shader>, const char *, vec3, vec3, GLuint>())
+		.def(python::init<std::shared_ptr<ImageShader>, const char *, vec3, vec3, GLuint>())
+		.def(python::init<std::shared_ptr<ModelShader>, const char *, vec3, vec3, GLuint>());
 
 	python::class_<RigidBody, python::bases<Component>, std::shared_ptr<RigidBody>>
 		("RigidBody", python::init<Physics &, const char *, float, bool>());

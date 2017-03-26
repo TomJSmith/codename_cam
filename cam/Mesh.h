@@ -26,16 +26,14 @@ public:
 	// For Python... it can't handle the shared_ptr<Shader> from a ModelShader
 	Mesh(std::shared_ptr<ModelShader> shader,
 		const char* objFileName,
-		const char* texFileName,
 		glm::vec3 colour,
 		glm::vec3 scale,
-		GLuint type) : Mesh(std::shared_ptr<Shader>(shader), objFileName, texFileName, colour, scale, type) {}
+		GLuint type) : Mesh(std::shared_ptr<Shader>(shader), objFileName, colour, scale, type) {}
 	Mesh(std::shared_ptr<ImageShader> shader,
 		const char* objFileName,
-		const char* texFileName,
 		glm::vec3 colour,
 		glm::vec3 scale,
-		GLuint type) : Mesh(std::shared_ptr<Shader>(shader), objFileName, texFileName, colour, scale, type) {}
+		GLuint type) : Mesh(std::shared_ptr<Shader>(shader), objFileName, colour, scale, type) {}
 
 	void GetMeshData(Events::Render event);
 	void Destroy() override;
