@@ -71,8 +71,7 @@ BOOST_PYTHON_MODULE(controller) {
 
 BOOST_PYTHON_MODULE(aicontroller) {
 	python::class_<aiController, std::shared_ptr<aiController>>("aiController", python::init<int>())
-		.def("setRight", &aiController::setRight)
-		.def("setLeft", &aiController::setLeft)
+		.def("setDirection", &aiController::setDirection)
 		.def("setBrake", &aiController::setBrake)
 		.def("setReverse", &aiController::setReverse)
 		.def("setAccel", &aiController::setAccel);

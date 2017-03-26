@@ -54,14 +54,7 @@ bool Controller::getBrake() {
 	}
 }
 
-int Controller::getDirectional() {
-	if (state.Gamepad.sThumbLX < -10000) {
-		return C_RIGHT;
-	}
-	else if (state.Gamepad.sThumbLX > 10000) {
-		return C_LEFT;
-	}
-	else {
-		return C_NO_DIRECTION;
-	}
+float Controller::getDirectional() {
+	return (state.Gamepad.sThumbLX / 32800.0f * -1.0f);
+	
 }

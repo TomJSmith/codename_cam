@@ -15,7 +15,7 @@ def init(self):
 
 	c.position = physics.PxVec3(20, 2, -40)
 	c.chassis_dimensions = dims
-	c.steer_angle = math.pi * .15
+	c.steer_angle = math.pi * .05
 	c.torque = 100000
 	c.wheel_radius = 0.5
 	c.wheel_width = 0.4

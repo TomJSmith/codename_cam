@@ -11,6 +11,7 @@ import runner
 
 # there might be a better way to do this... needed a_star in path but dont know where to tell Visual Studio that
 sys.path.insert(0, os.getcwd() + "\..\..\cam\Scripts")
+import positionSetter
 from a_star import *
 
 v = None
@@ -34,23 +35,7 @@ runner_e = None
 frame_count = -1
 stuck = False
 count = 0
-
-
-def destroyed(event):
-	pass
-	global v
-	v = None
-	print
-	"chaser ai collided"
-
-
-def runnercreated(event):
-	pass
-	global runner_e
-	global targetNodeXZ
-	runner_e = event.get_runner()
-	targetNodeXZ = astar.findCurrentNode(
-		(runner_e.transform().global_position().x, runner_e.transform().global_position().z))
+stuck_flag = False
 
 
 def init(self):
@@ -59,13 +44,15 @@ def init(self):
 	global map
 	global astar
 	global currentNodeXZ
+	aPS = positionSetter.getTheSetter()
+	startingPosition = aPS.getPosition()
 	_controller = aicontroller.aiController(5)
 	config = vehicle.Configuration()
 	map = create_nav_mesh()
 	astar = A_star(map)
 
 	dims = PxVec3(3, 1, 5)
-	config.position = PxVec3(-15, 2, 60)
+	config.position = PxVec3(startingPosition[0], 2, startingPosition[1])
 	config.rotation = PxQuat(0, 1, 0, 0)
 	config.chassis_dimensions = dims
 	config.steer_angle = math.pi * .05
@@ -103,11 +90,13 @@ def create_nav_mesh():
 
 def checkStuck(self):
 	global prevPos
+	global stuck_flag
 	currPos = self.entity().transform().global_position()
 
 	if prevPos is not None:
 		if (math.sqrt((currPos.x - prevPos.x) ** 2.0 + (currPos.z - prevPos.z) ** 2.0) < 1):
 			prevPos = currPos
+			stuck_flag = True
 			return True
 		else:
 			prevPos = currPos
@@ -194,11 +183,14 @@ def drive(self):
 		right.z = right.z / right.length()
 
 		dot = Vec3.dot(right, direction)
+		if dot < -1:
+			dot = -1
+		if dot > 1:
+			dot = 1
 
 		if stuck:
+			_controller.setDirection(-1.0 * dot)
 			_controller.setBrake(0)
-			_controller.setRight(0)
-			_controller.setLeft(0)
 			_controller.setReverse(1)
 			_controller.setAccel(1)
 
@@ -229,10 +221,9 @@ def drive(self):
 				#reachedGoal = True
 			else:
 				_controller.setAccel(1)
-				_controller.setRight(0)
-				_controller.setLeft(0)
+				_controller.setDirection(dot)
 
-				if dot < -.3:
+				"""if dot < -.3:
 					_controller.setLeft(1)
 					_controller.setRight(0)
 				else:
@@ -244,7 +235,7 @@ def drive(self):
 					_controller.setLeft(0)
 				else:
 					_controller.setRight(0)
-					_controller.setBrake(0)
+					_controller.setBrake(0)"""
 	
 	# else:
 	#   _controller.setAccel(0)
@@ -262,17 +253,15 @@ def update(self, dt):
 	global runner_e
 	global count
 	global map
+	global stuck_flag
 	
 	
 	currentNode = map[currentNodeXZ]
 	count %= len(currentNode.neighbors)
-	#if count % len(currentNode.neighbors) == 0:
-		#count = 0
 	targetNode = currentNode.neighbors[count]
 	myPos = (self.entity().transform().global_position().x, self.entity().transform().global_position().z) 
 	targetNodeXZ = astar.findNextNode(currentNode, (targetNode.x, targetNode.z))
-	
-	#count += 1
+
 	
 	"""
 	if runner_e is not None:
@@ -285,8 +274,13 @@ def update(self, dt):
 
 			if not map[targetNodeXZ].inNode(runnerPos):
 				targetNodeXZ = astar.findNextNode(map[targetNodeXZ],runnerPos)"""
-	if frame_count%60 == 0:
-		stuck = checkStuck(self)
+	if frame_count % 60 == 0:
+		if stuck_flag:
+			print( "Stuck!")
+			stuck = True
+			stuck_flag = False
+		else:
+			stuck = checkStuck(self)
 	"""if frame_count > 360 or frame_count == -1:
 		frame_count = -1
 		currentNodeIndex = 0
