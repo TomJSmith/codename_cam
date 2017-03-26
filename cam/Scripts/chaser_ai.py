@@ -230,7 +230,7 @@ def drive(self):
 				_controller.setRight(0)
 				_controller.setLeft(0)"""
 		else:
-			print("Reached Node " + str(currentNodeIndex))
+			# print("Reached Node " + str(currentNodeIndex))
 			# print "distance to goal : ", distanceToGoal
 			# print "size of closestPathVectors : ", len(closestPathVectors)
 			# print "size of targets : ", len(targets)
@@ -244,7 +244,7 @@ def drive(self):
 			currentNodeIndex += 1
 			if currentNodeIndex >= len(currentPath):
 				currentNodeIndex == len(currentPath) - 1
-				print "Reached the Target"
+				# print "Reached the Target"
 				reachedGoal = True
 
 			# else:
@@ -278,15 +278,17 @@ def update(self, dt):
 				if not map[targetNodeXZ[i]].inNode(runnerPos[i]):
 					targetNodeXZ[i] = astar.findNextNode(map[targetNodeXZ[i]], runnerPos[i])
 
+
 		if (frame_count+50) % 60 == 0:
 			if stuck_flag:
-				print( "Stuck!")
+				# print( "Stuck!")
 				stuck = True
 				stuck_flag = False
 			else:
 				stuck = checkStuck(self)
 
 		if frame_count % 180 == 0 or frame_count == -1:
+			print(targetNodeXZ[0])
 			targetRunner = closestRunner(self)
 
 			currentNodeIndex = 0

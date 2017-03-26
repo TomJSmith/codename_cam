@@ -11,6 +11,7 @@ import runner
 
 # there might be a better way to do this... needed a_star in path but dont know where to tell Visual Studio that
 sys.path.insert(0, os.getcwd() + "\..\..\cam\Scripts")
+import positionSetter
 from a_star import *
 
 v = None
@@ -36,22 +37,6 @@ stuck = False
 count = 0
 stuck_flag = False
 
-def destroyed(event):
-	pass
-	global v
-	v = None
-	print
-	"chaser ai collided"
-
-
-def runnercreated(event):
-	pass
-	global runner_e
-	global targetNodeXZ
-	runner_e = event.get_runner()
-	targetNodeXZ = astar.findCurrentNode(
-		(runner_e.transform().global_position().x, runner_e.transform().global_position().z))
-
 
 def init(self):
 	global v
@@ -59,13 +44,15 @@ def init(self):
 	global map
 	global astar
 	global currentNodeXZ
+	aPS = positionSetter.getTheSetter()
+	startingPosition = aPS.getPosition()
 	_controller = aicontroller.aiController(5)
 	config = vehicle.Configuration()
 	map = create_nav_mesh()
 	astar = A_star(map)
 
 	dims = PxVec3(3, 1, 5)
-	config.position = PxVec3(-15, 2, 60)
+	config.position = PxVec3(startingPosition[0], 2, startingPosition[1])
 	config.rotation = PxQuat(0, 1, 0, 0)
 	config.chassis_dimensions = dims
 	config.steer_angle = math.pi * .05
