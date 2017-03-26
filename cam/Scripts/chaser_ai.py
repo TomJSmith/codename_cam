@@ -7,7 +7,6 @@ import math
 import navmesh
 import sys
 import os
-print(os.getcwd())
 
 # there might be a better way to do this... needed a_star in path but dont know where to tell Visual Studio that
 sys.path.insert(0, os.getcwd() + "\\Scripts")
@@ -40,11 +39,10 @@ stuck = False
 stuck_flag = False
 started = False
 
-def destroyed(event):
-	pass
-	global v
-	v = None
-	print "chaser ai collided"
+# def destroyed(event):
+#     global v
+#     v = None
+#     print "chaser ai collided"
 
 def runnercreated(event):
 	pass
@@ -301,43 +299,3 @@ def update(self, dt):
 	frame_count += 1
 	if frame_count > 60000:
 		frame_count = 0
-
-<<<<<<< HEAD
-def update(self, dt): 
-	global time
-	global target
-	global v
-	global map
-	global currNodeTarget
-	global closestPathNodes
-	global closeNodeSelf
-	global closeNodeTarget
-        global started
-        if not started:
-            return
-
-	time += dt
-	if time > 5:
-		time = 0
-
-	if closestPathNodes is None or currNodeTarget >= len(closestPathNodes):
-		#targetPosNode = (targets[target].x, targets[target].z)
-		#selfPos = self.entity().transform().global_position()
-		#selfPosNode = (selfPos.x, selfPos.z)
-		#closeNodeTarget = astar.findClosestNode(map, targetPosNode)
-		#closeNodeSelf = astar.findClosestNode(map, selfPosNode)
-=======
-	"""if closestPathNodes is None or currNodeTarget >= len(closestPathNodes):
-		# targetPosNode = (targets[target].x, targets[target].z)
-		# selfPos = self.entity().transform().global_position()
-		# selfPosNode = (selfPos.x, selfPos.z)
-		# closeNodeTarget = astar.findClosestNode(map, targetPosNode)
-		# closeNodeSelf = astar.findClosestNode(map, selfPosNode)
->>>>>>> 1146d2365a4771bc3f531602a39a90641810705e
-		targetPosNode = (runner_e.transform().global_position().x, runner_e.transform().global_position().z)
-		selfPos = self.entity().transform().global_position()
-		selfPosNode = (selfPos.x, selfPos.z)
-		closeNodeTarget = astar.findNextNode(map, targetPosNode)
-		closeNodeSelf = astar.findClosestNode(map, selfPosNode)
-
-		drive_at(self, map[closeNodeTarget], map[closeNodeSelf])"""

@@ -29,11 +29,11 @@ def start_game(self):
     player = Entity.create(e).lock()
     mesh = Mesh(ModelShader(), "runner_mesh.fbx", "", Vec3(0.1, 0.1, 0.6), Vec3(4.427, 2.426, 12.935), 4)
     vehicle = ScriptComponent("vehicle", self.physics())
-    runner = ScriptComponent("runner", self.physics())
+    # runner = ScriptComponent("runner", self.physics())
 
     player.add_component(mesh)
     player.add_component(vehicle)
-    player.add_component(runner)
+    # player.add_component(runner)
 
     e.add_component(ScriptComponent("start_game", self.physics()))
 

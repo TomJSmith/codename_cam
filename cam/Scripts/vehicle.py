@@ -6,14 +6,24 @@ import controller
 import math
 import runner
 from start_game import *
+from entity import *
+from component import *
 
 v = None
+c = None
+dead = False
 
 def start_game(event):
+    global v
     v.set_active(True)
 
-def init(self):
+def infected(event):
+    global dead
+    dead = True
+
+def create_vehicle(e, phys):
     global v
+
     _controller = controller.Controller(0)
     c = vehicle.Configuration()
 
@@ -32,12 +42,37 @@ def init(self):
     c.chassis_moi = physics.PxVec3(c.chassis_mass, c.chassis_mass / 2, c.chassis_mass)
     c.chassis_offset = physics.PxVec3(0, -dims.y, 0)
 
-    v = vehicle.Vehicle(self.physics(),_controller, c)
-    v.set_active(False)
-    cam = camera.Camera(v)
-    r = runner.Runner()
-    self.entity().add_component(v)
-    self.entity().add_component(cam)
-    self.entity().add_component(r)
+    v = vehicle.Vehicle(phys, _controller, c)
+    # v.set_active(False)
+    # r = runner.Runner()
+    e.add_component(v)
+    # self.entity().add_component(r)
+
+def init(self):
+    global v
+    global c
+
+    c = self
     # self.entity().register_start_game_handler(start_game)
+    create_vehicle(self.entity(), self.physics())
+    cam = camera.Camera(v)
+    self.entity().add_component(cam)
+    v.set_active(False)
+    self.entity().add_component(runner.Runner())
     self.entity().register_handler(StartGame, start_game)
+    self.entity().register_handler(Infected, infected)
+
+def update(self, dt):
+    global c
+    global dead
+
+    if dead:
+        e = self.entity()
+        while e.get_parent():
+            e = e.get_parent()
+
+        e = Entity.create(e).lock()
+        # create_vehicle(e, self.physics())
+        # chaser = ScriptComponent("chaser", self.physics())
+        # e.add_component(chaser)
+        self.entity().destroy()

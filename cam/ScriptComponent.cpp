@@ -139,9 +139,6 @@ void AddComponent(Entity &e, std::shared_ptr<T> c) {
 // to the handler of the right type
 template <class T>
 void RegisterEventHandler(Entity &e, python::object pyhandler) {
-	// TODO this is some grease right hurrrrr
-	static std::vector<std::function<void(T)>> handlers;
-
 	auto handler = [=](T event) {
 		try {
 			pyhandler(event);
@@ -151,13 +148,13 @@ void RegisterEventHandler(Entity &e, python::object pyhandler) {
 		}
 	};
 
-	handlers.push_back(handler);
-	e.RegisterEventHandler(&handlers.back());
+	//handlers.push_back(handler);
+	// TODO leaky leaky
+	e.RegisterEventHandler(new std::function<void(T)>(handler));
 }
 
 void RegisterScriptEventHandler(Entity &e, python::object type, python::object pyhandler) {
-	// TODO this is some grease right hurrrrr
-	static std::vector<std::function<void(Events::ScriptEvent)>> handlers;
+	//static std::vector<std::function<void(Events::ScriptEvent)>> handlers;
 	auto name = type.attr("__name__");
 
 	auto handler = [=](Events::ScriptEvent event) {
@@ -171,12 +168,18 @@ void RegisterScriptEventHandler(Entity &e, python::object type, python::object p
 		}
 	};
 
-	handlers.push_back(handler);
-	e.RegisterEventHandler(&handlers.back());
+	//handlers.push_back(handler);
+	// TODO this is some grease right hurrrrr
+	e.RegisterEventHandler(new std::function<void(Events::ScriptEvent)>(handler));
 }
 
 void BroadcastScriptEvent(Entity &e, python::object event) {
-	e.BroadcastEvent(Events::ScriptEvent{ event });
+	try {
+		e.BroadcastEvent(Events::ScriptEvent{ event });
+	}
+	catch (const python::error_already_set &) {
+		PyErr_Print();
+	}
 }
 
 void FireScriptEvent(Entity &e, python::object event) {
@@ -188,7 +191,7 @@ BOOST_PYTHON_MODULE(events) {
 		.def("get_runner", &Events::RunnerCreated::GetRunner, python::return_internal_reference<>());
 	python::class_<Events::Infected>("Infected");
 	python::class_<Events::Destroyed>("Destroyed");
-	python::class_<Events::StartGame>("StartGame");
+//	python::class_<Events::StartGame>("StartGame");
 	python::class_<Events::Collided>("Collided")
 		.def("other", &Events::Collided::GetOther, python::return_internal_reference<>());
 }
@@ -213,19 +216,19 @@ BOOST_PYTHON_MODULE(entity) {
 		.def("fire_event", &Entity::FireEvent<Events::Infected>)
 		.def("fire_event", &Entity::FireEvent<Events::Destroyed>)
 		.def("fire_event", &Entity::FireEvent<Events::Collided>)
-		.def("fire_event", &Entity::FireEvent<Events::StartGame>)
+//		.def("fire_event", &Entity::FireEvent<Events::StartGame>)
 		.def("fire_event", FireScriptEvent)
 		.def("broadcast_event", &Entity::BroadcastEvent<Events::RunnerCreated>)
 		.def("broadcast_event", &Entity::BroadcastEvent<Events::Infected>)
 		.def("broadcast_event", &Entity::BroadcastEvent<Events::Destroyed>)
 		.def("broadcast_event", &Entity::BroadcastEvent<Events::Collided>)
-		.def("broadcast_event", &Entity::BroadcastEvent<Events::StartGame>)
+//		.def("broadcast_event", &Entity::BroadcastEvent<Events::StartGame>)
 		.def("broadcast_event", BroadcastScriptEvent)
 		.def("register_runnercreated_handler", RegisterEventHandler<Events::RunnerCreated>)
 		.def("register_infected_handler", RegisterEventHandler<Events::Infected>)
 		.def("register_destroyed_handler", RegisterEventHandler<Events::Destroyed>)
 		.def("register_collided_handler", RegisterEventHandler<Events::Collided>)
-		.def("register_start_game_handler", RegisterEventHandler<Events::StartGame>)
+//		.def("register_start_game_handler", RegisterEventHandler<Events::StartGame>)
 		.def("register_handler", RegisterScriptEventHandler)
 		.def("destroy", &Entity::Destroy)
 		.def("transform", &Entity::GetTransform, python::return_internal_reference<>())

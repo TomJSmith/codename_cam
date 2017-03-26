@@ -27,7 +27,7 @@ namespace Events {
 		Entity *GetOther() { return other; } // for python
 	};
 
-	struct StartGame {};
+//	struct StartGame {};
 
 	struct ScriptEvent {
 		python::object pyevent;
@@ -44,6 +44,6 @@ using EventSystem = EventSystem_<
 	Events::Destroyed, 
 	Events::Infected,
 	Events::RunnerCreated,
-	Events::StartGame,
+//	Events::StartGame,
 	Events::ScriptEvent
 >;
