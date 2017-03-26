@@ -19,7 +19,7 @@ public:
 	virtual void UpdateState();
 	virtual int getAcceleration();
 	virtual bool getBrake();
-	virtual int getDirectional();
+	virtual float getDirectional();
 
 private:
 	int i;

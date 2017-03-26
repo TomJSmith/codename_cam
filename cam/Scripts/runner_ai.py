@@ -194,11 +194,14 @@ def drive(self):
 		right.z = right.z / right.length()
 
 		dot = Vec3.dot(right, direction)
+		if dot < -1:
+			dot = -1
+		if dot > 1:
+			dot = 1
 
 		if stuck:
+			_controller.setDirection(-1.0 * dot)
 			_controller.setBrake(0)
-			_controller.setRight(0)
-			_controller.setLeft(0)
 			_controller.setReverse(1)
 			_controller.setAccel(1)
 
@@ -229,10 +232,9 @@ def drive(self):
 				#reachedGoal = True
 			else:
 				_controller.setAccel(1)
-				_controller.setRight(0)
-				_controller.setLeft(0)
+				_controller.setDirection(dot)
 
-				if dot < -.3:
+				"""if dot < -.3:
 					_controller.setLeft(1)
 					_controller.setRight(0)
 				else:
@@ -244,7 +246,7 @@ def drive(self):
 					_controller.setLeft(0)
 				else:
 					_controller.setRight(0)
-					_controller.setBrake(0)
+					_controller.setBrake(0)"""
 	
 	# else:
 	#   _controller.setAccel(0)

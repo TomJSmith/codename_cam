@@ -72,8 +72,8 @@ def init(self):
 	config.position = PxVec3(-5, 5, 60)
 	config.rotation = PxQuat(0, 1, 0, 0)
 	config.chassis_dimensions = dims
-	config.steer_angle = math.pi * .25
-	config.torque = 10000
+	config.steer_angle = math.pi * .1
+	config.torque = 100000
 	config.wheel_radius = 0.5
 	config.wheel_width = 0.4
 	config.wheel_mass = 10
@@ -189,21 +189,26 @@ def drive(self):
 	right.z = right.z / right.length()
 
 	dot = Vec3.dot(right, direction)
+	if dot < -1:
+		dot = -1
+	if dot > 1:
+		dot = 1
 	# if frame_count%120 == 0:
 	# print("dot = " + str(dot))
 	# print("Dx = " + str(direction.x))
 	# print("Dx = " + str(direction.z))
 
 	if stuck:
-		if dot < -.5:
+		"""if dot < -.5:
 			_controller.setLeft(1)
 			_controller.setRight(0)
 		elif dot > .5:
 			_controller.setRight(1)
 			_controller.setLeft(0)
 		else:
-			_controller.setRight(0)
+			_controller.setRight(0)"""
 
+		_controller.setDirection(-1.0 * dot)
 		_controller.setBrake(0)
 		_controller.setReverse(1)
 		_controller.setAccel(1)
@@ -214,7 +219,8 @@ def drive(self):
 		if reachedGoal or not astar.map[(currTarget.x, currTarget.z)].inNode((currPosition.x, currPosition.z)):
 			_controller.setAccel(1)
 			_controller.setBrake(0)
-			if dot < -.37:
+			_controller.setDirection(dot)
+			"""if dot < -.37:
 				_controller.setLeft(1)
 				_controller.setRight(0)
 			elif dot > .37:
@@ -222,7 +228,7 @@ def drive(self):
 				_controller.setLeft(0)
 			else:
 				_controller.setRight(0)
-				_controller.setLeft(0)
+				_controller.setLeft(0)"""
 		else:
 			print("Reached Node " + str(currentNodeIndex))
 			# print "distance to goal : ", distanceToGoal
@@ -272,7 +278,7 @@ def update(self, dt):
 				if not map[targetNodeXZ[i]].inNode(runnerPos[i]):
 					targetNodeXZ[i] = astar.findNextNode(map[targetNodeXZ[i]], runnerPos[i])
 
-		if frame_count % 90 == 0:
+		if frame_count % 60 == 0:
 			if stuck_flag:
 				print( "Stuck!")
 				stuck = True
