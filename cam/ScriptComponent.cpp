@@ -242,7 +242,8 @@ BOOST_PYTHON_MODULE(entity) {
 BOOST_PYTHON_MODULE(component) {
 	python::class_<Component>("Component");
 
-	python::class_<ModelShader, std::shared_ptr<ModelShader>>("ModelShader");
+	python::class_<ModelShader, std::shared_ptr<ModelShader>>("ModelShader")
+		.def(python::init<const char *>());
 	python::class_<ImageShader, std::shared_ptr<ImageShader>>("ImageShader", python::init<const char *>());
 
 	python::class_<ScriptComponent, python::bases<Component>, std::shared_ptr<ScriptComponent>>("ScriptComponent", python::init<std::string, Physics &>())

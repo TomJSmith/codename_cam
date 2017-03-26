@@ -52,7 +52,7 @@ void Renderer::Render(Entity &entity)
 	glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	auto view = glm::inverse(mat4(1.0f));
+	auto view = glm::inverse(cam);
 	auto perspective = glm::perspective(45.0f, 1.0f, 0.1f, 400.0f);
 	auto vp = perspective * view;
 

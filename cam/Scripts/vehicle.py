@@ -10,7 +10,6 @@ from entity import *
 from component import *
 
 v = None
-c = None
 dead = False
 
 def start_game(event):
@@ -43,27 +42,27 @@ def create_vehicle(e, phys):
     c.chassis_offset = physics.PxVec3(0, -dims.y, 0)
 
     v = vehicle.Vehicle(phys, _controller, c)
+    cam = camera.Camera(v)
+    mesh = Mesh(ModelShader("runner_texture.jpg"), "runner_mesh.fbx", physics.Vec3(0.1, 0.1, 0.6), physics.Vec3(4.427, 2.426, 12.935), 4)
     # v.set_active(False)
     # r = runner.Runner()
     e.add_component(v)
+    e.add_component(cam)
+    e.add_component(mesh)
     # self.entity().add_component(r)
 
 def init(self):
     global v
-    global c
 
-    c = self
     # self.entity().register_start_game_handler(start_game)
     create_vehicle(self.entity(), self.physics())
-    cam = camera.Camera(v)
-    self.entity().add_component(cam)
+    # self.entity().add_component(cam)
     v.set_active(False)
     self.entity().add_component(runner.Runner())
     self.entity().register_handler(StartGame, start_game)
     self.entity().register_handler(Infected, infected)
 
 def update(self, dt):
-    global c
     global dead
 
     if dead:
@@ -72,7 +71,7 @@ def update(self, dt):
             e = e.get_parent()
 
         e = Entity.create(e).lock()
-        # create_vehicle(e, self.physics())
-        # chaser = ScriptComponent("chaser", self.physics())
-        # e.add_component(chaser)
+        create_vehicle(e, self.physics())
+        chaser = ScriptComponent("chaser", self.physics())
+        e.add_component(chaser)
         self.entity().destroy()

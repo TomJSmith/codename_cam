@@ -297,7 +297,8 @@ Vehicle::Vehicle(Physics &physics, std::shared_ptr<Controller> controller, Confi
 	physics_(physics),
 	controller_(controller),
 	querybuffer_(config.nWheels),
-	hitbuffer_(config.nWheels)
+	hitbuffer_(config.nWheels),
+	active_(true)
 {
 	auto desc = CreateQueryDescription(querybuffer_.data(), hitbuffer_.data());
 	batchquery_ = physics.GetScene()->createBatchQuery(desc);

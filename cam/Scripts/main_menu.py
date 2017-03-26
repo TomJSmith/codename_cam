@@ -13,13 +13,13 @@ def start_game(self):
         e = e.get_parent()
 
     level = Entity.create(e).lock()
-    mesh = Mesh(ModelShader(), "map_mesh.fbx", "", Vec3(0.2, 0.4, 0.2), Vec3(1.0, 1.0, 1.0), 4) # TODO hacky hacky hardcoded opengl constant, 4 is GL_TRIANGLES
+    mesh = Mesh(ModelShader("grey.jpg"), "map_mesh.fbx", Vec3(0.2, 0.4, 0.2), Vec3(1.0, 1.0, 1.0), 4) # TODO hacky hacky hardcoded opengl constant, 4 is GL_TRIANGLES
     body = RigidBody(self.physics(), "map_mesh.fbx", 1.0, False)
     level.add_component(mesh)
     level.add_component(body)
 
     ai = Entity.create(e).lock()
-    mesh = Mesh(ModelShader(), "runner_mesh.fbx", "", Vec3(1.0, 0.84, 0.0), Vec3(4.427, 2.426, 12.935), 4)
+    mesh = Mesh(ModelShader("runner_texture.jpg"), "runner_mesh.fbx", Vec3(1.0, 0.84, 0.0), Vec3(4.427, 2.426, 12.935), 4)
     vehicle = ScriptComponent("chaser_ai", self.physics())
     chaser = ScriptComponent("chaser", self.physics())
     ai.add_component(mesh)
@@ -27,13 +27,15 @@ def start_game(self):
     ai.add_component(chaser)
 
     player = Entity.create(e).lock()
-    mesh = Mesh(ModelShader(), "runner_mesh.fbx", "", Vec3(0.1, 0.1, 0.6), Vec3(4.427, 2.426, 12.935), 4)
     vehicle = ScriptComponent("vehicle", self.physics())
-    # runner = ScriptComponent("runner", self.physics())
 
-    player.add_component(mesh)
     player.add_component(vehicle)
-    # player.add_component(runner)
+
+    runner = Entity.create(e).lock()
+    mesh = Mesh(ModelShader("runner_texture.jpg"), "runner_mesh.fbx", Vec3(1.0, 0.84, 0.0), Vec3(4.427, 2.426, 12.935), 4)
+    ai = ScriptComponent("runner_ai", self.physics())
+    runner.add_component(mesh)
+    runner.add_component(ai)
 
     e.add_component(ScriptComponent("start_game", self.physics()))
 
