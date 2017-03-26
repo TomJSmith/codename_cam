@@ -4,6 +4,11 @@ from physics import *
 from ui import *
 from entity import *
 
+import sys
+import os
+sys.path.insert(0, os.getcwd() + "\..\..\cam\Scripts")
+from runner_ai import *
+
 def set_position(marker, item):
     marker.position = item.position + Vec2(-0.1, 0.05)
 
@@ -36,13 +41,19 @@ class MainMenu:
 
         runner = Entity.create(e).lock()
         mesh = Mesh(ModelShader("runner_texture.jpg"), "runner_mesh.fbx", Vec3(1.0, 0.84, 0.0), Vec3(4.427, 2.426, 12.935), 4)
-        ai = ScriptComponent("runner_ai", self.physics)
+        #ai = ScriptComponent("runner_ai", self.physics)
+        ai = RunnerAi(Vec3(0.0, 0.0, -30.0))
         runner.add_component(mesh)
-        runner.add_component(ai)
+        runner.add_component(ai, self.physics)
 
         o = Entity.create(e).lock()
         o.transform().position = Vec3(0.0, 0.0, 60)
         o.add_component(ScriptComponent("oil_slick_powerup", self.physics))
+        
+        runner = Entity.create(e).lock()
+        runner.add_component(Mesh(ModelShader("runner_texture.jpg"), "runner_mesh.fbx", Vec3(1.0, 0.84, 0.0), Vec3(4.427, 2.426, 12.935), 4))
+        # runner.add_component(ScriptComponent("runner_ai", self.physics))
+        runner.add_component(RunnerAi(Vec3(0.0, 0.0, 60.0)), self.physics)
 
         e.add_component(ScriptComponent("start_game", self.physics))
 
@@ -64,7 +75,6 @@ class MainMenu:
         self.entity.add_component(self.marker)
 
     def update(self, dt):
-        print "menu update"
         self.control.update()
         if self.control.direction == 7: # down - probably shouldn't hardcode these...
             if self.selected != self.quitgame:

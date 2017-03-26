@@ -9,17 +9,17 @@ public:
 
 	bool getBrake() override;
 	int getAcceleration() override;
-	int getDirectional() override;
+	float getDirectional() override;
 	void UpdateState() override;
 
-	void setRight(int dir);
-	void setLeft(int dir);
+	void setDirection(float dir);
 	void setBrake(int dir);
 	void setReverse(int dir);
 	void setAccel(int dir);
 
 private:
-	bool right = false, left = false, none = false, brake = false, reverse = false, accel = false, doOnce = false;
+	bool none = false, brake = false, reverse = false, accel = false, doOnce = false;
+	float direction = 0.0f;
 	int aiControllerNumber;
 };
 

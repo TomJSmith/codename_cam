@@ -53,28 +53,14 @@ bool Controller::getBrake() {
 	}
 }
 
-int Controller::getDirectional() {
-	if (state.Gamepad.sThumbLX < -10000) {
-		return C_RIGHT;
-	}
-	else if (state.Gamepad.sThumbLX > 10000) {
-		return C_LEFT;
-	}
-	else if (state.Gamepad.sThumbLY < -10000) {
-		return C_DOWN;
-	}
-	else if (state.Gamepad.sThumbLY > 10000) {
-		return C_UP;
-	}
-	else {
-		return C_NO_DIRECTION;
-	}
-}
-
 bool Controller::getSelect() {
 	return (state.Gamepad.wButtons & XINPUT_GAMEPAD_A) != 0;
 }
 
 bool Controller::getSecondary() {
 	return (state.Gamepad.wButtons & XINPUT_GAMEPAD_B) != 0;
+}
+
+float Controller::getDirectional() {
+	return (state.Gamepad.sThumbLX / 32800.0f * -1.0f);
 }

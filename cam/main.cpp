@@ -28,7 +28,6 @@ int main() {
 		Physics physics;
 		auto root = Entity::Create();
 
-
 #ifdef DEBUG
 		std::function<void(Events::Render)> handler = [&physics](Events::Render e) {
 			auto d = physics.GetDebugMeshData();
@@ -45,8 +44,6 @@ int main() {
 			std::shared_ptr<Component> menu(std::make_shared<ScriptComponent>("main_menu", physics));
 			auto e = Entity::Create(root.get()).lock();
 			e->AddComponent(std::move(menu));
-			//auto e = Entity::Create(root.get()).lock();
-			//e->AddComponent(std::make_shared<ScriptComponent>("class_test", physics, "foobar"));
 		}
 	
 		auto lastTime = timer::now();
@@ -54,12 +51,11 @@ int main() {
 		while (!glfwWindowShouldClose(renderer.getWindow())) {
 			auto currentTime = timer::now();
 			auto dt = seconds(currentTime - lastTime);
-
 			lastTime = currentTime;
-
+			
 			root->Update(dt);
-			physics.Update(dt);
 			renderer.Render(*root);
+			physics.Update(dt);
 			Entity::DeleteDestroyed();
 
 			glfwPollEvents();

@@ -20,9 +20,10 @@ public:
 	virtual void UpdateState();
 	virtual int getAcceleration();
 	virtual bool getBrake();
-	virtual int getDirectional();
 	virtual bool getSelect();
 	virtual bool getSecondary();
+	virtual float getDirectional();
+
 private:
 	int i;
 	XINPUT_STATE state;

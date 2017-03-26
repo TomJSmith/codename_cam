@@ -380,7 +380,9 @@ void Vehicle::Drive()
 		break;
 	}
 
-	switch (controller_->getDirectional()) {
+	input_.setAnalogSteer(controller_->getDirectional());
+
+	/*switch (controller_->getDirectional()) {
 	case C_LEFT:
 		input_.setAnalogSteer(-.5f);
 		//input_.setDigitalSteerLeft(true);
@@ -396,7 +398,7 @@ void Vehicle::Drive()
 		//input_.setDigitalSteerRight(false);
 		//input_.setDigitalSteerLeft(false);
 		break;
-	}
+	}*/
 }
 
 void Vehicle::Update(seconds dt)

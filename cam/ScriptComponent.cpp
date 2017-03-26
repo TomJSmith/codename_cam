@@ -108,8 +108,7 @@ BOOST_PYTHON_MODULE(controller) {
 
 BOOST_PYTHON_MODULE(aicontroller) {
 	python::class_<aiController, std::shared_ptr<aiController>>("aiController", python::init<int>())
-		.def("setRight", &aiController::setRight)
-		.def("setLeft", &aiController::setLeft)
+		.def("setDirection", &aiController::setDirection)
 		.def("setBrake", &aiController::setBrake)
 		.def("setReverse", &aiController::setReverse)
 		.def("setAccel", &aiController::setAccel);
@@ -144,6 +143,9 @@ void AddComponent(Entity &e, std::shared_ptr<T> c) {
 	e.AddComponent(std::shared_ptr<Component>(c));
 }
 
+void AddScriptComponent(Entity &e, boost::python::object component, Physics &physics) {
+	e.AddComponent(std::make_shared<ScriptComponent>(component, physics));
+}
 
 // For this, we just need a template so we can pass a Python function (as python::object)
 // to the handler of the right type
@@ -228,6 +230,7 @@ BOOST_PYTHON_MODULE(entity) {
 		.def("add_component", AddComponent<RigidBody>)
 		.def("add_component", AddComponent<ScriptComponent>)
 		.def("add_component", AddComponent<Trigger>)
+		.def("add_component", AddScriptComponent)
 		.def("fire_event", &Entity::FireEvent<Events::Infected>)
 		.def("fire_event", &Entity::FireEvent<Events::Destroyed>)
 		.def("fire_event", &Entity::FireEvent<Events::Collided>)
@@ -325,29 +328,10 @@ BOOST_PYTHON_MODULE(vehicle) {
 BOOST_PYTHON_MODULE(camera) {
 	python::class_<Camera, std::shared_ptr<Camera>, python::bases<Component>>("Camera", python::init<std::shared_ptr<Vehicle>>());
 }
-//
-//ScriptComponent::ScriptComponent(const std::string &type, Physics &physics) :
-//{
-//	InitPython();
-//	InitScript(type_);
-//
-//	type_[0] = ::toupper(type_[0]);
-//	std::transform(type_.begin(), type_.end(), type_.begin(), [](char c) {
-//		static bool uppercase = false;
-//		if (uppercase) {
-//			uppercase = false;
-//			return static_cast<char>(::toupper(c));
-//		}
-//
-//		if (c == ' ' || c == '_') uppercase = true;
-//		return c;
-//	});
-//	type_.erase(std::remove_if(type_.begin(), type_.end(), [](char c) {return c == '_'; }));
-//}
 
 ScriptComponent::~ScriptComponent()
 {
-	locals_.clear();
+	//locals_.clear();
 }
 
 void ScriptComponent::RegisterHandlers()
@@ -360,7 +344,7 @@ void ScriptComponent::RegisterHandlers()
 void ScriptComponent::Update(seconds dt)
 {
 	Call("update", dt.count());
-	python::exec("while gc.collect(): pass", locals_, locals_);
+	//python::exec("while gc.collect(): pass", locals_, locals_);
 }
 
 void ScriptComponent::InitPython()

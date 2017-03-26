@@ -45,6 +45,8 @@ class ScriptComponent : public Component {
 		}
 	}
 
+	ScriptComponent(boost::python::object self, Physics &physics) : self_(self), physics_(physics) {}
+
 	//ScriptComponent(const std::string &filename, Physics &physics);
 	~ScriptComponent();
 
