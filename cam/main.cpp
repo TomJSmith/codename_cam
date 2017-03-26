@@ -73,7 +73,7 @@ int main() {
 
 			
 			auto aiVehicle = Entity::Create(root.get()).lock();
-			std::shared_ptr<Component> aiMesh(new Mesh(std::unique_ptr<Shader>(new ModelShader("runner_texture.jpg")), "runner_mesh.fbx", vec3(1.0, 0.84, 0.0), vec3(4.427f, 2.426f, 12.935f), GL_TRIANGLES));
+			std::shared_ptr<Component> aiMesh(new Mesh(std::unique_ptr<Shader>(new ModelShader("runner_texture_blue.jpg")), "runner_mesh.fbx", vec3(1.0, 0.84, 0.0), vec3(4.427f, 2.426f, 12.935f), GL_TRIANGLES));
 			std::shared_ptr<Component> aiV(new ScriptComponent("chaser_ai", physics));
 			aiVehicle->AddComponent(std::move(aiMesh));
 			aiVehicle->AddComponent(std::move(aiV));
@@ -91,7 +91,7 @@ int main() {
 			
 			
 			auto aiVehicleRun = Entity::Create(root.get()).lock();
-			std::shared_ptr<Component> aiMeshRun(new Mesh(std::unique_ptr<Shader>(new ModelShader("runner_texture.jpg")), "runner_mesh.fbx", vec3(1.0, 0.84, 0.0), vec3(4.427f, 2.426f, 12.935f), GL_TRIANGLES));
+			std::shared_ptr<Component> aiMeshRun(new Mesh(std::unique_ptr<Shader>(new ModelShader("runner_texture_green.jpg")), "runner_mesh.fbx", vec3(1.0, 0.84, 0.0), vec3(4.427f, 2.426f, 12.935f), GL_TRIANGLES));
 			std::shared_ptr<Component> aiVRun(new ScriptComponent("runner_ai", physics));
 			aiVehicleRun->AddComponent(std::move(aiMeshRun));
 			aiVehicleRun->AddComponent(std::move(aiVRun));

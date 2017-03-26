@@ -34,7 +34,7 @@ runner_e = None
 frame_count = -1
 stuck = False
 count = 0
-
+stuck_flag = False
 
 def destroyed(event):
 	pass
@@ -103,11 +103,13 @@ def create_nav_mesh():
 
 def checkStuck(self):
 	global prevPos
+	global stuck_flag
 	currPos = self.entity().transform().global_position()
 
 	if prevPos is not None:
 		if (math.sqrt((currPos.x - prevPos.x) ** 2.0 + (currPos.z - prevPos.z) ** 2.0) < 1):
 			prevPos = currPos
+			stuck_flag = True
 			return True
 		else:
 			prevPos = currPos
@@ -262,17 +264,15 @@ def update(self, dt):
 	global runner_e
 	global count
 	global map
+	global stuck_flag
 	
 	
 	currentNode = map[currentNodeXZ]
 	count %= len(currentNode.neighbors)
-	#if count % len(currentNode.neighbors) == 0:
-		#count = 0
 	targetNode = currentNode.neighbors[count]
 	myPos = (self.entity().transform().global_position().x, self.entity().transform().global_position().z) 
 	targetNodeXZ = astar.findNextNode(currentNode, (targetNode.x, targetNode.z))
-	
-	#count += 1
+
 	
 	"""
 	if runner_e is not None:
@@ -285,8 +285,13 @@ def update(self, dt):
 
 			if not map[targetNodeXZ].inNode(runnerPos):
 				targetNodeXZ = astar.findNextNode(map[targetNodeXZ],runnerPos)"""
-	if frame_count%60 == 0:
-		stuck = checkStuck(self)
+	if frame_count % 60 == 0:
+		if stuck_flag:
+			print( "Stuck!")
+			stuck = True
+			stuck_flag = False
+		else:
+			stuck = checkStuck(self)
 	"""if frame_count > 360 or frame_count == -1:
 		frame_count = -1
 		currentNodeIndex = 0
