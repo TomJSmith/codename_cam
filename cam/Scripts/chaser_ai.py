@@ -256,10 +256,10 @@ def update(self, dt):
 				if not map[targetNodeXZ[i]].inNode(runnerPos[i]):
 					targetNodeXZ[i] = astar.findNextNode(map[targetNodeXZ[i]], runnerPos[i])
 
-		if frame_count % 180 == 0:
+		if frame_count % 60 == 0:
 			stuck = checkStuck(self)
 
-		if frame_count > 360 or frame_count == -1:
+		if frame_count > 180 or frame_count == -1:
 			frame_count = 0
 			currentNodeIndex = 0
 			currentPath = getNodePathToVec(astar.find_path(map[targetNodeXZ[0]], map[currentNodeXZ]))

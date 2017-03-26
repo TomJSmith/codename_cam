@@ -135,10 +135,16 @@ def drive(self):
 	global reachedGoal
 	global currentNodeIndex
 	global currentPath
+	global currentNodeXZ
+	global targetNodeXZ
+	global count
 	# _controller.setAccel(1)
 	# _controller.setRight(1)
+	
+	currTarget = Vec3(targetNodeXZ[0], 0, targetNodeXZ[1])
 
-
+	
+	"""
 	_controller.setAccel(1)
 	_controller.setRight(0)
 	_controller.setLeft(0)
@@ -159,7 +165,7 @@ def drive(self):
 
 	"""
 	if not reachedGoal:
-		currTarget = currentPath[currentNodeIndex]
+		#currTarget = currentPath[currentNodeIndex]
 		currPosition = self.entity().transform().global_position()
 		direction = currTarget - currPosition  # transform().position
 		forward = self.entity().transform().forward()
@@ -212,13 +218,15 @@ def drive(self):
 			  #  _controller.setAccel(0)
 				# _controller.setLeft(0)
 				# _controller.setRight(0)
-				currentNodeIndex += 1
+				"""currentNodeIndex += 1
 				if currentNodeIndex >= len(currentPath):
 					currentNodeIndex == len(currentPath) - 1
 				   # currTarget.x = runner_e.transform().global_position().x
-				   # currTarget.z = runner_e.transform().global_position().z
-					print "Reached the Target"
-					reachedGoal = True
+				   # currTarget.z = runner_e.transform().global_position().z"""
+				print "Reached the Target"
+				count +=1
+
+				#reachedGoal = True
 			else:
 				_controller.setAccel(1)
 				_controller.setRight(0)
@@ -237,7 +245,7 @@ def drive(self):
 				else:
 					_controller.setRight(0)
 					_controller.setBrake(0)
-	"""
+	
 	# else:
 	#   _controller.setAccel(0)
 	#     _controller.setBrake(1)
@@ -253,13 +261,19 @@ def update(self, dt):
 	global stuck
 	global runner_e
 	global count
-
-	"""
-	if count % len(currentNodeXZ.neighbours) == 0:
-		count = 0
-	targetNodeXZ = currentNodeXZ.neighbours[count]
-	count += 1
-	"""
+	global map
+	
+	
+	currentNode = map[currentNodeXZ]
+	count %= len(currentNode.neighbors)
+	#if count % len(currentNode.neighbors) == 0:
+		#count = 0
+	targetNode = currentNode.neighbors[count]
+	myPos = (self.entity().transform().global_position().x, self.entity().transform().global_position().z) 
+	targetNodeXZ = astar.findNextNode(currentNode, (targetNode.x, targetNode.z))
+	
+	#count += 1
+	
 	"""
 	if runner_e is not None:
 		runnerPos = (runner_e.transform().global_position().x, runner_e.transform().global_position().z)
@@ -270,10 +284,10 @@ def update(self, dt):
 				currentNodeXZ = astar.findNextNode(map[currentNodeXZ], chaserPos)
 
 			if not map[targetNodeXZ].inNode(runnerPos):
-				targetNodeXZ = astar.findNextNode(map[targetNodeXZ],runnerPos)
-	if frame_count%180 == 0:
+				targetNodeXZ = astar.findNextNode(map[targetNodeXZ],runnerPos)"""
+	if frame_count%60 == 0:
 		stuck = checkStuck(self)
-	if frame_count > 360 or frame_count == -1:
+	"""if frame_count > 360 or frame_count == -1:
 		frame_count = -1
 		currentNodeIndex = 0
 		currentPath = getNodePathToVec(astar.find_path(map[targetNodeXZ], map[currentNodeXZ]))
@@ -285,8 +299,8 @@ def update(self, dt):
 	"""
 	drive(self)
 
-	#  frame_count += 1
-
+	frame_count += 1
+	frame_count %= 360
 	"""if closestPathNodes is None or currNodeTarget >= len(closestPathNodes):
 		# targetPosNode = (targets[target].x, targets[target].z)
 		# selfPos = self.entity().transform().global_position()
