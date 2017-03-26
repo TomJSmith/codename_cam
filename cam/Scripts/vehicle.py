@@ -8,9 +8,13 @@ import runner
 from start_game import *
 from entity import *
 from component import *
+from oil_slick import *
 
 v = None
 dead = False
+
+def change_surface(event):
+    v.set_friction(event.friction)
 
 def start_game(event):
     global v
@@ -61,9 +65,11 @@ def init(self):
     self.entity().add_component(runner.Runner())
     self.entity().register_handler(StartGame, start_game)
     self.entity().register_handler(Infected, infected)
+    self.entity().register_handler(ChangeSurface, change_surface)
 
 def update(self, dt):
     global dead
+    global v
 
     if dead:
         e = self.entity()

@@ -32,13 +32,15 @@ public:
 	enum CollisionFlags : PxU32 {
 		WHEEL = (1 << 0),
 		GROUND = (1 << 1),
-		CHASSIS = (1 << 2)
+		CHASSIS = (1 << 2),
+		TRIGGER = (1 << 3)
 	};
 
 	enum CollidesWithFlags : PxU32 {
 		WHEEL_COLLISIONS = CollisionFlags::CHASSIS | CollisionFlags::WHEEL, // wheels don't hit the ground, raycasts do that
 		GROUND_COLLISIONS = CollisionFlags::CHASSIS | CollisionFlags::GROUND, // ground doesn't hit wheels either
-		CHASSIS_COLLISIONS = CollisionFlags::GROUND | CollisionFlags::WHEEL | CollisionFlags::CHASSIS // chassis hits everything!
+		CHASSIS_COLLISIONS = CollisionFlags::GROUND | CollisionFlags::WHEEL | CollisionFlags::CHASSIS, // chassis hits everything!
+		TRIGGER_COLLISIONS = 0xFFFFFFFF, // triggers *literally* hit everything
 	};
 
 	static const float Timestep;

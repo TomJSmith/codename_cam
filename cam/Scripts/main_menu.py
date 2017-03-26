@@ -30,12 +30,17 @@ def start_game(self):
     vehicle = ScriptComponent("vehicle", self.physics())
 
     player.add_component(vehicle)
+    player.add_component(ScriptComponent("powerup_manager", self.physics()))
 
     runner = Entity.create(e).lock()
     mesh = Mesh(ModelShader("runner_texture.jpg"), "runner_mesh.fbx", Vec3(1.0, 0.84, 0.0), Vec3(4.427, 2.426, 12.935), 4)
     ai = ScriptComponent("runner_ai", self.physics())
     runner.add_component(mesh)
     runner.add_component(ai)
+
+    oilslick = Entity.create(e).lock()
+    oilslick.transform().position = Vec3(0.0, 0.0, 60)
+    oilslick.add_component(ScriptComponent("oil_slick_powerup", self.physics()))
 
     e.add_component(ScriptComponent("start_game", self.physics()))
 

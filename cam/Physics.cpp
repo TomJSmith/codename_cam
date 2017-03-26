@@ -14,7 +14,28 @@ class SimulationCallback : public PxSimulationEventCallback {
 	void onConstraintBreak(PxConstraintInfo *, PxU32) override {}
 	void onWake(PxActor **, PxU32) override {}
 	void onSleep(PxActor **, PxU32) override {}
-	void onTrigger(PxTriggerPair *, PxU32) override {}
+	void onTrigger(PxTriggerPair *pairs, PxU32 count) override {
+		for (PxU32 i = 0; i < count; ++i) {
+			if (!pairs[i].flags.isSet(PxTriggerPairFlag::eDELETED_SHAPE_OTHER)
+				&& !pairs[i].flags.isSet(PxTriggerPairFlag::eREMOVED_SHAPE_OTHER)
+				&& !pairs[i].flags.isSet(PxTriggerPairFlag::eDELETED_SHAPE_TRIGGER)
+				&& !pairs[i].flags.isSet(PxTriggerPairFlag::eREMOVED_SHAPE_TRIGGER))
+			{
+				auto t = static_cast<Entity *>(pairs[i].triggerActor->userData);
+				auto e = static_cast<Entity *>(pairs[i].otherActor->userData);
+
+				if (pairs[i].status == PxPairFlag::eNOTIFY_TOUCH_FOUND) {
+					t->FireEvent(Events::TriggerEnter{ e });
+					e->FireEvent(Events::TriggerEnter{ t });
+				}
+				else {
+					t->FireEvent(Events::TriggerExit{ e });
+					e->FireEvent(Events::TriggerExit{ t });
+				}
+			}
+		}
+	}
+
 	void onContact(const PxContactPairHeader &header, const PxContactPair *pairs, PxU32 n) override {
 		if (!header.flags.isSet(PxContactPairHeaderFlag::eREMOVED_ACTOR_0)
 			&& !header.flags.isSet(PxContactPairHeaderFlag::eDELETED_ACTOR_0)
@@ -43,6 +64,11 @@ static PxFilterFlags VehicleFilterShader(PxFilterObjectAttributes /* unused */,
 {
 	if (((data0.word0 & data1.word1) == 0) && ((data1.word0 & data0.word1) == 0)) {
 		return PxFilterFlag::eSUPPRESS;
+	}
+
+	if (data0.word0 & Physics::TRIGGER || (data1.word0 & Physics::TRIGGER)) {
+		flags = PxPairFlag::eTRIGGER_DEFAULT;
+		return PxFilterFlags();
 	}
 
 	flags = PxPairFlag::eCONTACT_DEFAULT | PxPairFlag::eNOTIFY_TOUCH_FOUND;

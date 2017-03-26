@@ -22,6 +22,7 @@ public:
 	virtual bool getBrake();
 	virtual int getDirectional();
 	virtual bool getSelect();
+	virtual bool getSecondary();
 private:
 	int i;
 	XINPUT_STATE state;

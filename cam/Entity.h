@@ -13,6 +13,8 @@
 class Entity {
  public:
 	Entity();
+
+	// TODO create with position
 	static std::shared_ptr<Entity> Create();
 	static std::weak_ptr<Entity> Create(Entity *parent);
 	static void DeleteDestroyed();

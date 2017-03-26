@@ -81,6 +81,7 @@ public:
 	Physics &GetPhysics() { return physics_; } // TODO we probably shouldn't need this....
 
 	void SetActive(bool active) { active_ = active; }
+	void SetFriction(float friction);
 protected:
 	void RegisterHandlers() override;
 
@@ -100,5 +101,6 @@ private:
 	PxVehicleDrive4WRawInputData input_;
 	PxVehicleDrivableSurfaceToTireFrictionPairs *frictionpairs_;
 	bool active_;
+	float mass_;
 };
 

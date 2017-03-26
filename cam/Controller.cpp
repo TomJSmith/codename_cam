@@ -74,3 +74,7 @@ int Controller::getDirectional() {
 bool Controller::getSelect() {
 	return (state.Gamepad.wButtons & XINPUT_GAMEPAD_A) != 0;
 }
+
+bool Controller::getSecondary() {
+	return (state.Gamepad.wButtons & XINPUT_GAMEPAD_B) != 0;
+}

@@ -4,6 +4,7 @@
 
 #include "EventSystem.h"
 #include "Renderer.h"
+#include "Trigger.h"
 
 class Entity;
 
@@ -32,6 +33,16 @@ namespace Events {
 	struct ScriptEvent {
 		python::object pyevent;
 	};
+
+	struct TriggerEnter {
+		Entity *entity;
+		Entity *GetEntity() { return entity; }
+	};
+
+	struct TriggerExit {
+		Entity *entity;
+		Entity *GetEntity() { return entity; }
+	};
 };
 
 // Expose the template class with all event types as EventSystem (so we don't have to
@@ -45,5 +56,7 @@ using EventSystem = EventSystem_<
 	Events::Infected,
 	Events::RunnerCreated,
 //	Events::StartGame,
-	Events::ScriptEvent
+	Events::ScriptEvent,
+	Events::TriggerEnter,
+	Events::TriggerExit
 >;

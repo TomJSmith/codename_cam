@@ -278,7 +278,7 @@ static PxBatchQueryDesc CreateQueryDescription(PxRaycastQueryResult *queryBuffer
 	return ret;
 }
 
-static PxVehicleDrivableSurfaceToTireFrictionPairs *CreateFrictionPairs(PxPhysics *physics, float mass)
+static PxVehicleDrivableSurfaceToTireFrictionPairs *CreateFrictionPairs(PxPhysics *physics, float mass, float friction)
 {
 	PxVehicleDrivableSurfaceToTireFrictionPairs *ret =
 		PxVehicleDrivableSurfaceToTireFrictionPairs::allocate(1, 1);
@@ -288,9 +288,15 @@ static PxVehicleDrivableSurfaceToTireFrictionPairs *CreateFrictionPairs(PxPhysic
 	const PxMaterial *surfaces[1] = { physics->createMaterial(.5f, .5f, 0.6f) };
 	PxVehicleDrivableSurfaceType types[1] = { 0 };
 	ret->setup(1, 1, surfaces, types);
-	ret->setTypePairFriction(0, 0, 1.0f * mass);
+	ret->setTypePairFriction(0, 0, friction * mass);
 
 	return ret;
+}
+
+void Vehicle::SetFriction(float friction)
+{
+	if (frictionpairs_) frictionpairs_->release();
+	frictionpairs_ = CreateFrictionPairs(physics_.GetPhysics(), mass_, friction);
 }
 
 Vehicle::Vehicle(Physics &physics, std::shared_ptr<Controller> controller, Configuration &config) :
@@ -298,7 +304,8 @@ Vehicle::Vehicle(Physics &physics, std::shared_ptr<Controller> controller, Confi
 	controller_(controller),
 	querybuffer_(config.nWheels),
 	hitbuffer_(config.nWheels),
-	active_(true)
+	active_(true),
+	mass_(config.chassisMass)
 {
 	auto desc = CreateQueryDescription(querybuffer_.data(), hitbuffer_.data());
 	batchquery_ = physics.GetScene()->createBatchQuery(desc);
@@ -315,7 +322,7 @@ Vehicle::Vehicle(Physics &physics, std::shared_ptr<Controller> controller, Confi
 	vehicle_->setToRestState();
 	vehicle_->mDriveDynData.forceGearChange(PxVehicleGearsData::eFIRST);
 
-	frictionpairs_ = CreateFrictionPairs(physics_.GetPhysics(), config.chassisMass);
+	SetFriction(1.0f);
 
 	wheels->free();
 }

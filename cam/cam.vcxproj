@@ -194,6 +194,7 @@ xcopy /S /Y /D "$(SolutionDir)cam\Shaders" "$(TargetDir)\Shaders\"</Command>
     <ClInclude Include="System.h" />
     <ClInclude Include="Time.h" />
     <ClInclude Include="Transform.h" />
+    <ClInclude Include="Trigger.h" />
     <ClInclude Include="Util.h" />
     <ClInclude Include="OpenGL.h" />
     <ClInclude Include="Mesh.h" />
@@ -225,6 +226,7 @@ xcopy /S /Y /D "$(SolutionDir)cam\Shaders" "$(TargetDir)\Shaders\"</Command>
     <ClCompile Include="ScriptComponent.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="Transform.cpp" />
+    <ClCompile Include="Trigger.cpp" />
     <ClCompile Include="Util.cpp" />
     <ClCompile Include="Vehicle.cpp" />
   </ItemGroup>
