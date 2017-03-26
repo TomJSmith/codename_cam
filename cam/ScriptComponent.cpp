@@ -70,7 +70,7 @@ BOOST_PYTHON_MODULE(controller) {
 }
 
 BOOST_PYTHON_MODULE(aicontroller) {
-	python::class_<aiController, std::shared_ptr<aiController>>("aiController", python::init<>())
+	python::class_<aiController, std::shared_ptr<aiController>>("aiController", python::init<int>())
 		.def("setRight", &aiController::setRight)
 		.def("setLeft", &aiController::setLeft)
 		.def("setBrake", &aiController::setBrake)
@@ -163,11 +163,11 @@ BOOST_PYTHON_MODULE(component) {
 }
 
 BOOST_PYTHON_MODULE(vehicle) {
-	python::class_<PxVehicleDrive4WRawInputData>("Input")
+	/*python::class_<PxVehicleDrive4WRawInputData>("Input")
 		.def("set_acceleration", &PxVehicleDrive4WRawInputData::setDigitalAccel)
 		.def("set_steer_left", &PxVehicleDrive4WRawInputData::setDigitalSteerLeft)
 		.def("set_steer_right", &PxVehicleDrive4WRawInputData::setDigitalSteerRight)
-		.def("set_brake", &PxVehicleDrive4WRawInputData::setDigitalBrake);
+		.def("set_brake", &PxVehicleDrive4WRawInputData::setDigitalBrake);*/
 
 	python::class_<Vehicle, std::shared_ptr<Vehicle>, python::bases<Component>>
 		("Vehicle", python::init<Physics &, std::shared_ptr<Controller>, Vehicle::Configuration &>())
