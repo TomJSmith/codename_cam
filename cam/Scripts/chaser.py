@@ -1,8 +1,9 @@
 from events import *
 
-def collided(event):
-    event.other().fire_event(Infected())
-    print "chaser collided with " + str(event.other().id)
+class Chaser:
+    def collided(self, event):
+        event.other().fire_event(Infected())
+        print "chaser collided with " + str(event.other().id)
 
-def init(self):
-    self.entity().register_collided_handler(collided)
+    def start(self):
+        self.entity.register_collided_handler(self.collided)

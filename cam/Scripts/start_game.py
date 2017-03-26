@@ -1,17 +1,16 @@
 from events import *
 
-time = 0.0
-fired = False
-
-class StartGame:
+class GameStarted:
     pass
 
-def update(self, dt):
-    global time
-    global fired
+class StartGame:
+    def start(self):
+        self.time = 0.0
+        self.fired = False
 
-    time += dt
-    if time > 3.0 and not fired:
-        self.entity().broadcast_event(StartGame())
-        print "starting game..."
-        fired = True
+    def update(self, dt):
+        self.time += dt
+        if self.time > 3.0 and not self.fired:
+            self.entity.broadcast_event(GameStarted())
+            print "starting game..."
+            self.fired = True

@@ -2,21 +2,14 @@ from component import *
 from physics import *
 
 class PickedUpOilSlick:
-    def __init__(self, cmpnt):
-        self.component = cmpnt
+    def __init__(self, entity):
+        self.entity = entity
 
-cmpnt = None
+class OilSlickPowerup:
+    def triggered(self, event):
+        print "powerup #triggered"
+        event.entity().fire_event(PickedUpOilSlick(self.entity))
 
-def triggered(event):
-    global cmpnt
-
-    print "powerup #triggered"
-    event.entity().fire_event(PickedUpOilSlick(cmpnt))
-
-def init(self):
-    global cmpnt
-
-    self.entity().add_component(Trigger(self.physics(), PxBox(PxVec3(3.0, 3.0, 3.0)), PxTransform(PxVec3(0.0, 0.0, 0.0))))
-    self.entity().register_triggerenter_handler(triggered)
-
-    cmpnt = self
+    def start(self):
+        self.entity.add_component(Trigger(self.physics, PxBox(PxVec3(3.0, 3.0, 3.0)), PxTransform(PxVec3(0.0, 0.0, 0.0))))
+        self.entity.register_triggerenter_handler(self.triggered)

@@ -42,11 +42,11 @@ int main() {
 		Audio audio;
 
 		{
-			//std::shared_ptr<Component> menu(std::make_shared<ScriptComponent>("main_menu", physics));
-			//auto e = Entity::Create(root.get()).lock();
-			//e->AddComponent(std::move(menu));
+			std::shared_ptr<Component> menu(std::make_shared<ScriptComponent>("main_menu", physics));
 			auto e = Entity::Create(root.get()).lock();
-			e->AddComponent(std::make_shared<ScriptComponent>("class_test", physics, "foobar"));
+			e->AddComponent(std::move(menu));
+			//auto e = Entity::Create(root.get()).lock();
+			//e->AddComponent(std::make_shared<ScriptComponent>("class_test", physics, "foobar"));
 		}
 	
 		auto lastTime = timer::now();

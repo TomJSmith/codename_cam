@@ -15,61 +15,51 @@ from a_star import *
 
 v = None
 
-time = 0
-_controller = None
-reachedGoal = False
-backUp = False
-
-currPos = None
-prevPos = None
-
-map = None
-astar = None
-
-closestPathNodes = None
-closeNodeSelf = None
-closeNodeTarget = None
-
-runner_e = []
-targetNodeXZ = []
-runnerPos = []
-targetRunner = 0
-frame_count = -1
-stuck = False
-stuck_flag = False
-started = False
-
+# _controller = None
 # def destroyed(event):
 #     global v
 #     v = None
 #     print "chaser ai collided"
 
-def runnercreated(event):
-	pass
-	global runner_e
-	global targetNodeXZ
-	global runnerPos
-	runner_e.append(event.get_runner())
-	targetNodeXZ.append(astar.findCurrentNode(
-		(event.get_runner().transform().global_position().x, event.get_runner().transform().global_position().z)))
-	runnerPos.append(
-		(event.get_runner().transform().global_position().x, event.get_runner().transform().global_position().z))
+class ChaserAi:
+    def runnercreated(self, event):
+    # global self.runner_e
+    #     global self.targetNodeXZ
+    #     global self.runnerPos
+	self.runner_e.append(event.get_runner())
+	self.targetNodeXZ.append(self.astar.findCurrentNode(
+	    (event.get_runner().transform().global_position().x, event.get_runner().transform().global_position().z)))
+	self.runnerPos.append(
+	    (event.get_runner().transform().global_position().x, event.get_runner().transform().global_position().z))
 
-def start_game(event):
-    global started
-    started = True
+    def start_game(self, event):
+        self.started = True
 
+    def start(self):
+        self.reachedGoal = False
+        self.backUp = False
 
-def init(self):
-	global v
-	global _controller
-	global map
-	global astar
-	global currentNodeXZ
-	_controller = aicontroller.aiController(4)
+        self.currPos = None
+        self.prevPos = None
+
+        self.map = None
+
+        self.closeNodeSelf = None
+        self.closeNodeTarget = None
+
+        self.runner_e = []
+        self.targetNodeXZ = []
+        self.runnerPos = []
+        self.targetRunner = 0
+        self.frame_count = -1
+        self.stuck = False
+        self.stuck_flag = False
+        self.started = False
+
+	self.controller = aicontroller.aiController(4)
 	config = vehicle.Configuration()
-	map = create_nav_mesh()
-	astar = A_star(map)
+	self.map = self.create_nav_mesh()
+	self.astar = A_star(self.map)
 
 	dims = PxVec3(3, 1, 5)
 	config.position = PxVec3(-5, 5, 60)
@@ -86,89 +76,87 @@ def init(self):
 	config.chassis_moi = PxVec3(config.chassis_mass, config.chassis_mass / 10, config.chassis_mass)
 	config.chassis_offset = PxVec3(0, -dims.y, 0)
 
-	v = vehicle.Vehicle(self.physics(), _controller, config)
-	self.entity().add_component(v)
-	self.entity().register_runnercreated_handler(runnercreated)
-        self.entity().register_handler(StartGame, start_game)
+	self.vehicle = vehicle.Vehicle(self.physics, self.controller, config)
+	self.entity.add_component(self.vehicle)
+	self.entity.register_runnercreated_handler(self.runnercreated)
+        self.entity.register_handler(GameStarted, self.start_game)
 	# self.entity().register_destroyed_handler(destroyed)
 
-	currentNodeXZ = astar.findCurrentNode(
-		(self.entity().transform().global_position().x, self.entity().transform().global_position().z))
+	self.currentNodeXZ = self.astar.findCurrentNode(
+	    (self.entity.transform().global_position().x, self.entity.transform().global_position().z))
 
-def create_nav_mesh():
+    def create_nav_mesh(self):
 	# global physics
 	_navmesh = navmesh.NavMesh('nav_mesh.fbx', Vec3(2.0, 2.0, 2.0))
 	graph = _navmesh.getSimpleGraph()
-	map = {}
+	self.map = {}
 	for node in graph:
-		map[(node[0], node[1])] = Node(node[0], node[1], node[3])
+		self.map[(node[0], node[1])] = Node(node[0], node[1], node[3])
 	for node in graph:
 		for neighbor in node[2]:
-			map[(node[0], node[1])].add_neighbor(map[neighbor])
-	return map
+			self.map[(node[0], node[1])].add_neighbor(self.map[neighbor])
+	return self.map
 
+    def checkStuck(self):
+	# global self.prevPos
+	# global self.stuck_flag
+	self.stuck_flag = False
+	self.currPos = self.entity.transform().global_position()
 
-def checkStuck(self):
-	global prevPos
-	global stuck_flag
-	stuck_flag = False
-	currPos = self.entity().transform().global_position()
-
-	if prevPos is not None:
-		print(math.sqrt((currPos.x - prevPos.x) ** 2.0 + (currPos.z - prevPos.z) ** 2.0))
-		if (math.sqrt((currPos.x - prevPos.x) ** 2.0 + (currPos.z - prevPos.z) ** 2.0) < .3):
-			prevPos = currPos
-			stuck_flag = True
+	if self.prevPos is not None:
+		print(math.sqrt((self.currPos.x - self.prevPos.x) ** 2.0 + (self.currPos.z - self.prevPos.z) ** 2.0))
+		if (math.sqrt((self.currPos.x - self.prevPos.x) ** 2.0 + (self.currPos.z - self.prevPos.z) ** 2.0) < .3):
+			self.prevPos = self.currPos
+			self.stuck_flag = True
 			return True
 		else:
-			prevPos = currPos
+			self.prevPos = self.currPos
 			return False
 
-	prevPos = currPos
+	self.prevPos = self.currPos
 	return False
 
-def closestRunner(self):
-	currPos = self.entity().transform().global_position()
+    def closestRunner(self):
+	self.currPos = self.entity.transform().global_position()
 	minDistance = 9999999
 	closest = 0
-	for i in range(0, len(runnerPos)):
-		currDistance = math.sqrt((currPos.x - runnerPos[i][0]) ** 2.0 + (currPos.z - runnerPos[i][1]) ** 2.0)
-		if currDistance < minDistance:
-			minDistance = currDistance
-			closest = i
+	for i in range(0, len(self.runnerPos)):
+	    currDistance = math.sqrt((self.currPos.x - self.runnerPos[i][0]) ** 2.0 + (self.currPos.z - self.runnerPos[i][1]) ** 2.0)
+	    if currDistance < minDistance:
+		minDistance = currDistance
+		closest = i
 	print "Closest Runner: " + str(closest)
 	return closest
 
 
-def getNodePathToVec(closestPathNodes):
+    def getNodePathToVec(self, closestPathNodes):
 	arrayVecs = []
 	for node in closestPathNodes:
-		vectorToAdd = Vec3(node.x, 0, node.z)
-		arrayVecs.append(vectorToAdd)
+	    vectorToAdd = Vec3(node.x, 0, node.z)
+	    arrayVecs.append(vectorToAdd)
 
 	return arrayVecs
 
-
-def getCurrentCoor(ent):
+    def getCurrentCoor(self, ent):
 	return (ent.transform().global_position().x, ent.transform().global_position().z)
 
 
-def drive(self):
-	global _controller
-	global reachedGoal
-	global currentNodeIndex
-	global currentPath
-	global frame_count
+    def drive(self):
+	# global _controller
+	# global self.reachedGoal
+	# global currentNodeIndex
+	# global currentPath
+	# global self.frame_count
 
-	if not reachedGoal:
-		currTarget = currentPath[currentNodeIndex]
+	if not self.reachedGoal:
+		currTarget = self.currentPath[self.currentNodeIndex]
 	else:
-		currTarget = runner_e[targetRunner].transform().global_position()
-	currPosition = self.entity().transform().global_position()
-	direction = currTarget - currPosition  # transform().position
-	forward = self.entity().transform().forward()
-	right = self.entity().transform().right()
-	test = self.entity().transform().position
+		currTarget = self.runner_e[self.targetRunner].transform().global_position()
+	self.currPosition = self.entity.transform().global_position()
+	direction = currTarget - self.currPosition  # transform().position
+	forward = self.entity.transform().forward()
+	right = self.entity.transform().right()
+	test = self.entity.transform().position
 
 	# print "Current Target X: ", currTarget.x
 	# print "Current Target Y: ", currTarget.y
@@ -192,110 +180,109 @@ def drive(self):
 	right.z = right.z / right.length()
 
 	dot = Vec3.dot(right, direction)
-	# if frame_count%120 == 0:
+	# if self.frame_count%120 == 0:
 	# print("dot = " + str(dot))
 	# print("Dx = " + str(direction.x))
 	# print("Dx = " + str(direction.z))
 
-	if stuck:
+	if self.stuck:
 		if dot < -.5:
-			_controller.setLeft(1)
-			_controller.setRight(0)
+			self.controller.setLeft(1)
+			self.controller.setRight(0)
 		elif dot > .5:
-			_controller.setRight(1)
-			_controller.setLeft(0)
+			self.controller.setRight(1)
+			self.controller.setLeft(0)
 		else:
-			_controller.setRight(0)
+			self.controller.setRight(0)
 
-		_controller.setBrake(0)
-		_controller.setReverse(1)
-		_controller.setAccel(1)
+		self.controller.setBrake(0)
+		self.controller.setReverse(1)
+		self.controller.setAccel(1)
 	else:
 		# print("Goal : " + str((currTarget.x, currTarget.z)))
 		# print("Chaser Position : " + str((self.entity().transform().global_position().x, self.entity().transform().global_position().z)))
-		_controller.setReverse(0)
-		if reachedGoal or not astar.map[(currTarget.x, currTarget.z)].inNode((currPosition.x, currPosition.z)):
-			_controller.setAccel(1)
-			_controller.setBrake(0)
+		self.controller.setReverse(0)
+		if self.reachedGoal or not self.astar.map[(currTarget.x, currTarget.z)].inNode((self.currPosition.x, self.currPosition.z)):
+			self.controller.setAccel(1)
+			self.controller.setBrake(0)
 			if dot < -.37:
-				_controller.setLeft(1)
-				_controller.setRight(0)
+				self.controller.setLeft(1)
+				self.controller.setRight(0)
 			elif dot > .37:
-				_controller.setRight(1)
-				_controller.setLeft(0)
+				self.controller.setRight(1)
+				self.controller.setLeft(0)
 			else:
-				_controller.setRight(0)
-				_controller.setLeft(0)
+				self.controller.setRight(0)
+				self.controller.setLeft(0)
 		else:
-			print("Reached Node " + str(currentNodeIndex))
+			print("Reached Node " + str(self.currentNodeIndex))
 			# print "distance to goal : ", distanceToGoal
 			# print "size of closestPathVectors : ", len(closestPathVectors)
 			# print "size of targets : ", len(targets)
 			# print "target index : ", target
-			# reachedGoal = False
-			_controller.setBrake(1)
+			# self.reachedGoal = False
+			self.controller.setBrake(1)
 			# print "We're there!"
-			_controller.setAccel(0)
-			# _controller.setLeft(0)
-			# _controller.setRight(0)
-			currentNodeIndex += 1
-			if currentNodeIndex >= len(currentPath):
-				currentNodeIndex == len(currentPath) - 1
+			self.controller.setAccel(0)
+			# controller.setLeft(0)
+			# controller.setRight(0)
+			self.currentNodeIndex += 1
+			if self.currentNodeIndex >= len(self.currentPath):
+				self.currentNodeIndex == len(self.currentPath) - 1
 				print "Reached the Target"
-				reachedGoal = True
+				self.reachedGoal = True
 
 			# else:
-			# reachedGoal = False;
-			# _controller.setAccel(0)
-			#     _controller.setBrake(1)
+			# self.reachedGoal = False;
+			# controller.setAccel(0)
+			#     controller.setBrake(1)
 
 
-def update(self, dt):
-	global currentNodeXZ
-	global targetNodeXZ
-	global frame_count
-	global currentNodeIndex
-	global currentPath
-	global reachedGoal
-	global stuck
-	global stuck_flag
-	global runner_e
-	global targetRunner
-        global started
-        if not started:
+    def update(self, dt):
+	# global currentNodeXZ
+	# global self.targetNodeXZ
+	# global self.frame_count
+	# global currentNodeIndex
+	# global currentPath
+	# global self.reachedGoal
+	# global self.stuck
+	# global self.stuck_flag
+	# global self.runner_e
+	# global self.targetRunner
+        # global self.started
+        if not self.started:
             return
 
-	if runner_e is not None:
-		for i in range(0, len(runnerPos)):
-			runnerPos[i] = (runner_e[i].transform().global_position().x, runner_e[i].transform().global_position().z)
+	if self.runner_e is not None:
+		for i in range(0, len(self.runnerPos)):
+		    self.runnerPos[i] = (self.runner_e[i].transform().global_position().x, self.runner_e[i].transform().global_position().z)
 
-		chaserPos = (self.entity().transform().global_position().x, self.entity().transform().global_position().z)
-		if frame_count % 30 == 0 or frame_count == -1:
-			if not map[currentNodeXZ].inNode(chaserPos):
-				currentNodeXZ = astar.findNextNode(map[currentNodeXZ], chaserPos)
+		chaserPos = (self.entity.transform().global_position().x, self.entity.transform().global_position().z)
+		if self.frame_count % 30 == 0 or self.frame_count == -1:
+			if not self.map[self.currentNodeXZ].inNode(chaserPos):
+			    self.currentNodeXZ = self.astar.findNextNode(self.map[self.currentNodeXZ], chaserPos)
 
-			for i in range(0, len(targetNodeXZ)):
-				if not map[targetNodeXZ[i]].inNode(runnerPos[i]):
-					targetNodeXZ[i] = astar.findNextNode(map[targetNodeXZ[i]], runnerPos[i])
+			for i in range(0, len(self.targetNodeXZ)):
+				if not self.map[self.targetNodeXZ[i]].inNode(self.runnerPos[i]):
+				    self.targetNodeXZ[i] = self.astar.findNextNode(self.map[self.targetNodeXZ[i]], self.runnerPos[i])
 
-		if frame_count % 90 == 0:
-			if stuck_flag:
-				print( "Stuck!")
-				stuck = True
-				stuck_flag = False
+		if self.frame_count % 90 == 0:
+			if self.stuck_flag:
+			    print( "Self.Stuck!")
+			    self.stuck = True
+			    self.stuck_flag = False
 			else:
-				stuck = checkStuck(self)
+			    self.stuck = self.checkStuck()
 
-		if frame_count % 180 == 0 or frame_count == -1:
-			targetRunner = closestRunner(self)
+		if self.frame_count % 180 == 0 or self.frame_count == -1:
+		    self.targetRunner = self.closestRunner()
 
-			currentNodeIndex = 0
-			currentPath = getNodePathToVec(astar.find_path(map[targetNodeXZ[targetRunner]], map[currentNodeXZ]))
-			reachedGoal = False
-		# print("Updated Path")
+		    self.currentNodeIndex = 0
+		    self.currentPath = self.getNodePathToVec(self.astar.find_path(self.map[self.targetNodeXZ[self.targetRunner]], self.map[self.currentNodeXZ]))
+		    self.reachedGoal = False
 
-		drive(self)
+		self.drive()
 
-	frame_count += 1
-	if frame_count > 60000:
-		frame_count = 0
+	self.frame_count += 1
+	if self.frame_count > 60000:
+	    self.frame_count = 0
