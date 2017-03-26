@@ -1,16 +1,20 @@
 #pragma once
 
+#include <memory>
 #include <vector>
 
 #include <PhysX/PxBatchQueryDesc.h>
+#include <PhysX/PxPhysicsAPI.h>
 
 #include "windows.h"
 #include "Xinput.h"
 
 #include "Component.h"
-#include "Physics.h"
 #include "Controller.h"
 #include "aiController.h"
+
+using namespace physx;
+class Physics;
 
 class Vehicle : public Component
 {
@@ -76,7 +80,8 @@ public:
 
 	~Vehicle();
 	
-	void Update(seconds dt);
+	void Step(float dt);
+	void Update(seconds dt) override;
 	PxRigidDynamic *GetActor() { return actor_; }
 	Physics &GetPhysics() { return physics_; } // TODO we probably shouldn't need this....
 

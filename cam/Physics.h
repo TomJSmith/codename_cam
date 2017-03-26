@@ -6,6 +6,7 @@
 
 #include "Renderer.h"
 #include "Time.h"
+#include "Vehicle.h"
 
 // This using should be fine because everything in physx:: is prefixed
 // with Px anyways, so there will be no name conflicts with anything
@@ -23,6 +24,8 @@ public:
 	PxScene *GetScene() { return scene_; }
 	PxFoundation *GetFoundation() { return foundation_; }
 	PxCooking *GetCooking() { return cooking_; }
+
+	void RegisterVehicle(Vehicle *vehicle) { vehicles_.push_back(vehicle); }
 
 	enum SurfaceFlags : PxU32 {
 		DRIVABLE_SURFACE = (1 << 0),
@@ -51,7 +54,7 @@ private:
 	PxScene *scene_;
 	PxCooking *cooking_;
 
-	float extraFrameTime = 0;
+	std::vector<Vehicle *> vehicles_;
 #ifdef DEBUG
 public:
 	std::vector<Renderer::MeshData> GetDebugMeshData();

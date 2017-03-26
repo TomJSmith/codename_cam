@@ -325,6 +325,8 @@ Vehicle::Vehicle(Physics &physics, std::shared_ptr<Controller> controller, Confi
 	SetFriction(1.0f);
 
 	wheels->free();
+
+	physics_.RegisterVehicle(this);
 }
 
 Vehicle::Vehicle(Physics &physics, std::shared_ptr<aiController> aicontroller, Configuration &config) :
@@ -401,6 +403,29 @@ void Vehicle::Drive()
 	}*/
 }
 
+void Vehicle::Step(float dt)
+{
+
+	PxVehicleWheels *vehicles[1] = { vehicle_ };
+
+	PxVehicleSuspensionRaycasts(
+		batchquery_,
+		1,
+		vehicles,
+		(PxU32)querybuffer_.size(),
+		querybuffer_.data()
+	);
+
+	PxVehicleUpdates(
+		dt,
+		physics_.GetScene()->getGravity(),
+		*frictionpairs_,
+		1,
+		vehicles,
+		nullptr
+	);
+}
+
 void Vehicle::Update(seconds dt)
 {
 	// TODO do we want to configure these per-vehicle?
@@ -436,45 +461,20 @@ void Vehicle::Update(seconds dt)
 		}
 	};
 
-	PxVehicleWheels *vehicles[1] = { vehicle_ };
-
 	Drive();
 
-	static float accumulator = 0.0f;
-	accumulator += dt.count();
+	std::vector<PxWheelQueryResult> wheelresults(vehicle_->mWheelsSimData.getNbWheels());
 
-	while (accumulator > Physics::Timestep) {
-		PxVehicleSuspensionRaycasts(
-			batchquery_,
-			1,
-			vehicles,
-			(PxU32)querybuffer_.size(),
-			querybuffer_.data()
-		);
+	PxVehicleWheelQueryResult vehicleresults[1] = {
+		{ wheelresults.data(), vehicle_->mWheelsSimData.getNbWheels() }
+	};
 
-		std::vector<PxWheelQueryResult> wheelresults(vehicle_->mWheelsSimData.getNbWheels());
-		PxVehicleWheelQueryResult vehicleresults[1] = {
-			{wheelresults.data(), vehicle_->mWheelsSimData.getNbWheels()}
-		};
-
-		PxVehicleDrive4WSmoothAnalogRawInputsAndSetAnalogInputs(
-			padSmoothingData,
-			steerVsForwardSpeedTable,
-			input_,
-			dt.count(),
-			PxVehicleIsInAir(vehicleresults[0]),
-			*vehicle_
-		);
-
-		PxVehicleUpdates(
-			Physics::Timestep,
-			physics_.GetScene()->getGravity(),
-			*frictionpairs_,
-			1,
-			vehicles,
-			nullptr
-		);
-
-		accumulator -= Physics::Timestep;
-	}
+	PxVehicleDrive4WSmoothAnalogRawInputsAndSetAnalogInputs(
+		padSmoothingData,
+		steerVsForwardSpeedTable,
+		input_,
+		dt.count(),
+		PxVehicleIsInAir(vehicleresults[0]),
+		*vehicle_
+	);
 }

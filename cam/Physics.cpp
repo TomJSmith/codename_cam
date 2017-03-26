@@ -1,5 +1,6 @@
 #include "Physics.h"
 
+#include <algorithm>
 #include <iostream>
 #include <PhysX/PxSimulationEventCallback.h>
 #include <stdexcept>
@@ -143,7 +144,7 @@ void Physics::Update(seconds dt)
 {
 	if (dt.count() == 0) return;
 	static float accumulator = 0.0f;
-	accumulator += dt.count();
+	accumulator += std::max(dt.count(), 0.1f);
 
 	while (accumulator > Timestep) {
 		scene_->simulate(Timestep);
@@ -169,6 +170,10 @@ void Physics::Update(seconds dt)
 		}
 
 		accumulator -= Timestep;
+
+		for (auto vehicle : vehicles_) {
+			vehicle->Step(Timestep);
+		}
 	}
 }
 
