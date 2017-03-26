@@ -93,6 +93,13 @@ int main() {
 			aiVehicleRun->AddComponent(std::move(aiVRun));
 			//aiVehicleRun->AddComponent(std::make_unique<ScriptComponent>("runner", physics));
 
+
+			auto testaiVehicleRun = Entity::Create(root.get()).lock();
+			std::shared_ptr<Component> testaiMeshRun(new Mesh(std::unique_ptr<Shader>(new ModelShader("runner_texture_green.jpg")), "runner_mesh.fbx", vec3(1.0, 0.84, 0.0), vec3(4.427f, 2.426f, 12.935f), GL_TRIANGLES));
+			std::shared_ptr<Component> testaiVRun(new ScriptComponent("runner_ai", physics));
+			testaiVehicleRun->AddComponent(std::move(testaiMeshRun));
+			testaiVehicleRun->AddComponent(std::move(testaiVRun));
+
 			/*auto smiley = Entity::Create(root.get()).lock();
 			std::shared_ptr<Component> image(new Image("runner_texture.jpg"));
 			smiley->AddComponent(std::move(image));*/
