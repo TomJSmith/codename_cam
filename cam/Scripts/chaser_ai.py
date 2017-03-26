@@ -69,11 +69,11 @@ def init(self):
 	astar = A_star(map)
 
 	dims = PxVec3(3, 1, 5)
-	config.position = PxVec3(-5, 5, 60)
+	config.position = PxVec3(-5, 2, 60)
 	config.rotation = PxQuat(0, 1, 0, 0)
 	config.chassis_dimensions = dims
 	config.steer_angle = math.pi * .1
-	config.torque = 100000
+	config.torque = 200000
 	config.wheel_radius = 0.5
 	config.wheel_width = 0.4
 	config.wheel_mass = 10
@@ -113,7 +113,7 @@ def checkStuck(self):
 
 	if prevPos is not None:
 		print(math.sqrt((currPos.x - prevPos.x) ** 2.0 + (currPos.z - prevPos.z) ** 2.0))
-		if (math.sqrt((currPos.x - prevPos.x) ** 2.0 + (currPos.z - prevPos.z) ** 2.0) < .3):
+		if (math.sqrt((currPos.x - prevPos.x) ** 2.0 + (currPos.z - prevPos.z) ** 2.0) < .5):
 			prevPos = currPos
 			stuck_flag = True
 			return True
@@ -208,7 +208,7 @@ def drive(self):
 		else:
 			_controller.setRight(0)"""
 
-		_controller.setDirection(-1.0 * dot)
+		_controller.setDirection(-.80 * dot)
 		_controller.setBrake(0)
 		_controller.setReverse(1)
 		_controller.setAccel(1)
@@ -278,7 +278,7 @@ def update(self, dt):
 				if not map[targetNodeXZ[i]].inNode(runnerPos[i]):
 					targetNodeXZ[i] = astar.findNextNode(map[targetNodeXZ[i]], runnerPos[i])
 
-		if frame_count+50 % 60 == 0:
+		if (frame_count+50) % 60 == 0:
 			if stuck_flag:
 				print( "Stuck!")
 				stuck = True
