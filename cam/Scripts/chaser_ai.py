@@ -278,7 +278,7 @@ def update(self, dt):
 				if not map[targetNodeXZ[i]].inNode(runnerPos[i]):
 					targetNodeXZ[i] = astar.findNextNode(map[targetNodeXZ[i]], runnerPos[i])
 
-		if frame_count % 60 == 0:
+		if frame_count+50 % 60 == 0:
 			if stuck_flag:
 				print( "Stuck!")
 				stuck = True
