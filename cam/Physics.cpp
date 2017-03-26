@@ -8,7 +8,7 @@
 #include "ModelShader.h"
 #include "Transform.h"
 
-const float Physics::Timestep = 1.0f / 60.0f;
+const float Physics::Timestep = 1.0f / 500.0f;
 
 class SimulationCallback : public PxSimulationEventCallback {
 	void onConstraintBreak(PxConstraintInfo *, PxU32) override {}

@@ -19,7 +19,6 @@ class Mesh : public Component {
 public:
 	Mesh(std::shared_ptr<Shader> shader,
 		 const char* objFileName,
-		 const char* texFileName,
 		 glm::vec3 colour,
 		 glm::vec3 scale,
 		 GLuint type);
@@ -48,7 +47,6 @@ private:
 	GLuint vao_;
 	GLuint type_;
 	GLuint count_;
-	Texture texture_;
 
 	std::shared_ptr<Shader> shader_;
 

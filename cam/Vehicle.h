@@ -18,6 +18,7 @@ public:
 	struct Configuration {
 		// Starting position of the vehicle
 		PxVec3 position = PxVec3(0.0f, 10.0f, -10.0f);
+		PxQuat rotation = PxQuat(PxIdentity);
 
 		// Wheel parameters
 		PxF32 wheelMass = 20.0f;

@@ -230,7 +230,7 @@ static PxRigidDynamic *CreateVehicleActor(Vehicle::Configuration config, PxPhysi
 		wheelMeshes.push_back(CreateWheelMesh(config.wheelWidth, config.wheelRadius, physics, cooking));
 	}
 
-	auto ret = physics->createRigidDynamic(PxTransform(config.position, PxQuat(PxIdentity)));
+	auto ret = physics->createRigidDynamic(PxTransform(config.position, config.rotation));
 
 	PxFilterData wheelSimFilter { Physics::WHEEL, Physics::WHEEL_COLLISIONS, 0, 0 };
 	PxFilterData chassisSimFilter { Physics::CHASSIS, Physics::CHASSIS_COLLISIONS, 0, 0 };
@@ -351,39 +351,42 @@ void Vehicle::Drive()
 	{
 	case C_FAST:
 		vehicle_->mDriveDynData.setCurrentGear(PxVehicleGearsData::eFIRST);
-		input_.setDigitalAccel(true);
-		input_.setDigitalBrake(false);
+		input_.setAnalogAccel(1.0f);
+		input_.setAnalogBrake(0.0f);
 		break;
 	case C_NEUTRAL:
-		input_.setDigitalAccel(false);
+		input_.setAnalogAccel(0.0f);
 		break;
 	case C_REVERSE:
 		vehicle_->mDriveDynData.setCurrentGear(PxVehicleGearsData::eREVERSE);
-		input_.setDigitalAccel(true);
+		input_.setAnalogAccel(0.5f);
 		break;
 	}
 
 	switch (controller_->getBrake()) {
 	case true:
-		input_.setDigitalHandbrake(true);
+		input_.setAnalogBrake(1.0f);
 		break;
 	case false:
-		input_.setDigitalHandbrake(false);
+		input_.setAnalogBrake(0.0f);
 		break;
 	}
 
 	switch (controller_->getDirectional()) {
 	case C_LEFT:
-		input_.setDigitalSteerLeft(true);
-		input_.setDigitalSteerRight(false);
+		input_.setAnalogSteer(-.5f);
+		//input_.setDigitalSteerLeft(true);
+		//input_.setDigitalSteerRight(false);
 		break;
 	case C_RIGHT:
-		input_.setDigitalSteerRight(true);
-		input_.setDigitalSteerLeft(false);
+		input_.setAnalogSteer(.5f);
+		//input_.setDigitalSteerRight(true);
+		//input_.setDigitalSteerLeft(false);
 		break;
 	case C_NO_DIRECTION:
-		input_.setDigitalSteerRight(false);
-		input_.setDigitalSteerLeft(false);
+		input_.setAnalogSteer(0.0f);
+		//input_.setDigitalSteerRight(false);
+		//input_.setDigitalSteerLeft(false);
 		break;
 	}
 }
@@ -405,21 +408,21 @@ void Vehicle::Update(seconds dt)
 
 	static PxFixedSizeLookupTable<8> steerVsForwardSpeedTable(steerVsForwardSpeedData, 4);
 
-	static PxVehicleKeySmoothingData keySmoothingData =
+	static PxVehiclePadSmoothingData padSmoothingData =
 	{
 		{
 			6.0f,	//rise rate eANALOG_INPUT_ACCEL
 			6.0f,	//rise rate eANALOG_INPUT_BRAKE		
 			6.0f,	//rise rate eANALOG_INPUT_HANDBRAKE	
-			2.5f,	//rise rate eANALOG_INPUT_STEER_LEFT
-			2.5f,	//rise rate eANALOG_INPUT_STEER_RIGHT
+			3.0f,	//rise rate eANALOG_INPUT_STEER_LEFT
+			3.0f,	//rise rate eANALOG_INPUT_STEER_RIGHT
 		},
 		{
 			10.0f,	//fall rate eANALOG_INPUT_ACCEL
 			10.0f,	//fall rate eANALOG_INPUT_BRAKE		
 			10.0f,	//fall rate eANALOG_INPUT_HANDBRAKE	
-			5.0f,	//fall rate eANALOG_INPUT_STEER_LEFT
-			5.0f	//fall rate eANALOG_INPUT_STEER_RIGHT
+			20.0f,	//fall rate eANALOG_INPUT_STEER_LEFT
+			20.0f	//fall rate eANALOG_INPUT_STEER_RIGHT
 		}
 	};
 
@@ -444,8 +447,8 @@ void Vehicle::Update(seconds dt)
 			{wheelresults.data(), vehicle_->mWheelsSimData.getNbWheels()}
 		};
 
-		PxVehicleDrive4WSmoothDigitalRawInputsAndSetAnalogInputs(
-			keySmoothingData,
+		PxVehicleDrive4WSmoothAnalogRawInputsAndSetAnalogInputs(
+			padSmoothingData,
 			steerVsForwardSpeedTable,
 			input_,
 			dt.count(),

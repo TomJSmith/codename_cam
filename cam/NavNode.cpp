@@ -2,17 +2,15 @@
 #include <math.h>
 #include <iostream>
 
-NavNode::NavNode(float x, float z, const aiFace* aFace, const aiVector3D* verts)
+NavNode::NavNode(float x, float z, const aiFace* aFace, const aiVector3D* verts, const glm::vec3* aScale)
 {
+	scale = aScale;
 	centerX = x;
 	centerZ = z;
 	mFace = aFace;
 	mVerts = verts;
 	for (uint32_t i = 0; i < mFace->mNumIndices; i++)
 	{
-		std::cout << mFace->mIndices[i] << std::endl;
-		/*vertIndices.push_back(aiVector2D(aMesh->mVertices[aFace->mIndices[i]].x,
-			aMesh->mVertices[aFace->mIndices[i]].z));*/
 		vertIndices.push_back(mFace->mIndices[i]);
 	}
 }
@@ -40,16 +38,16 @@ bool NavNode::isInside(float xPos, float zPos)
 	bool result = false;
 	for (i = 0, j = (int)vertIndices.size() - 1; i < vertIndices.size(); j = i++)
 	{
-		float ix = mVerts[vertIndices[i]].x;
-		float iz = mVerts[vertIndices[i]].z;
-		float jx = mVerts[vertIndices[j]].x;
-		float jz = mVerts[vertIndices[j]].z;
+		float ix = mVerts[vertIndices[i]].x * scale->x;
+		float iz = mVerts[vertIndices[i]].z * scale->z;
+		float jx = mVerts[vertIndices[j]].x * scale->x;
+		float jz = mVerts[vertIndices[j]].z * scale->z;
 		if ((iz > zPos) != (jz > zPos) &&
 			(xPos < (jx - ix) * (zPos - iz) / (jz - iz) + ix))
 		{
 			result = !result;
 		}
 	}
-	std::cout << xPos << ",   " << zPos << "    " << result << std::endl;
+	/*std::cout << xPos << ",   " << zPos << "    " << result << std::endl;*/
 	return result;
 }

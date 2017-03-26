@@ -69,6 +69,13 @@ BOOST_PYTHON_MODULE(physics) {
 		.def("axis_angle", &glm::angleAxis<float, glm::defaultp>)
 		.staticmethod("axis_angle");
 
+	python::class_<PxQuat>("PxQuat")
+		.def(python::init<float, float, float, float>())
+		.def_readwrite("x", &PxQuat::x)
+		.def_readwrite("y", &PxQuat::y)
+		.def_readwrite("z", &PxQuat::z)
+		.def_readwrite("w", &PxQuat::w);
+
 	python::class_<Transform>("Transform")
 		.def_readwrite("position", &Transform::position)
 		.def_readwrite("rotation", &Transform::rotation)
@@ -90,7 +97,7 @@ BOOST_PYTHON_MODULE(controller) {
 }
 
 BOOST_PYTHON_MODULE(aicontroller) {
-	python::class_<aiController, std::shared_ptr<aiController>>("aiController", python::init<>())
+	python::class_<aiController, std::shared_ptr<aiController>>("aiController", python::init<int>())
 		.def("setRight", &aiController::setRight)
 		.def("setLeft", &aiController::setLeft)
 		.def("setBrake", &aiController::setBrake)
@@ -104,7 +111,7 @@ BOOST_PYTHON_MODULE(runner) {
 
 
 BOOST_PYTHON_MODULE(navmesh) {
-	python::class_<NavMesh, std::shared_ptr<NavMesh>>("NavMesh", python::init<const char*>())
+	python::class_<NavMesh, std::shared_ptr<NavMesh>>("NavMesh", python::init<const char*, vec3>())
 		.def("getSimpleGraph", &NavMesh::getSimpleGraph);
 		//.def("getSimpleNeighbors", &NavMesh::getSimpleNeighbors, args("node"))
 }
@@ -250,11 +257,11 @@ BOOST_PYTHON_MODULE(component) {
 }
 
 BOOST_PYTHON_MODULE(vehicle) {
-	python::class_<PxVehicleDrive4WRawInputData>("Input")
+	/*python::class_<PxVehicleDrive4WRawInputData>("Input")
 		.def("set_acceleration", &PxVehicleDrive4WRawInputData::setDigitalAccel)
 		.def("set_steer_left", &PxVehicleDrive4WRawInputData::setDigitalSteerLeft)
 		.def("set_steer_right", &PxVehicleDrive4WRawInputData::setDigitalSteerRight)
-		.def("set_brake", &PxVehicleDrive4WRawInputData::setDigitalBrake);
+		.def("set_brake", &PxVehicleDrive4WRawInputData::setDigitalBrake);*/
 
 	python::class_<Vehicle, std::shared_ptr<Vehicle>, python::bases<Component>>
 		("Vehicle", python::init<Physics &, std::shared_ptr<Controller>, Vehicle::Configuration &>())
@@ -263,6 +270,7 @@ BOOST_PYTHON_MODULE(vehicle) {
 
 	python::class_<Vehicle::Configuration>("Configuration")
 		.def_readwrite("position", &Vehicle::Configuration::position)
+		.def_readwrite("rotation", &Vehicle::Configuration::rotation)
 		.def_readwrite("wheel_mass", &Vehicle::Configuration::wheelMass)
 		.def_readwrite("wheel_moi", &Vehicle::Configuration::wheelMOI)
 		.def_readwrite("wheel_radius", &Vehicle::Configuration::wheelRadius)

@@ -4,7 +4,7 @@ class aiController : public Controller
 {
 
 public:
-	aiController();
+	aiController(int num);
 	~aiController();
 
 	bool getBrake() override;
@@ -20,5 +20,6 @@ public:
 
 private:
 	bool right = false, left = false, none = false, brake = false, reverse = false, accel = false, doOnce = false;
+	int aiControllerNumber;
 };
 

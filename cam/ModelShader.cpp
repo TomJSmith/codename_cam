@@ -6,12 +6,23 @@ ModelShader::ModelShader() :
 	Shader({
 		{ GL_VERTEX_SHADER, "passthrough.vert" },
 		{ GL_FRAGMENT_SHADER, "passthrough.frag" }
-    })
+})
+{}
+
+ModelShader::ModelShader(const char* filename) :
+	Shader({
+		{ GL_VERTEX_SHADER, "passthrough.vert" },
+		{ GL_FRAGMENT_SHADER, "passthrough.frag" }
+    }),
+	texture_(filename)
 {}
 
 void ModelShader::Setup(const Renderer::MeshData &data, const mat4 &projection)
 {
 	glUseProgram(*program_);
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, texture_.GetTexture());
 
 	auto mvp = projection * data.modelMatrix;
 

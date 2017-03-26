@@ -1,9 +1,11 @@
 #include "aiController.h"
 #include <iostream>
 
-aiController::aiController()
-	: Controller(4)
-{}
+aiController::aiController(int num)
+	: Controller(aiControllerNumber)
+{
+	aiControllerNumber = num;
+}
 
 aiController::~aiController()
 {}
