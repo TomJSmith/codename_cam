@@ -5,12 +5,17 @@
 #include "EventSystem.h"
 #include "Renderer.h"
 #include "Trigger.h"
-
+#include "Audio.h"
 class Entity;
 
 using namespace boost;
 
 namespace Events {
+
+	struct Sound {
+		std::vector<ALuint> &sources;
+		std::vector<int> &choice;
+	};
 	struct Infected {
 		Entity* other;
 		Entity* GetOther() { return other; }
@@ -54,6 +59,7 @@ namespace Events {
 //
 // To add an event type, add it to the template arguments here.
 using EventSystem = EventSystem_<
+	Events::Sound,
 	Events::Render,
 	Events::Collided, 
 	Events::Destroyed, 

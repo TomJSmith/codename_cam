@@ -8,6 +8,7 @@
 #include "Entity.h"
 #include "ModelShader.h"
 #include "Transform.h"
+#include "Vehicle.h"
 
 const float Physics::Timestep = 1.0f / 500.0f;
 

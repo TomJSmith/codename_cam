@@ -6,10 +6,12 @@
 
 #include "Renderer.h"
 #include "Time.h"
-#include "Vehicle.h"
+//#include "Vehicle.h"
 
 // This using should be fine because everything in physx:: is prefixed
 // with Px anyways, so there will be no name conflicts with anything
+
+class Vehicle;
 using namespace physx;
 
 class Physics
