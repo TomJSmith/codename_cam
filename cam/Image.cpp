@@ -1,6 +1,8 @@
 #include "Image.h"
 
 #include "Entity.h"
+#include "ImageShader.h"
+#include "TextShader.h"
 
 void Image::GenerateBuffers()
 {
@@ -48,26 +50,35 @@ void Image::FillBuffers()
 }
 
 Image::Image(const char *filename, const vec2 &pos, const vec2 &size, size_t layer) :
-	shader_(filename, layer),
+	shader_(std::make_shared<ImageShader>(filename, layer)),
 	pos_(pos),
 	size_(size)
 {
 	GenerateBuffers();
 	FillBuffers();
+}
 
+Image::Image(unsigned char *data, int width, int height, const vec2 &pos, const vec2 &size, size_t layer) :
+	shader_(std::make_shared<TextShader>(data, width, height, layer)),
+	pos_(pos),
+	size_(size)
+{
+	GenerateBuffers();
+	FillBuffers();
+}
+
+void Image::RegisterHandlers()
+{
 	handler_ = [this](Events::Render event) {
 		event.data.push_back({
 			vao_,
 			6,
 			GL_TRIANGLES,
 			mat3(1.0), // TODO
-			&shader_
+			shader_.get()
 		});
 	};
-}
 
-void Image::RegisterHandlers()
-{
 	entity_->RegisterEventHandler(&handler_);
 }
 
@@ -90,5 +101,5 @@ void Image::SetSize(const vec2 &size)
 
 void Image::SetLayer(size_t size)
 {
-	shader_.SetLayer(size);
+	shader_->SetLayer(size);
 }

@@ -10,7 +10,7 @@ sys.path.insert(0, os.getcwd() + "\..\..\cam\Scripts")
 from runner_ai import *
 
 def set_position(marker, item):
-    marker.position = item.position + Vec2(-0.1, 0.05)
+    marker.position = item.position + Vec2(-0.2, 0.0)
 
 class MainMenu:
     def start_game(self):
@@ -35,25 +35,31 @@ class MainMenu:
 
         player = Entity.create(e).lock()
         vehicle = ScriptComponent("vehicle_script", self.physics)
-
         player.add_component(vehicle)
         player.add_component(ScriptComponent("powerup_manager", self.physics))
 
         runner = Entity.create(e).lock()
         mesh = Mesh(ModelShader("runner_texture.jpg"), "runner_mesh.fbx", Vec3(1.0, 0.84, 0.0), Vec3(1, 1, 1), 4)
         #ai = ScriptComponent("runner_ai", self.physics)
-        ai = RunnerAi(Vec3(0.0, 0.0, -30.0))
+        ai = RunnerAi(Vec3(10.0, 2.0, -100.0))
         runner.add_component(mesh)
         runner.add_component(ai, self.physics)
+
+        runner2 = Entity.create(e).lock()
+        runner2.add_component(Mesh(ModelShader("runner_texture_blue.jpg"), "runner_mesh.fbx", Vec3(1.0, 0.84, 0.0), Vec3(1, 1, 1), 4))
+        runner2.add_component(RunnerAi(Vec3(-5.0, 0.0, -20.0)), self.physics)
+
+        runner3 = Entity.create(e).lock()
+        runner3.add_component(Mesh(ModelShader("runner_texture_green.jpg"), "runner_mesh.fbx", Vec3(1.0, 0.84, 0.0), Vec3(1, 1, 1), 4))
+        runner3.add_component(RunnerAi(Vec3(90.0, 2.0, -10.0)), self.physics)
+
+        runner4 = Entity.create(e).lock()
+        runner4.add_component(Mesh(ModelShader("runner_texture_blue.jpg"), "runner_mesh.fbx", Vec3(1.0, 0.84, 0.0), Vec3(1, 1, 1), 4))
+        runner4.add_component(RunnerAi(Vec3(0.0, 2.0, -90.0)), self.physics)
 
         o = Entity.create(e).lock()
         o.transform().position = Vec3(0.0, 0.0, 60)
         o.add_component(ScriptComponent("oil_slick_powerup", self.physics))
-        
-        runner = Entity.create(e).lock()
-        runner.add_component(Mesh(ModelShader("runner_texture.jpg"), "runner_mesh.fbx", Vec3(1.0, 0.84, 0.0), Vec3(1, 1, 1), 4))
-        # runner.add_component(ScriptComponent("runner_ai", self.physics))
-        runner.add_component(RunnerAi(Vec3(0.0, 0.0, 60.0)), self.physics)
 
         e.add_component(ScriptComponent("start_game", self.physics))
 
@@ -62,8 +68,8 @@ class MainMenu:
     def start(self):
         self.control = Controller(0)
         self.background = Image("background.png", Vec2(-1.0, -1.0), Vec2(2.0, 2.0), 3)
-        self.startgame = Image("start-game.png", Vec2(-0.3, 0.0), Vec2(0.6, 0.2), 2)
-        self.quitgame = Image("quit-game.png", Vec2(-0.3, -0.2), Vec2(0.6, 0.2), 2)
+        self.startgame = Text("Start Game", "GROBOLD", Vec2(-0.3, 0.0), 12)
+        self.quitgame = Text("Quit Game", "GROBOLD", Vec2(-0.3, -0.2), 12)
         self.marker = Image("menu-marker.png", Vec2(-1.0, -1.0), Vec2(0.2, 0.2), 1)
         self.selected = self.startgame
 

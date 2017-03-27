@@ -9,6 +9,7 @@ class Texture : public Component
 public:
 	Texture();
 	Texture(const char *filename);
+	Texture(unsigned char *data, int width, int height);
 	~Texture();
 
 	GLuint GetTexture() { return texture_; }
@@ -19,6 +20,8 @@ private:
 	int ncomponents_;
 	GLuint texture_;
 
-	unsigned char *data_;
+	void Initialize(unsigned char *data, GLenum type);
+
+	//unsigned char *data_;
 };
 

@@ -11,4 +11,5 @@ namespace Util
 	const static std::string ShaderDirectory = "Shaders/";
 	const static std::string ScriptDirectory = "Scripts/";
 	const static std::string AudioDirectory = "\\Audio/";
+	const static std::string FontDirectory = "Fonts/";
 }
