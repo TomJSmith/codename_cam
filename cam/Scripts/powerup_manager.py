@@ -2,11 +2,12 @@ from physics import *
 from entity import *
 from controller import *
 from oil_slick_powerup import *
+from oil_slick import *
 from ui import *
 
 class PowerupManager:
     def pickup_oil_slick(self, event):
-        self.powerup = "oil_slick"
+        self.powerup = OilSlick
         print "picked up oil slick"
         event.entity.destroy()
 
@@ -19,8 +20,13 @@ class PowerupManager:
     def update(self, dt):
         self.ctrl.update()
         if self.ctrl.secondary and self.powerup:
-            print "using powerup " + self.powerup
-            self.entity.add_component(ScriptComponent(self.powerup, self.physics))
+            print "using powerup " + self.powerup.__name__
+            entity = Entity.create(self.entity.get_parent()).lock()
+
+            entity.transform().position = self.entity.transform().position
+            entity.transform().position.y = 0.01
+
+            entity.add_component(self.powerup(), self.physics)
             self.powerup = None
             if self.image and self.image.lock():
                 self.image.lock().destroy()
