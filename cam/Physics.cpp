@@ -144,7 +144,7 @@ void Physics::Update(seconds dt)
 {
 	if (dt.count() == 0) return;
 	static float accumulator = 0.0f;
-	accumulator += std::max(dt.count(), 0.1f);
+	accumulator += std::min(dt.count(), 0.1f);
 
 	while (accumulator > Timestep) {
 		scene_->simulate(Timestep);

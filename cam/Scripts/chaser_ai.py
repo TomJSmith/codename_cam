@@ -1,5 +1,5 @@
 from physics import *
-import events
+from events import *
 import controller
 import aicontroller
 import vehicle
@@ -15,11 +15,6 @@ from a_star import *
 
 v = None
 
-# _controller = None
-# def destroyed(event):
-#     global v
-#     v = None
-#     print "chaser ai collided"
 
 class ChaserAi:
     def runnercreated(self, event):
@@ -28,6 +23,10 @@ class ChaserAi:
             (event.get_runner().transform().global_position().x, event.get_runner().transform().global_position().z)))
         self.runnerPos.append(
             (event.get_runner().transform().global_position().x, event.get_runner().transform().global_position().z))
+
+    def runnerdestroyed(self, event):
+        print("Removing runner")
+        self.remove_runner(targetRunner)
 
     def start_game(self, event):
         self.started = True
@@ -77,7 +76,7 @@ class ChaserAi:
         self.entity.add_component(self.vehicle)
         self.entity.register_runnercreated_handler(self.runnercreated)
         self.entity.register_handler(GameStarted, self.start_game)
-        # self.entity().register_destroyed_handler(destroyed)
+        self.entity.register_runnerdestroyed_handler(self.runnerdestroyed)
 
         self.currentNodeXZ = self.astar.findCurrentNode(
             (self.entity.transform().global_position().x, self.entity.transform().global_position().z))
@@ -136,6 +135,15 @@ class ChaserAi:
 
     def getCurrentCoor(self, ent):
         return (ent.transform().global_position().x, ent.transform().global_position().z)
+
+    def remove_runner(self):
+        global targetNodeXZ, runnerPos, runner_e, targetRunner
+        runner_e.pop(self.targetRunner)
+        targetNodeXZ.pop(self.targetRunner)
+        runnerPos.pop(self.targetRunner)
+        targetRunner = closestRunner()
+        print("Destroyed runner " + str(self.targetRunner) + ", next closest target: "
+              + str(self.targetRunner) + ". Runners Left: " + str(len(self.runner_e)))
 
 
     def drive(self):
@@ -221,17 +229,6 @@ class ChaserAi:
 
 
     def update(self, dt):
-    # global currentNodeXZ
-    # global self.targetNodeXZ
-    # global self.frame_count
-    # global currentNodeIndex
-    # global currentPath
-    # global self.reachedGoal
-    # global self.stuck
-    # global self.stuck_flag
-    # global self.runner_e
-    # global self.targetRunner
-        # global self.started
         if not self.started:
             return
 
@@ -248,9 +245,8 @@ class ChaserAi:
                     if not self.map[self.targetNodeXZ[i]].inNode(self.runnerPos[i]):
                         self.targetNodeXZ[i] = self.astar.findNextNode(self.map[self.targetNodeXZ[i]], self.runnerPos[i])
 
-            if self.frame_count % 90 == 0:
+            if self.frame_count+50 % 60 == 0:
                 if self.stuck_flag:
-                    print( "Self.Stuck!")
                     self.stuck = True
                     self.stuck_flag = False
                 else:
@@ -268,3 +264,4 @@ class ChaserAi:
         self.frame_count += 1
         if self.frame_count > 60000:
             self.frame_count = 0
+

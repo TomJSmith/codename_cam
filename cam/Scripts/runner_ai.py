@@ -1,5 +1,5 @@
 from physics import *
-import events
+from events import *
 import controller
 import aicontroller
 import vehicle
@@ -22,6 +22,12 @@ class RunnerAi:
         self.runner_e = event.get_runner()
         self.targetNodeXZ = self.astar.findCurrentNode(
             (self.runner_e.transform().global_position().x, self.runner_e.transform().global_position().z))
+
+    def infected(self, event):
+        event.getother().fire_event(RunnerDestroyed())
+        print("infected yo")
+        self.entity.destroy()
+        self.entity = None
 
     def start(self):
     # global v
@@ -69,6 +75,7 @@ class RunnerAi:
         r = runner.Runner()
         self.entity.add_component(self.vehicle)
         self.entity.add_component(r)
+        self.entity.register_infected_handler(self.infected)
         # self.entity().register_destroyed_handler(destroyed)
 
         self.currentNodeXZ = self.astar.findCurrentNode(

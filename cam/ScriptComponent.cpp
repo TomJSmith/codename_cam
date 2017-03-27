@@ -201,15 +201,19 @@ void FireScriptEvent(Entity &e, python::object event) {
 BOOST_PYTHON_MODULE(events) {
 	python::class_<Events::RunnerCreated>("RunnerCreated")
 		.def("get_runner", &Events::RunnerCreated::GetRunner, python::return_internal_reference<>());
-	python::class_<Events::Infected>("Infected");
+	python::class_<Events::Infected>("Infected")
+		.def_readwrite("other", &Events::Infected::other)
+		.def("getother", &Events::Infected::GetOther, python::return_internal_reference<>());
 	python::class_<Events::Destroyed>("Destroyed");
 //	python::class_<Events::StartGame>("StartGame");
 	python::class_<Events::Collided>("Collided")
-		.def("other", &Events::Collided::GetOther, python::return_internal_reference<>());
+		.def("getother", &Events::Collided::GetOther, python::return_internal_reference<>());
 	python::class_<Events::TriggerEnter>("TriggerEnter")
 		.def("entity", &Events::TriggerEnter::GetEntity, python::return_internal_reference<>());
 	python::class_<Events::TriggerExit>("TriggerExit")
 		.def("entity", &Events::TriggerExit::GetEntity, python::return_internal_reference<>());
+	python::class_<Events::RunnerDestroyed>("RunnerDestroyed");
+
 }
 
 std::weak_ptr<Entity> Create(Entity *parent) {
@@ -234,6 +238,7 @@ BOOST_PYTHON_MODULE(entity) {
 		.def("fire_event", &Entity::FireEvent<Events::Infected>)
 		.def("fire_event", &Entity::FireEvent<Events::Destroyed>)
 		.def("fire_event", &Entity::FireEvent<Events::Collided>)
+		.def("fire_event", &Entity::FireEvent<Events::RunnerDestroyed>)
 		.def("fire_event", &Entity::FireEvent<Events::TriggerEnter>)
 		.def("fire_event", &Entity::FireEvent<Events::TriggerExit>)
 //		.def("fire_event", &Entity::FireEvent<Events::StartGame>)
@@ -242,8 +247,9 @@ BOOST_PYTHON_MODULE(entity) {
 		.def("broadcast_event", &Entity::BroadcastEvent<Events::Infected>)
 		.def("broadcast_event", &Entity::BroadcastEvent<Events::Destroyed>)
 		.def("broadcast_event", &Entity::BroadcastEvent<Events::Collided>)
-		.def("broadcast_event", &Entity::FireEvent<Events::TriggerEnter>)
-		.def("broadcast_event", &Entity::FireEvent<Events::TriggerExit>)
+		.def("broadcast_event", &Entity::BroadcastEvent<Events::TriggerEnter>)
+		.def("broadcast_event", &Entity::BroadcastEvent<Events::TriggerExit>)
+		.def("broadcast_event", &Entity::BroadcastEvent<Events::RunnerDestroyed>)
 //		.def("broadcast_event", &Entity::BroadcastEvent<Events::StartGame>)
 		.def("broadcast_event", BroadcastScriptEvent)
 		.def("register_runnercreated_handler", RegisterEventHandler<Events::RunnerCreated>)
@@ -252,6 +258,7 @@ BOOST_PYTHON_MODULE(entity) {
 		.def("register_collided_handler", RegisterEventHandler<Events::Collided>)
 		.def("register_triggerenter_handler", RegisterEventHandler<Events::TriggerEnter>)
 		.def("register_triggerexit_handler", RegisterEventHandler<Events::TriggerExit>)
+		.def("register_runnerdestroyed_handler", RegisterEventHandler<Events::RunnerDestroyed>)
 //		.def("register_start_game_handler", RegisterEventHandler<Events::StartGame>)
 		.def("register_handler", RegisterScriptEventHandler)
 		.def("destroy", &Entity::Destroy)
@@ -301,6 +308,7 @@ BOOST_PYTHON_MODULE(vehicle) {
 		.def("set_friction", &Vehicle::SetFriction);
 
 	python::class_<Vehicle::Configuration>("Configuration")
+		.def_readwrite("max_speed", &Vehicle::Configuration::maxSpeed)
 		.def_readwrite("position", &Vehicle::Configuration::position)
 		.def_readwrite("rotation", &Vehicle::Configuration::rotation)
 		.def_readwrite("wheel_mass", &Vehicle::Configuration::wheelMass)

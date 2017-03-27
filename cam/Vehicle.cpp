@@ -133,6 +133,7 @@ static PxVehicleDriveSimData4W SetupDrive(const Vehicle::Configuration &config)
 	ret.setDiffData(diff);
 
 	PxVehicleEngineData engine;
+	engine.mMOI = config.maxSpeed;
 	engine.mPeakTorque = config.torque;
 	engine.mMaxOmega = config.maxOmega;
 	ret.setEngineData(engine);

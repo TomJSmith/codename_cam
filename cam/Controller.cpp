@@ -62,5 +62,11 @@ bool Controller::getSecondary() {
 }
 
 float Controller::getDirectional() {
-	return (state.Gamepad.sThumbLX / 32800.0f * -1.0f);
+	float analog = state.Gamepad.sThumbLX;
+	if (analog < 5000 && analog > -5000) {
+		return 0.0f;
+	}
+	else {
+		return (analog / 32800.0f * -1.0f);
+	}	
 }

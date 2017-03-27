@@ -11,12 +11,16 @@ class Entity;
 using namespace boost;
 
 namespace Events {
-	struct Infected {};
+	struct Infected {
+		Entity* other;
+		Entity* GetOther() { return other; }
+	};
 	struct Destroyed {};
 	struct RunnerCreated {
 		Entity *runner;
 		Entity *GetRunner() { return runner; }
 	};
+	struct RunnerDestroyed {};
 
 	struct Render {
 		std::vector<Renderer::MeshData> &data;
@@ -58,5 +62,6 @@ using EventSystem = EventSystem_<
 //	Events::StartGame,
 	Events::ScriptEvent,
 	Events::TriggerEnter,
-	Events::TriggerExit
+	Events::TriggerExit,
+	Events::RunnerDestroyed
 >;

@@ -63,6 +63,7 @@ public:
 
 		// Engine parameters
 		PxF32 torque = 3000.0f;
+		PxF32 maxSpeed = 1.0f;
 
 		// Also not certain what this is, something engine-related
 		PxF32 maxOmega = 1000.0f; //INCREASE THIS TO INCREASE OUR SPEED I BELIEVE
