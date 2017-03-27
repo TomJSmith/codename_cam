@@ -115,7 +115,6 @@ class ChaserAi:
             if currDistance < minDistance:
                 minDistance = currDistance
                 closest = i
-        print "Closest Runner: " + str(closest)
         return closest
 
 

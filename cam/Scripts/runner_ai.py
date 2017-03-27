@@ -43,11 +43,12 @@ class RunnerAi:
         self.count = 0
         self.reachedGoal = True
         self.backUp = False
-        self.frame_count = -1
         self.count = 0
         self.stuck = False
         self.stuck_flag = False
         self.currentPath = []
+        self.seed = random.randint(0, 4800)
+        self.frame_count = 0
 
         self.prevPos = None
 
@@ -61,7 +62,7 @@ class RunnerAi:
         config.position = PxVec3(self.startingPosition.x, 2, self.startingPosition.z)
         config.rotation = PxQuat(0, 1, 0, 0)
         config.chassis_dimensions = dims
-        config.steer_angle = math.pi * .10
+        config.steer_angle = math.pi * .12
         config.torque = 10000
         config.wheel_radius = 0.5
         config.wheel_width = 0.4
@@ -119,11 +120,11 @@ class RunnerAi:
         return arrayVecs
 
     def drive(self):
-
         # currTarget = Vec3(self.targetNodeXZ[0], 0, self.targetNodeXZ[1])
-
-
-        currTarget = self.currentPath[self.currentNodeIndex]
+        if len(self.currentPath) > self.currentNodeIndex:
+            currTarget = self.currentPath[self.currentNodeIndex]
+        else:
+            currTarget = Vec3(self.currentNodeXZ[0], 0, self.currentNodeXZ[1])
         self.currPosition = self.entity.transform().global_position()
         direction = currTarget - self.currPosition  # transform().position
         forward = self.entity.transform().forward()
@@ -168,11 +169,10 @@ class RunnerAi:
             #print("Chaser Position : " + str((self.entity().transform().global_position().x, self.entity().transform().global_position().z)))
             self.controller.setReverse(0)
             if self.astar.map[(currTarget.x, currTarget.z)].inNode((self.currPosition.x, self.currPosition.z)):
-                self.currentNodeIndex += 1
-                if self.currentNodeIndex >= len(self.currentPath):
-                    self.currentNodeIndex = len(self.currentPath) - 1
-                    print("Reached Goal")
+                if (self.currentNodeIndex+1) >= len(self.currentPath):
                     self.reachedGoal = True
+                else:
+                    self.currentNodeIndex += 1
             else:
                 self.controller.setAccel(1)
                 self.controller.setDirection(dot)
@@ -181,28 +181,14 @@ class RunnerAi:
         if not self.started:
             return
 
-        """currentNode = self.map[self.currentNodeXZ]
-        self.count %= len(currentNode.neighbors)
-        #ifself.count % len(currentNode.neighbors) == 0:
-            # self.count = 0
-        targetNode = currentNode.neighbors[self.count]
-        myPos = (self.entity.transform().global_position().x, self.entity.transform().global_position().z) 
-        self.targetNodeXZ = self.astar.findNextNode(currentNode, (targetNode.x, targetNode.z))
-        
-        self.count += 1"""
-        """if self.runner_e is not None:
-            runnerPos = (self.runner_e.transform().global_position().x, self.runner_e.transform().global_position().z)
-
-            chaserPos = (self.entity.transform().global_position().x, self.entity.transform().global_position().z)"""
-
         myPos = (self.entity.transform().global_position().x, self.entity.transform().global_position().z)
         if self.frame_count % 30 == 0 or self.frame_count == -1:
             if not self.map[self.currentNodeXZ].inNode(myPos):
                 self.currentNodeXZ = self.astar.findNextNode(self.map[self.currentNodeXZ], myPos)
 
-        if (self.frame_count) % 6000 == 0 or self.reachedGoal:
+        if (self.frame_count + self.seed) % 4800 == 0 or self.reachedGoal:
             if self.reachedGoal:
-                self.frame_count = 0
+                self.frame_count = self.seed + 1
             rndNodes = list(self.map.keys())
             rndNodes.remove(self.currentNodeXZ)
             randomTarget = random.choice(rndNodes)
@@ -211,15 +197,14 @@ class RunnerAi:
             self.currentPath = self.getNodePathToVec(
             self.astar.find_path(self.map[self.currentNodeXZ], self.map[randomTarget]))
             self.reachedGoal = False
-            print("New Path " + str(len(self.currentPath)))
 
-        if (self.frame_count+50) % 360 == 0:
+        if (self.frame_count) % 360 == 0:
             if self.stuck_flag:
                 self.stuck = True
                 self.stuck_flag = False
             else:
                 self.stuck = self.checkStuck()
-                
+
         self.drive()
         self.frame_count += 1
         self.frame_count %= 60000
