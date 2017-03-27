@@ -181,20 +181,6 @@ class RunnerAi:
         if not self.started:
             return
 
-        """currentNode = self.map[self.currentNodeXZ]
-        self.count %= len(currentNode.neighbors)
-        #ifself.count % len(currentNode.neighbors) == 0:
-            # self.count = 0
-        targetNode = currentNode.neighbors[self.count]
-        myPos = (self.entity.transform().global_position().x, self.entity.transform().global_position().z)
-        self.targetNodeXZ = self.astar.findNextNode(currentNode, (targetNode.x, targetNode.z))
-
-        self.count += 1"""
-        """if self.runner_e is not None:
-            runnerPos = (self.runner_e.transform().global_position().x, self.runner_e.transform().global_position().z)
-
-            chaserPos = (self.entity.transform().global_position().x, self.entity.transform().global_position().z)"""
-
         myPos = (self.entity.transform().global_position().x, self.entity.transform().global_position().z)
         if self.frame_count % 30 == 0 or self.frame_count == -1:
             if not self.map[self.currentNodeXZ].inNode(myPos):
