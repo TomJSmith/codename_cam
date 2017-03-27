@@ -8,6 +8,25 @@
 Texture::Texture()
 {}
 
+Texture::Texture(unsigned char *data, int width, int height) :
+	width_(width),
+	height_(height),
+	ncomponents_(1)
+{
+	glGenTextures(1, &texture_);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, texture_);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, (GLsizei)width_, (GLsizei)height_, 0, GL_RED, GL_UNSIGNED_BYTE, nullptr);
+
+	for (int row = 0; row < height_; ++row) {
+		int offset = (height_ - row - 1) * width_;
+		glTexSubImage2D(GL_TEXTURE_2D, 0, 0, row, width_, 1, GL_RED, GL_UNSIGNED_BYTE, data + offset);
+	}
+}
+
 Texture::Texture(const char *filename)
 {
 	auto fullfilename = Util::TextureDirectory + filename;
@@ -26,10 +45,14 @@ Texture::Texture(const char *filename)
 		glTexSubImage2D(GL_TEXTURE_2D, 0, 0, row, width_, 1, GL_RGBA, GL_UNSIGNED_BYTE, data + offset);
 	}
 
-	stbi_image_free(data_);
+	stbi_image_free(data);
 }
 
 Texture::~Texture()
 {
 	glDeleteTextures(1, &texture_);
+}
+
+void Texture::Initialize(unsigned char *data, GLenum type)
+{
 }

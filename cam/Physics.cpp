@@ -158,7 +158,7 @@ void Physics::Update(seconds dt)
 			auto entity = static_cast<Entity *>(transforms[i].userData);
 			if (!entity->GetParent()) {
 				// TODO is this actually a problem or should we silently continue here?
-				std::cout << "hmmm...\n";
+				// std::cout << "hmmm...\n";
 				continue;
 			}
 			auto parentpos = entity->GetParent()->GetGlobalPosition();
@@ -176,6 +176,11 @@ void Physics::Update(seconds dt)
 			vehicle->Step(Timestep);
 		}
 	}
+}
+
+void Physics::UnregisterVehicle(Vehicle *vehicle)
+{
+	vehicles_.erase(std::remove(vehicles_.begin(), vehicles_.end(), vehicle), vehicles_.end());
 }
 
 #ifdef DEBUG

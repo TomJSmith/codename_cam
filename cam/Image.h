@@ -5,12 +5,13 @@
 #include <functional>
 
 #include "Events.h"
-#include "ImageShader.h"
+#include "Shader.h"
 
 class Image : public Component
 {
 public:
 	Image(const char *filename, const vec2 &pos, const vec2 &size, size_t layer = 1);
+	Image(unsigned char *data, int width, int height, const vec2 &pos, const vec2 &size, size_t layer = 1);
 
 	void Destroy() override;
 	void SetPosition(const vec2 &pos);
@@ -24,7 +25,7 @@ protected:
 	void GenerateBuffers();
 	void FillBuffers();
 private:
-	ImageShader shader_;
+	std::shared_ptr<Shader> shader_;
 	std::function<void(Events::Render)> handler_;
 	GLuint vao_;
 	GLuint buffers_[2];

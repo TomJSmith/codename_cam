@@ -16,6 +16,7 @@
 #include "RigidBody.h"
 #include "ScriptComponent.h"
 #include "Shader.h"
+#include "Text.h"
 #include "Vehicle.h"
 /*Not sure where to put this afterwards just for testing*/
 #include "drawAiPath.h"
@@ -24,6 +25,7 @@
 int main() {
 	try {
 		Renderer::Initialize();
+		Text::Initialize();
 		Renderer renderer;
 		Physics physics;
 		auto root = Entity::Create();
