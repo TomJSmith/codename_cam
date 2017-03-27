@@ -60,6 +60,13 @@ BOOST_PYTHON_MODULE(physics) {
 		.def(python::self - python::self)
 		.def(python::self += python::self)
 		.def(python::self -= python::self)
+		.def(-python::self)
+		.def(python::self * float())
+		.def(python::self / float())
+		.def(float() * python::self)
+		.def(float() / python::self)
+		.def(python::self *= float())
+		.def(python::self /= float())
 		.def("dot", &dot3)
 		.staticmethod("dot");
 
@@ -72,6 +79,13 @@ BOOST_PYTHON_MODULE(physics) {
 		.def(python::self - python::self)
 		.def(python::self += python::self)
 		.def(python::self -= python::self)
+		.def(-python::self)
+		.def(python::self * float())
+		.def(python::self / float())
+		.def(float() * python::self)
+		.def(float() / python::self)
+		.def(python::self *= float())
+		.def(python::self /= float())
 		.def("dot", &dot2)
 		.staticmethod("dot");
 

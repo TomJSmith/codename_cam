@@ -177,6 +177,11 @@ void Physics::Update(seconds dt)
 	}
 }
 
+void Physics::UnregisterVehicle(Vehicle *vehicle)
+{
+	vehicles_.erase(std::remove(vehicles_.begin(), vehicles_.end(), vehicle), vehicles_.end());
+}
+
 #ifdef DEBUG
 std::vector<Renderer::MeshData> Physics::GetDebugMeshData()
 {
