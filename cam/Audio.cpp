@@ -9,10 +9,11 @@ Audio::Audio()
 
 Audio::~Audio()
 {
-	cleanUpAudio(wav);
-	cleanUpAudio(wav2);
-	cleanUpAudio(wav3);
-	cleanUpAudio(wav4);
+	cleanUpAudio(background);
+	cleanUpAudio(idle);
+	cleanUpAudio(speedDown);
+	cleanUpAudio(speedUp);
+	cleanUpAudio(horn);
 
 }
 
@@ -86,83 +87,103 @@ void Audio::initAudio()
 
 	/*Source Generation creating an audio source object which is the origin of the sound*/
 
-
-	alGenSources(1, &wav.source);
+	alGenSources(1, &horn.source);
 	checkError();
 
-	alGenSources(1, &wav2.source);
+	alGenSources(1, &speedUp.source);
 	checkError();
 
-	alGenSources(1, &wav3.source);
+	alGenSources(1, &speedDown.source);
 	checkError();
 
-	alGenSources(1, &wav4.source);
+	alGenSources(1, &idle.source);
+	checkError();
+
+	alGenSources(1, &background.source);
 	checkError();
 
 
-	wav.source = sourceSetup(wav.source);
-	wav2.source = sourceSetup(wav2.source);
-	wav3.source = sourceSetup(wav3.source);
-	wav4.source = sourceSetup(wav4.source);
+
+	background.source = sourceSetup(background.source);
+	horn.source = sourceSetup(horn.source);
+	speedUp.source = sourceSetup(speedUp.source);
+	speedDown.source = sourceSetup(speedDown.source);
+	idle.source = sourceSetup(idle.source);
 
 
 	/*Buffer Generation this holds the raw audio stream*/
 
-
-	alGenBuffers(1, &wav.buffer);
+	alGenBuffers(1, &horn.buffer);
 	checkError();
 
-	alGenBuffers(1, &wav2.buffer);
+	alGenBuffers(1, &speedUp.buffer);
 	checkError();
 
-	alGenBuffers(1, &wav3.buffer);
+	alGenBuffers(1, &speedDown.buffer);
 	checkError();
 
-	alGenBuffers(1, &wav4.buffer);
+	alGenBuffers(1, &idle.buffer);
 	checkError();
 
-	string firstWav = Util::AudioDirectory + "test.wav";
-	string secondWav = Util::AudioDirectory + "test2.wav";
-	string thirdWav = Util::AudioDirectory + "Bats.wav";
-	string fourthWav = Util::AudioDirectory + "Inferno.wav";
+	alGenBuffers(1, &background.buffer);
+	checkError();
 
-	firstWav = pathToWav + firstWav;
-	secondWav = pathToWav + secondWav;
-	thirdWav = pathToWav + thirdWav;
-	fourthWav = pathToWav + fourthWav;
-	
-	cout << firstWav << endl;
-	wav = openWavFile(firstWav, wav);
-	wav2 = openWavFile(secondWav, wav2);
-	wav3 = openWavFile(thirdWav, wav3);
-	wav4 = openWavFile(fourthWav, wav4);
 
-	wav.format = formatWav(wav);
-	wav2.format = formatWav(wav2);
-	wav3.format = formatWav(wav3);
-	wav4.format = formatWav(wav4);
+	string backgroundLoc = Util::AudioDirectory + "Background.wav";
+	string hornLoc = Util::AudioDirectory + "Horn.wav";
+	string idleLoc = Util::AudioDirectory + "Idle.wav";
+	string speedUpLoc = Util::AudioDirectory + "SpeedingUp.wav";
+	string speedDownLoc = Util::AudioDirectory + "SlowingDown.wav";
+
+
+	backgroundLoc = pathToWav + backgroundLoc;
+
+	hornLoc = pathToWav + hornLoc;
+	idleLoc = pathToWav + idleLoc;
+	speedUpLoc = pathToWav + speedUpLoc;
+	speedDownLoc = pathToWav + speedDownLoc;
+
+	//cout << firstWav << endl;
+	background = openWavFile(backgroundLoc, background);
+	horn = openWavFile(hornLoc, horn);
+	idle = openWavFile(idleLoc, idle);
+	speedUp = openWavFile(speedUpLoc, speedUp);
+	speedDown = openWavFile(speedDownLoc, speedDown);
+
+
+	background.format = formatWav(background);
+
+	horn.format = formatWav(horn);
+	idle.format = formatWav(idle);
+	speedUp.format = formatWav(speedUp);
+	speedDown.format = formatWav(speedDown);
+
 
 }
 
 /*TODO find a better way to figure out if something is playing or not, otherwise there is a bunch of errors being printed
 I think its to do with it constantly changing toPlay to one of the wav files need to find a better way to set toPlay to a wav file
 */
+
 void Audio::playAudio(int choice)
 {
 	wavFile* toPlay;
 	switch (choice)
 	{
+	case 0:
+		toPlay = &background;
+		break;
 	case 1:
-		toPlay = &wav;
+		toPlay = &idle;
 		break;
 	case 2:
-		toPlay = &wav2;
+		toPlay = &speedUp;
 		break;
 	case 3:
-		toPlay = &wav3;
+		toPlay = &speedDown;
 		break;
 	case 4:
-		toPlay = &wav4;
+		toPlay = &horn;
 		break;
 	default:
 		cout << "Invalid song choice" << endl;
@@ -189,7 +210,7 @@ void Audio::playAudio(int choice)
 		alSourcePlay(toPlay->source);
 	}
 
-	
+
 }
 void Audio::cleanUpAudio(wavFile wav)
 {
@@ -257,7 +278,7 @@ wavFile Audio::openWavFile(string fileName, wavFile toPlay)
 	unsigned char* buf;
 
 
-	
+
 	FILE *fp = nullptr;
 	fopen_s(&fp, fileName.c_str(), "rb");
 
@@ -327,36 +348,36 @@ void Audio::checkError()
 
 	switch (error)
 	{
-		case AL_INVALID_NAME:
-		{
-			cout << "INVALID NAME" << endl;
-			break;
-		}
-		case AL_INVALID_ENUM:
-		{
-			cout << "INVALID ENUM" << endl;
-			break;
-		}
-		case AL_INVALID_VALUE:
-		{
-			cout << "INVALID VALUE" << endl;
-			break;
-		}
-		case AL_INVALID_OPERATION:
-		{
-			cout << "INVALID OPERATION" << endl;
-			break;
-		}
-		case AL_OUT_OF_MEMORY:
-		{
-			cout << "OUT OF MEMORY" << endl;
-			break;
-		}
-		
-		default:
-			break;
+	case AL_INVALID_NAME:
+	{
+		cout << "INVALID NAME" << endl;
+		break;
 	}
-	
+	case AL_INVALID_ENUM:
+	{
+		cout << "INVALID ENUM" << endl;
+		break;
+	}
+	case AL_INVALID_VALUE:
+	{
+		cout << "INVALID VALUE" << endl;
+		break;
+	}
+	case AL_INVALID_OPERATION:
+	{
+		cout << "INVALID OPERATION" << endl;
+		break;
+	}
+	case AL_OUT_OF_MEMORY:
+	{
+		cout << "OUT OF MEMORY" << endl;
+		break;
+	}
+
+	default:
+		break;
+	}
+
 
 }
 /*Probably not need just shows what audio devices are available*/

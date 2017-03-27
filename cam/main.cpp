@@ -39,7 +39,7 @@ int main() {
 
 
 		Audio audio;
-
+		audio.initAudio();
 		{
 			std::shared_ptr<Component> menu(std::make_shared<ScriptComponent>("main_menu", physics));
 			auto e = Entity::Create(root.get()).lock();
@@ -56,6 +56,7 @@ int main() {
 			root->Update(dt);
 			renderer.Render(*root);
 			physics.Update(dt);
+			audio.playAudio(0);
 			Entity::DeleteDestroyed();
 
 			glfwPollEvents();
