@@ -35,25 +35,32 @@ class MainMenu:
 
         player = Entity.create(e).lock()
         vehicle = ScriptComponent("vehicle_script", self.physics)
-
         player.add_component(vehicle)
         player.add_component(ScriptComponent("powerup_manager", self.physics))
 
         runner = Entity.create(e).lock()
         mesh = Mesh(ModelShader("runner_texture.jpg"), "runner_mesh.fbx", Vec3(1.0, 0.84, 0.0), Vec3(4.427, 2.426, 12.935), 4)
         #ai = ScriptComponent("runner_ai", self.physics)
-        ai = RunnerAi(Vec3(0.0, 0.0, -30.0))
+        ai = RunnerAi(Vec3(10.0, 2.0, -100.0))
         runner.add_component(mesh)
         runner.add_component(ai, self.physics)
+
+        runner2 = Entity.create(e).lock()
+        runner2.add_component(Mesh(ModelShader("runner_texture_blue.jpg"), "runner_mesh.fbx", Vec3(1.0, 0.84, 0.0), Vec3(4.427, 2.426, 12.935), 4))
+        runner2.add_component(RunnerAi(Vec3(-5.0, 0.0, -20.0)), self.physics)
+
+        runner3 = Entity.create(e).lock()
+        runner3.add_component(Mesh(ModelShader("runner_texture_green.jpg"), "runner_mesh.fbx", Vec3(1.0, 0.84, 0.0), Vec3(4.427, 2.426, 12.935), 4))
+        runner3.add_component(RunnerAi(Vec3(90.0, 2.0, -10.0)), self.physics)
+
+        runner4 = Entity.create(e).lock()
+        runner4.add_component(Mesh(ModelShader("runner_texture_blue.jpg"), "runner_mesh.fbx", Vec3(1.0, 0.84, 0.0), Vec3(4.427, 2.426, 12.935), 4))
+        runner4.add_component(RunnerAi(Vec3(0.0, 2.0, -90.0)), self.physics)
 
         o = Entity.create(e).lock()
         o.transform().position = Vec3(0.0, 0.0, 60)
         o.add_component(ScriptComponent("oil_slick_powerup", self.physics))
-        
-        runner = Entity.create(e).lock()
-        runner.add_component(Mesh(ModelShader("runner_texture.jpg"), "runner_mesh.fbx", Vec3(1.0, 0.84, 0.0), Vec3(4.427, 2.426, 12.935), 4))
-        # runner.add_component(ScriptComponent("runner_ai", self.physics))
-        runner.add_component(RunnerAi(Vec3(0.0, 0.0, 60.0)), self.physics)
+
 
         e.add_component(ScriptComponent("start_game", self.physics))
 
