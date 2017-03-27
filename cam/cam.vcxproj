@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -107,8 +107,8 @@
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>Xinput9_1_0.lib;assimp.lib;EFX-Util.lib;OpenAL32.lib;winmm.lib;PhysX3CommonCHECKED_x64.lib;PhysX3CookingCHECKED_x64.lib;LowLevelClothCHECKED.lib;LowLevelCHECKED.lib;PhysX3CharacterKinematicCHECKED_x64.lib;PhysX3ExtensionsCHECKED.lib;PhysX3VehicleCHECKED.lib;PhysXProfileSDKCHECKED.lib;PhysXVisualDebuggerSDKCHECKED.lib;PvdRuntimeCHECKED.lib;PxTaskCHECKED.lib;SceneQueryCHECKED.lib;SimulationControllerCHECKED.lib;PhysX3CHECKED_x64.lib;opengl32.lib;glfw3.lib;glew32s.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(ProjectDir)Libraries\openAL;$(ProjectDir)Libraries\SDL;$(ProjectDir)Libraries\Debug;%(AdditionalLibraryDirectories);$(ProjectDir)Libraries\assimp\64</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Xinput9_1_0.lib;assimp.lib;EFX-Util.lib;OpenAL32.lib;winmm.lib;freetype27.lib;PhysX3CommonCHECKED_x64.lib;PhysX3CookingCHECKED_x64.lib;LowLevelClothCHECKED.lib;LowLevelCHECKED.lib;PhysX3CharacterKinematicCHECKED_x64.lib;PhysX3ExtensionsCHECKED.lib;PhysX3VehicleCHECKED.lib;PhysXProfileSDKCHECKED.lib;PhysXVisualDebuggerSDKCHECKED.lib;PvdRuntimeCHECKED.lib;PxTaskCHECKED.lib;SceneQueryCHECKED.lib;SimulationControllerCHECKED.lib;PhysX3CHECKED_x64.lib;opengl32.lib;glfw3.lib;glew32s.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(ProjectDir)Libraries\openAL;$(ProjectDir)Libraries\SDL;$(ProjectDir)Libraries\freetype27;$(ProjectDir)Libraries\Debug;%(AdditionalLibraryDirectories);$(ProjectDir)Libraries\assimp\64</AdditionalLibraryDirectories>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <EntryPointSymbol>
       </EntryPointSymbol>
@@ -121,6 +121,7 @@ xcopy /S /Y /D "$(SolutionDir)cam\Audio" "$(TargetDir)\Audio\"
 xcopy /S /Y /D "$(SolutionDir)cam\Textures" "$(TargetDir)\Textures\"
 xcopy /S /Y /D "$(SolutionDir)cam\Models" "$(TargetDir)\Models\"
 xcopy /S /Y /D "$(SolutionDir)cam\Scripts" "$(TargetDir)\Scripts\"
+xcopy /S /Y /D "$(SolutionDir)cam\Fonts" "$(TargetDir)\Fonts\"
 xcopy /S /Y /D "$(SolutionDir)cam\Shaders" "$(TargetDir)\Shaders\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -157,8 +158,8 @@ xcopy /S /Y /D "$(SolutionDir)cam\Shaders" "$(TargetDir)\Shaders\"</Command>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>$(ProjectDir)Libraries\openAL;$(ProjectDir)Libraries\SDL;$(ProjectDir)Libraries\Release;%(AdditionalLibraryDirectories);$(ProjectDir)Libraries\assimp\64</AdditionalLibraryDirectories>
-      <AdditionalDependencies>Xinput9_1_0.lib;assimp.lib;EFX-Util.lib;OpenAL32.lib;winmm.lib;LowLevel.lib;LowLevelCLoth.lib;PhysX3_x64.lib;PhysX3CharacterKinematic_x64.lib;PhysX3Common_x64.lib;PhysX3Cooking_x64.lib;PhysX3Extensions.lib;PhysX3Vehicle.lib;PhysXProfileSDK.lib;PhysXVisualDebuggerSDK.lib;PvdRuntime.lib;PxTask.lib;SceneQuery.lib;SimulationController.lib;glfw3.lib;opengl32.lib;glew32s.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(ProjectDir)Libraries\openAL;$(ProjectDir)Libraries\SDL;$(ProjectDir)Libraries\freetype27;$(ProjectDir)Libraries\Release;%(AdditionalLibraryDirectories);$(ProjectDir)Libraries\assimp\64</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Xinput9_1_0.lib;assimp.lib;EFX-Util.lib;OpenAL32.lib;winmm.lib;freetype27.lib;LowLevel.lib;LowLevelCLoth.lib;PhysX3_x64.lib;PhysX3CharacterKinematic_x64.lib;PhysX3Common_x64.lib;PhysX3Cooking_x64.lib;PhysX3Extensions.lib;PhysX3Vehicle.lib;PhysXProfileSDK.lib;PhysXVisualDebuggerSDK.lib;PvdRuntime.lib;PxTask.lib;SceneQuery.lib;SimulationController.lib;glfw3.lib;opengl32.lib;glew32s.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <EntryPointSymbol>
       </EntryPointSymbol>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
@@ -185,6 +186,8 @@ xcopy /S /Y /D "$(SolutionDir)cam\Shaders" "$(TargetDir)\Shaders\"</Command>
     <ClInclude Include="Image.h" />
     <ClInclude Include="ImageShader.h" />
     <ClInclude Include="Runner.h" />
+    <ClInclude Include="Text.h" />
+    <ClInclude Include="TextShader.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="ModelShader.h" />
     <ClInclude Include="NavMesh.h" />
@@ -214,6 +217,8 @@ xcopy /S /Y /D "$(SolutionDir)cam\Shaders" "$(TargetDir)\Shaders\"</Command>
     <ClCompile Include="Image.cpp" />
     <ClCompile Include="ImageShader.cpp" />
     <ClCompile Include="Runner.cpp" />
+    <ClCompile Include="Text.cpp" />
+    <ClCompile Include="TextShader.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Mesh.cpp" />

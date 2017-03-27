@@ -26,6 +26,7 @@ public:
 	PxCooking *GetCooking() { return cooking_; }
 
 	void RegisterVehicle(Vehicle *vehicle) { vehicles_.push_back(vehicle); }
+	void UnregisterVehicle(Vehicle *vehicle);
 
 	enum SurfaceFlags : PxU32 {
 		DRIVABLE_SURFACE = (1 << 0),
