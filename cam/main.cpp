@@ -16,6 +16,7 @@
 #include "RigidBody.h"
 #include "ScriptComponent.h"
 #include "Shader.h"
+#include "Text.h"
 #include "Vehicle.h"
 /*Not sure where to put this afterwards just for testing*/
 #include "drawAiPath.h"
@@ -24,6 +25,7 @@
 int main() {
 	try {
 		Renderer::Initialize();
+		Text::Initialize();
 		Renderer renderer;
 		Physics physics;
 		auto root = Entity::Create();
@@ -39,7 +41,7 @@ int main() {
 
 
 		Audio audio;
-
+		audio.initAudio();
 		{
 			std::shared_ptr<Component> menu(std::make_shared<ScriptComponent>("main_menu", physics));
 			auto e = Entity::Create(root.get()).lock();
@@ -56,6 +58,7 @@ int main() {
 			root->Update(dt);
 			renderer.Render(*root);
 			physics.Update(dt);
+			audio.playAudio(0);
 			Entity::DeleteDestroyed();
 
 			glfwPollEvents();

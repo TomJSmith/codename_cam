@@ -337,6 +337,7 @@ Vehicle::Vehicle(Physics &physics, std::shared_ptr<aiController> aicontroller, C
 Vehicle::~Vehicle()
 {
 	std::cout << "killing a vehicle!\n";
+	physics_.UnregisterVehicle(this);
 	physics_.GetScene()->removeActor(*vehicle_->getRigidDynamicActor());
 	vehicle_->getRigidDynamicActor()->release();
 	vehicle_->free();

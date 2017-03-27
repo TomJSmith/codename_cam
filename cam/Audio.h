@@ -40,7 +40,8 @@ private:
 	ALuint sourceSetup(ALuint source);
 	ALenum formatWav(wavFile wav);
 	wavFile openWavFile(string fileName, wavFile toPlay);
-	wavFile wav, wav2, wav3, wav4; //creative names later
+	wavFile background;
+	wavFile horn, speedUp, speedDown, idle;
 	ALCcontext *context;
 	ALCdevice* Device; // select the "preferred device"
 };
