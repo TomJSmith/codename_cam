@@ -23,14 +23,18 @@ void main() {
 	//vec3 specular = vec3(1.0f, 1.0f, 1.0f) * spec;
 	//vec3 ambient = vec3(1.0f, 1.0f, 1.0f) * 0.2f;
 
-	vec3 diffuse = v_colour * diff;
-	vec3 specular = v_colour * spec;
-	vec3 ambient = v_colour * 0.2f;
+	//vec3 diffuse = v_colour * diff;
+	//vec3 specular = v_colour * spec;
+	//vec3 ambient = v_colour * 0.2f;
 
 	//colour = vec4(ambient + diffuse + specular, 1.0f);
 
-	colour = texture(model_texture, TexCoord0);
-
+	vec3 tex3 = texture(model_texture, TexCoord0).rgb;
+	vec3 diffuse = tex3 * diff;
+	vec3 specular = tex3 * spec;
+	vec3 ambient = tex3 * 0.02f;
+	vec4 tex4 = vec4 (tex3, 1.0f);
+	colour = tex4 + vec4(ambient + diffuse + specular, 1.0f);
    // colour = vec4(v_colour, 1.0);
  
 }
