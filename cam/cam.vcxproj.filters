@@ -129,6 +129,12 @@
     <ClInclude Include="Trigger.h">
       <Filter>Header Files\Components</Filter>
     </ClInclude>
+    <ClInclude Include="Text.h">
+      <Filter>Header Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="TextShader.h">
+      <Filter>Header Files\Shaders</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Entity.cpp">
@@ -205,6 +211,12 @@
     </ClCompile>
     <ClCompile Include="Trigger.cpp">
       <Filter>Source Files\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Text.cpp">
+      <Filter>Source Files\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="TextShader.cpp">
+      <Filter>Source Files\Shaders</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

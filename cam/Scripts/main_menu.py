@@ -10,7 +10,7 @@ sys.path.insert(0, os.getcwd() + "\..\..\cam\Scripts")
 from runner_ai import *
 
 def set_position(marker, item):
-    marker.position = item.position + Vec2(-0.1, 0.05)
+    marker.position = item.position + Vec2(-0.2, 0.0)
 
 class MainMenu:
     def start_game(self):
@@ -62,8 +62,8 @@ class MainMenu:
     def start(self):
         self.control = Controller(0)
         self.background = Image("background.png", Vec2(-1.0, -1.0), Vec2(2.0, 2.0), 3)
-        self.startgame = Image("start-game.png", Vec2(-0.3, 0.0), Vec2(0.6, 0.2), 2)
-        self.quitgame = Image("quit-game.png", Vec2(-0.3, -0.2), Vec2(0.6, 0.2), 2)
+        self.startgame = Text("Start Game", "GROBOLD", Vec2(-0.3, 0.0), 12)
+        self.quitgame = Text("Quit Game", "GROBOLD", Vec2(-0.3, -0.2), 12)
         self.marker = Image("menu-marker.png", Vec2(-1.0, -1.0), Vec2(0.2, 0.2), 1)
         self.selected = self.startgame
 

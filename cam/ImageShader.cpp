@@ -8,6 +8,15 @@ ImageShader::ImageShader(const char *filename, size_t layer) :
 	texture_(filename),
 	layer_(layer)
 {}
+//
+//ImageShader::ImageShader(unsigned char *data, size_t layer) :
+//	Shader({
+//		{GL_VERTEX_SHADER, "image.vert"},
+//		{GL_FRAGMENT_SHADER, "image.frag"}
+//	}),
+//	texture_(data),
+//	layer_(layer)
+//{}
 
 void ImageShader::Setup(const Renderer::MeshData &data, const mat4 &projection)
 {

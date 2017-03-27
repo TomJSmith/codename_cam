@@ -15,6 +15,7 @@ class Shader
 {
 public:
 	virtual void Setup(const Renderer::MeshData &data, const mat4 &projection) = 0;
+	virtual void SetLayer(size_t layer) {}
 	virtual ~Shader() = default;
 
 protected:

@@ -17,6 +17,7 @@
 #include "Physics.h"
 #include "RigidBody.h"
 #include "Runner.h"
+#include "Text.h"
 #include "Trigger.h"
 #include "Util.h"
 #include "Vehicle.h"
@@ -122,14 +123,17 @@ BOOST_PYTHON_MODULE(runner) {
 BOOST_PYTHON_MODULE(navmesh) {
 	python::class_<NavMesh, std::shared_ptr<NavMesh>>("NavMesh", python::init<const char*, vec3>())
 		.def("getSimpleGraph", &NavMesh::getSimpleGraph);
-		//.def("getSimpleNeighbors", &NavMesh::getSimpleNeighbors, args("node"))
 }
 
 BOOST_PYTHON_MODULE(ui) {
-	python::class_<Image, std::shared_ptr<Image>>("Image", python::init<const char *, const vec2 &, const vec2 &, size_t>())
+	python::class_<Image, python::bases<Component>, std::shared_ptr<Image>>("Image", python::init<const char *, const vec2 &, const vec2 &, size_t>())
 		.add_property("size", &Image::GetSize, &Image::SetSize)
 		.add_property("position", &Image::GetPosition, &Image::SetPosition)
 		.def("set_layer", &Image::SetLayer);
+
+	python::class_<Text, python::bases<Component>, std::shared_ptr<Text>>("Text", python::init<std::string, const std::string &, vec2, size_t>())
+		.add_property("position", &Text::GetPosition, &Text::SetPosition)
+		.add_property("text", &Text::GetText, &Text::SetText);
 }
 
 // boost::python won't let us use shared_ptr<Component> for subclasses of Component by
@@ -160,13 +164,11 @@ void RegisterEventHandler(Entity &e, python::object pyhandler) {
 		}
 	};
 
-	//handlers.push_back(handler);
 	// TODO leaky leaky
 	e.RegisterEventHandler(new std::function<void(T)>(handler));
 }
 
 void RegisterScriptEventHandler(Entity &e, python::object type, python::object pyhandler) {
-	//static std::vector<std::function<void(Events::ScriptEvent)>> handlers;
 	auto name = type.attr("__name__");
 
 	auto handler = [=](Events::ScriptEvent event) {
@@ -180,7 +182,6 @@ void RegisterScriptEventHandler(Entity &e, python::object type, python::object p
 		}
 	};
 
-	//handlers.push_back(handler);
 	// TODO this is some grease right hurrrrr
 	e.RegisterEventHandler(new std::function<void(Events::ScriptEvent)>(handler));
 }
@@ -234,6 +235,7 @@ BOOST_PYTHON_MODULE(entity) {
 		.def("add_component", AddComponent<RigidBody>)
 		.def("add_component", AddComponent<ScriptComponent>)
 		.def("add_component", AddComponent<Trigger>)
+		.def("add_component", AddComponent<Text>)
 		.def("add_component", AddScriptComponent)
 		.def("fire_event", &Entity::FireEvent<Events::Infected>)
 		.def("fire_event", &Entity::FireEvent<Events::Destroyed>)
@@ -339,7 +341,6 @@ BOOST_PYTHON_MODULE(camera) {
 
 ScriptComponent::~ScriptComponent()
 {
-	//locals_.clear();
 }
 
 void ScriptComponent::RegisterHandlers()
@@ -352,7 +353,6 @@ void ScriptComponent::RegisterHandlers()
 void ScriptComponent::Update(seconds dt)
 {
 	Call("update", dt.count());
-	//python::exec("while gc.collect(): pass", locals_, locals_);
 }
 
 void ScriptComponent::InitPython()
@@ -514,6 +514,13 @@ namespace boost {
 	template <>
 	Trigger const volatile * get_pointer<class Trigger const volatile>(
 		class Trigger const volatile *c
+		) {
+		return c;
+	}
+
+	template <>
+	Text const volatile * get_pointer<class Text const volatile>(
+		class Text const volatile *c
 		) {
 		return c;
 	}
