@@ -338,7 +338,6 @@ Vehicle::~Vehicle()
 	std::cout << "killing a vehicle!\n";
 	physics_.GetScene()->removeActor(*vehicle_->getRigidDynamicActor());
 	vehicle_->getRigidDynamicActor()->release();
-	//vehicle_->release(); 
 	vehicle_->free();
 	frictionpairs_->release();
 	batchquery_->release();
@@ -383,24 +382,6 @@ void Vehicle::Drive()
 	}
 
 	input_.setAnalogSteer(controller_->getDirectional());
-
-	/*switch (controller_->getDirectional()) {
-	case C_LEFT:
-		input_.setAnalogSteer(-.5f);
-		//input_.setDigitalSteerLeft(true);
-		//input_.setDigitalSteerRight(false);
-		break;
-	case C_RIGHT:
-		input_.setAnalogSteer(.5f);
-		//input_.setDigitalSteerRight(true);
-		//input_.setDigitalSteerLeft(false);
-		break;
-	case C_NO_DIRECTION:
-		input_.setAnalogSteer(0.0f);
-		//input_.setDigitalSteerRight(false);
-		//input_.setDigitalSteerLeft(false);
-		break;
-	}*/
 }
 
 void Vehicle::Step(float dt)
