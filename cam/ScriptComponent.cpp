@@ -227,7 +227,9 @@ BOOST_PYTHON_MODULE(events) {
 		.def("entity", &Events::TriggerEnter::GetEntity, python::return_internal_reference<>());
 	python::class_<Events::TriggerExit>("TriggerExit")
 		.def("entity", &Events::TriggerExit::GetEntity, python::return_internal_reference<>());
-	python::class_<Events::RunnerDestroyed>("RunnerDestroyed");
+	python::class_<Events::RunnerDestroyed>("RunnerDestroyed")
+		.def_readwrite("other", &Events::RunnerDestroyed::other)
+		.def("getother", &Events::RunnerDestroyed::GetOther, python::return_internal_reference<>());
 
 }
 

@@ -20,7 +20,10 @@ namespace Events {
 		Entity *runner;
 		Entity *GetRunner() { return runner; }
 	};
-	struct RunnerDestroyed {};
+	struct RunnerDestroyed {
+		Entity* other;
+		Entity* GetOther() { return other; }
+	};
 
 	struct Render {
 		std::vector<Renderer::MeshData> &data;

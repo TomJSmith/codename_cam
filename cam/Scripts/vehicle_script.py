@@ -15,6 +15,7 @@ class VehicleScript:
         self.controller = controller.Controller(0)
         self.create_vehicle(self.entity)
         self.dead = False
+        self.killed_by = None
         self.vehicle.set_active(False)
 
         self.entity.register_handler(GameStarted, self.start_game)
@@ -23,15 +24,7 @@ class VehicleScript:
 
     def update(self, dt):
         if self.dead:
-            e = self.entity
-            while e.get_parent():
-                e = e.get_parent()
-
-            e = Entity.create(e).lock()
-            self.create_vehicle(e, True)
-            chaser = ScriptComponent("chaser", self.physics)
-            e.add_component(chaser)
-            self.entity.destroy()
+            pass
 
     def change_surface(self, event):
         self.vehicle.set_friction(event.friction)
@@ -40,10 +33,25 @@ class VehicleScript:
         self.vehicle.set_active(True)
 
     def infected(self, event):
-        event.getother().fire_event(RunnerDestroyed())
+        thisEvent = RunnerDestroyed()
+        thisEvent.other = self.entity
+        event.getother().fire_event(thisEvent)
         print("infected me")
-        self.dead = True
+        self.killed_by = event.getother()
+        e = self.entity
+        while e.get_parent():
+            e = e.get_parent()
 
+        self.entity.destroy()
+        e = Entity.create(e).lock()
+        self.create_vehicle(e, True)
+        chaser = ScriptComponent("chaser", self.physics)
+        e.add_component(chaser)
+
+    def runnerdestroyed(self, event):
+        thisEvent = RunnerDestroyed()
+        thisEvent.other = event.getother()
+        self.killed_by.fire_event(thisEvent)
 
     def create_vehicle(self, entity, chaser = False):
         c = vehicle.Configuration()
@@ -65,9 +73,12 @@ class VehicleScript:
 
         self.vehicle = vehicle.Vehicle(self.physics, self.controller, c)
         cam = camera.Camera(self.vehicle)
-        r = runner.Runner()
         mesh = Mesh(ModelShader("chaser_texture.jpg" if chaser else "runner_texture.jpg"), "chaser_mesh.fbx" if chaser else "runner_mesh.fbx", physics.Vec3(0.1, 0.1, 0.6), physics.Vec3(1, 1, 1), 4)
         entity.add_component(self.vehicle)
         entity.add_component(cam)
         entity.add_component(mesh)
-        entity.add_component(r)
+        if chaser:
+            entity.register_handler(RunnerDestroyed, self.runnerdestroyed)
+        else:
+            r = runner.Runner()
+            entity.add_component(r)
