@@ -26,7 +26,7 @@ class ChaserAi:
 
     def runnerdestroyed(self, event):
         print("Removing runner")
-        self.remove_runner(targetRunner)
+        self.remove_runner()
 
     def start_game(self, event):
         self.started = True
@@ -35,7 +35,6 @@ class ChaserAi:
         self.reachedGoal = False
         self.backUp = False
 
-        self.currPos = None
         self.prevPos = None
 
         self.map = None
@@ -58,11 +57,11 @@ class ChaserAi:
         self.astar = A_star(self.map)
 
         dims = PxVec3(3, 1, 5)
-        config.position = PxVec3(-5, 2, 60)
+        config.position = PxVec3(10, 2, 10)
         config.rotation = PxQuat(0, 1, 0, 0)
         config.chassis_dimensions = dims
-        config.steer_angle = math.pi * .1
-        config.torque = 200000
+        config.steer_angle = math.pi * .18
+        config.torque = 10000
         config.wheel_radius = 0.5
         config.wheel_width = 0.4
         config.wheel_mass = 10
@@ -76,14 +75,13 @@ class ChaserAi:
         self.entity.add_component(self.vehicle)
         self.entity.register_runnercreated_handler(self.runnercreated)
         self.entity.register_handler(GameStarted, self.start_game)
-        self.entity.register_runnerdestroyed_handler(self.runnerdestroyed)
-
+        self.entity.register_handler(RunnerDestroyed, self.runnerdestroyed)
         self.currentNodeXZ = self.astar.findCurrentNode(
             (self.entity.transform().global_position().x, self.entity.transform().global_position().z))
 
     def create_nav_mesh(self):
     # global physics
-        _navmesh = navmesh.NavMesh('nav_mesh.fbx', Vec3(2.0, 2.0, 2.0))
+        _navmesh = navmesh.NavMesh('nav_mesh.fbx', Vec3(1.0, 1.0, 1.0))
         graph = _navmesh.getSimpleGraph()
         self.map = {}
         for node in graph:
@@ -94,34 +92,29 @@ class ChaserAi:
         return self.map
 
     def checkStuck(self):
-    # global self.prevPos
-    # global self.stuck_flag
-        self.stuck_flag = False
-        self.currPos = self.entity.transform().global_position()
+        currPos = self.entity.transform().global_position()
 
         if self.prevPos is not None:
-            print(math.sqrt((self.currPos.x - self.prevPos.x) ** 2.0 + (self.currPos.z - self.prevPos.z) ** 2.0))
-            if (math.sqrt((self.currPos.x - self.prevPos.x) ** 2.0 + (self.currPos.z - self.prevPos.z) ** 2.0) < .3):
-                self.prevPos = self.currPos
+            if (math.sqrt((currPos.x - self.prevPos.x) ** 2.0 + (currPos.z - self.prevPos.z) ** 2.0) < .3):
+                self.prevPos = currPos
                 self.stuck_flag = True
                 return True
             else:
-                self.prevPos = self.currPos
+                self.prevPos = currPos
                 return False
 
-        self.prevPos = self.currPos
+        self.prevPos = currPos
         return False
 
     def closestRunner(self):
-        self.currPos = self.entity.transform().global_position()
+        currPos = self.entity.transform().global_position()
         minDistance = 9999999
         closest = 0
         for i in range(0, len(self.runnerPos)):
-            currDistance = math.sqrt((self.currPos.x - self.runnerPos[i][0]) ** 2.0 + (self.currPos.z - self.runnerPos[i][1]) ** 2.0)
+            currDistance = math.sqrt((currPos.x - self.runnerPos[i][0]) ** 2.0 + (currPos.z - self.runnerPos[i][1]) ** 2.0)
             if currDistance < minDistance:
                 minDistance = currDistance
                 closest = i
-        print "Closest Runner: " + str(closest)
         return closest
 
 
@@ -133,15 +126,11 @@ class ChaserAi:
 
         return arrayVecs
 
-    def getCurrentCoor(self, ent):
-        return (ent.transform().global_position().x, ent.transform().global_position().z)
-
     def remove_runner(self):
-        global targetNodeXZ, runnerPos, runner_e, targetRunner
-        runner_e.pop(self.targetRunner)
-        targetNodeXZ.pop(self.targetRunner)
-        runnerPos.pop(self.targetRunner)
-        targetRunner = closestRunner()
+        self.runner_e.pop(self.targetRunner)
+        self.targetNodeXZ.pop(self.targetRunner)
+        self.runnerPos.pop(self.targetRunner)
+        self.targetRunner = self.closestRunner()
         print("Destroyed runner " + str(self.targetRunner) + ", next closest target: "
               + str(self.targetRunner) + ". Runners Left: " + str(len(self.runner_e)))
 
@@ -204,35 +193,20 @@ class ChaserAi:
                 self.controller.setBrake(0)
                 self.controller.setDirection(dot)
             else:
-                print("Reached Node " + str(self.currentNodeIndex))
                 self.controller.setDirection(0)
-                # print "distance to goal : ", distanceToGoal
-                # print "size of closestPathVectors : ", len(closestPathVectors)
-                # print "size of targets : ", len(targets)
-                # print "target index : ", target
-                # self.reachedGoal = False
                 self.controller.setBrake(1)
-                # print "We're there!"
                 self.controller.setAccel(0)
-                # controller.setLeft(0)
-                # controller.setRight(0)
+
                 self.currentNodeIndex += 1
                 if self.currentNodeIndex >= len(self.currentPath):
-                    self.currentNodeIndex == len(self.currentPath) - 1
-                    print "Reached the Target"
+                    self.currentNodeIndex = len(self.currentPath) - 1
                     self.reachedGoal = True
-
-                # else:
-                # self.reachedGoal = False;
-                # controller.setAccel(0)
-                #     controller.setBrake(1)
-
 
     def update(self, dt):
         if not self.started:
             return
 
-        if self.runner_e is not None:
+        if len(self.runner_e) > 0:
             for i in range(0, len(self.runnerPos)):
                 self.runnerPos[i] = (self.runner_e[i].transform().global_position().x, self.runner_e[i].transform().global_position().z)
 
@@ -245,23 +219,27 @@ class ChaserAi:
                     if not self.map[self.targetNodeXZ[i]].inNode(self.runnerPos[i]):
                         self.targetNodeXZ[i] = self.astar.findNextNode(self.map[self.targetNodeXZ[i]], self.runnerPos[i])
 
-            if self.frame_count+50 % 60 == 0:
+            if (self.frame_count + 50) % 360 == 0:
                 if self.stuck_flag:
                     self.stuck = True
                     self.stuck_flag = False
                 else:
                     self.stuck = self.checkStuck()
 
-            if self.frame_count % 180 == 0 or self.frame_count == -1:
+            if self.frame_count % 1200 == 0 or self.frame_count == -1:
                 self.targetRunner = self.closestRunner()
-
                 self.currentNodeIndex = 0
                 self.currentPath = self.getNodePathToVec(self.astar.find_path(self.map[self.targetNodeXZ[self.targetRunner]], self.map[self.currentNodeXZ]))
                 self.reachedGoal = False
 
             self.drive()
 
-        self.frame_count += 1
-        if self.frame_count > 60000:
-            self.frame_count = 0
+            self.frame_count += 1
+            if self.frame_count > 60000:
+                self.frame_count = 0
+        else:
+            print("-----------------------------")
+            print("CHASER HAS DESTROYED EVERYONE")
+            print("-----------------------------")
+            self.entity.destroy()
 

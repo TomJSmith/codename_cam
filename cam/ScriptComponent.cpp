@@ -255,6 +255,7 @@ BOOST_PYTHON_MODULE(entity) {
 		.def("fire_event", &Entity::FireEvent<Events::Destroyed>)
 		.def("fire_event", &Entity::FireEvent<Events::Collided>)
 		.def("fire_event", &Entity::FireEvent<Events::RunnerDestroyed>)
+		.def("fire_event", &Entity::FireEvent<Events::RunnerCreated>)
 		.def("fire_event", &Entity::FireEvent<Events::TriggerEnter>)
 		.def("fire_event", &Entity::FireEvent<Events::TriggerExit>)
 //		.def("fire_event", &Entity::FireEvent<Events::StartGame>)

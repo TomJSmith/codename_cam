@@ -103,7 +103,7 @@ class A_star():
             if(node.inNode(currentPosition)):
                 return (node.x, node.z)
 
-        return (previousNode.x, previousNode.z)
+        return self.findCurrentNode(currentPosition)
 
     def findClosestNode(self, map, start):
 
@@ -174,16 +174,3 @@ class A_star():
             total_path.append(next_node)
         return (total_path)
 
-    def create_neighbors(self, x, y, grid):
-        """
-        OLD, POSSIBLY OF NO USE
-        """
-        dxy = [(1, -1), (1, 0), (1, 1), (0, 1), (-1, 1), (-1, 0), (-1, -1), (0, -1)]
-        neighbors = []
-        for XY in dxy:
-            new_x = x + XY[0]
-            new_y = y + XY[1]
-            if (new_x < len(grid)) and (new_y < len(grid)) and (new_x >= 0) and (new_y >= 0):
-                if grid[new_x][new_y]:
-                    neighbors.append((new_x, new_y))
-        return neighbors[::-1]
