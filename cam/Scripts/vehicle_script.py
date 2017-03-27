@@ -42,7 +42,7 @@ class VehicleScript:
     def infected(self, event):
         event.getother().fire_event(RunnerDestroyed())
         print("infected me")
-        self.entity.destroy()
+        self.dead = True
 
 
     def create_vehicle(self, entity, chaser = False):
