@@ -20,13 +20,13 @@ class MainMenu:
             e = e.get_parent()
 
         level = Entity.create(e).lock()
-        mesh = Mesh(ModelShader("map_texture.jpg"), "map_mesh.fbx", Vec3(0.2, 0.4, 0.2), Vec3(1.0, 1.0, 1.0), 4) # TODO hacky hacky hardcoded opengl constant, 4 is GL_TRIANGLES
-        body = RigidBody(self.physics, "map_mesh.fbx", 1.0, False)
+        mesh = Mesh(ModelShader("map_texture.jpg"), "map_mesh.fbx", Vec3(0.2, 0.4, 0.2), Vec3(2.0, 2.0, 2.0), 4) # TODO hacky hacky hardcoded opengl constant, 4 is GL_TRIANGLES
+        body = RigidBody(self.physics, "map_mesh.fbx", 2.0, False)
         level.add_component(mesh)
         level.add_component(body)
 
         ai = Entity.create(e).lock()
-        mesh = Mesh(ModelShader("chaser_texture.jpg"), "chaser_mesh.fbx", Vec3(1.0, 0.84, 0.0), Vec3(4.427, 2.426, 12.935), 4)
+        mesh = Mesh(ModelShader("chaser_texture.jpg"), "chaser_mesh.fbx", Vec3(1.0, 0.84, 0.0), Vec3(1, 1, 1), 4)
         vehicle = ScriptComponent("chaser_ai", self.physics)
         chaser = ScriptComponent("chaser", self.physics)
         ai.add_component(mesh)
@@ -40,7 +40,7 @@ class MainMenu:
         player.add_component(ScriptComponent("powerup_manager", self.physics))
 
         runner = Entity.create(e).lock()
-        mesh = Mesh(ModelShader("runner_texture.jpg"), "runner_mesh.fbx", Vec3(1.0, 0.84, 0.0), Vec3(4.427, 2.426, 12.935), 4)
+        mesh = Mesh(ModelShader("runner_texture.jpg"), "runner_mesh.fbx", Vec3(1.0, 0.84, 0.0), Vec3(1, 1, 1), 4)
         #ai = ScriptComponent("runner_ai", self.physics)
         ai = RunnerAi(Vec3(0.0, 0.0, -30.0))
         runner.add_component(mesh)
@@ -51,7 +51,7 @@ class MainMenu:
         o.add_component(ScriptComponent("oil_slick_powerup", self.physics))
         
         runner = Entity.create(e).lock()
-        runner.add_component(Mesh(ModelShader("runner_texture.jpg"), "runner_mesh.fbx", Vec3(1.0, 0.84, 0.0), Vec3(4.427, 2.426, 12.935), 4))
+        runner.add_component(Mesh(ModelShader("runner_texture.jpg"), "runner_mesh.fbx", Vec3(1.0, 0.84, 0.0), Vec3(1, 1, 1), 4))
         # runner.add_component(ScriptComponent("runner_ai", self.physics))
         runner.add_component(RunnerAi(Vec3(0.0, 0.0, 60.0)), self.physics)
 

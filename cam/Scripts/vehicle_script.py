@@ -63,7 +63,7 @@ class VehicleScript:
 
         self.vehicle = vehicle.Vehicle(self.physics, self.controller, c)
         cam = camera.Camera(self.vehicle)
-        mesh = Mesh(ModelShader("chaser_texture.jpg" if chaser else "runner_texture.jpg"), "chaser_mesh.fbx" if chaser else "runner_mesh.fbx", physics.Vec3(0.1, 0.1, 0.6), physics.Vec3(4.427, 2.426, 12.935), 4)
+        mesh = Mesh(ModelShader("chaser_texture.jpg" if chaser else "runner_texture.jpg"), "chaser_mesh.fbx" if chaser else "runner_mesh.fbx", physics.Vec3(0.1, 0.1, 0.6), physics.Vec3(1, 1, 1), 4)
         entity.add_component(self.vehicle)
         entity.add_component(cam)
         entity.add_component(mesh)
