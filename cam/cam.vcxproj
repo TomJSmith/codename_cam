@@ -170,6 +170,7 @@ xcopy /S /Y /D "$(SolutionDir)cam\Audio" "$(TargetDir)\Audio\"
 xcopy /S /Y /D "$(SolutionDir)cam\Textures" "$(TargetDir)\Textures\"
 xcopy /S /Y /D "$(SolutionDir)cam\Models" "$(TargetDir)\Models\"
 xcopy /S /Y /D "$(SolutionDir)cam\Scripts" "$(TargetDir)\Scripts\"
+xcopy /S /Y /D "$(SolutionDir)cam\Fonts" "$(TargetDir)\Fonts\"
 xcopy /S /Y /D "$(SolutionDir)cam\Shaders" "$(TargetDir)\Shaders\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
