@@ -119,6 +119,7 @@ private:
 	int prevSoundChoice;
 	ALuint source;
 	int soundChoice;
+	int prevChoice;
 	std::function<void(Events::Sound)> handler_;
 };
 

@@ -104,11 +104,11 @@ void Audio::initAudio()
 
 
 
-	background.source = sourceSetup(background.source, 0.2f, glm::vec3(0.0f, 0.0f, 0.0f));
+	background.source = sourceSetup(background.source, 0.4f, glm::vec3(0.0f, 0.0f, 0.0f));
 	horn.source = sourceSetup(horn.source, 0.1f, glm::vec3(0.0f, 0.0f, 0.0f));
-	speedUp.source = sourceSetup(speedUp.source, 0.1f, glm::vec3(0.0f, 0.0f, 0.0f));
-	speedDown.source = sourceSetup(speedDown.source, 0.1f, glm::vec3(0.0f, 0.0f, 0.0f));
-	idle.source = sourceSetup(idle.source, 0.1f, glm::vec3(0.0f, 0.0f, 0.0f));
+	speedUp.source = sourceSetup(speedUp.source, 0.3f, glm::vec3(0.0f, 0.0f, 0.0f));
+	speedDown.source = sourceSetup(speedDown.source, 0.2f, glm::vec3(0.0f, 0.0f, 0.0f));
+	idle.source = sourceSetup(idle.source, 0.2f, glm::vec3(0.0f, 0.0f, 0.0f));
 
 
 	/*Buffer Generation this holds the raw audio stream*/
@@ -165,28 +165,28 @@ void Audio::initAudio()
 I think its to do with it constantly changing toPlay to one of the wav files need to find a better way to set toPlay to a wav file
 */
 
-void Audio::playAudio(int choice, ALuint source)
+void Audio::playAudio(int choice, ALuint source, int prevChoice)
 {
-	wavFile* toPlay;
+	wavFile toPlay;
 	//if(choice == 0)
 		//cout << "MY CHOICE: " << choice << endl;
 	
 	switch (choice)
 	{
 	case 5:
-		toPlay = &background;
+		toPlay = background;
 		break;
 	case 1:
-		toPlay = &idle;
+		toPlay = idle;
 		break;
 	case 2:
-		toPlay = &speedUp;
+		toPlay = speedUp;
 		break;
 	case 3:
-		toPlay = &speedDown;
+		toPlay = speedDown;
 		break;
 	case 4:
-		toPlay = &horn;
+		toPlay = horn;
 		break;
 	default:
 		cout << "Invalid song choice" << endl;
@@ -196,20 +196,23 @@ void Audio::playAudio(int choice, ALuint source)
 	//toPlay->source = source;
 	/*This just forces it to play one song until the song is finished*/
 	ALint source_state;
-
+	//cout << "Source: " << source << endl;
+	if (prevChoice != choice)
+		alSourceStop(source);
 	alGetSourcei(source, AL_SOURCE_STATE, &source_state);
 	checkError();
 	if (source_state == AL_PLAYING)
 	{
+
 		//cout << "PLAY AUDIO SOURCE:  " << source << " IS PLAYING" << endl;
 		return;
 	}
 	else
 	{
-		alBufferData(toPlay->buffer, toPlay->format, (ALvoid*)toPlay->songBuf, (ALsizei)toPlay->dataSize, (ALsizei)toPlay->sampleRate);
+		alBufferData(toPlay.buffer, toPlay.format, (ALvoid*)toPlay.songBuf, (ALsizei)toPlay.dataSize, (ALsizei)toPlay.sampleRate);
 		checkError();
 
-		alSourcei(source, AL_BUFFER, toPlay->buffer);
+		alSourcei(source, AL_BUFFER, toPlay.buffer);
 		checkError();
 		alSourcePlay(source);		
 	}
@@ -405,7 +408,8 @@ void Audio::playSounds(Entity &entity)
 	//ALuint source;
 	vector<int> choice;
 	vector<ALuint> sources;
-	Events::Sound e{sources, choice};
+	vector<int> prevChoices;
+	Events::Sound e{sources, choice, prevChoices};
 	
 	entity.BroadcastEvent(e);
 
@@ -413,7 +417,7 @@ void Audio::playSounds(Entity &entity)
 	{
 		e.sources[i] = sourceSetup(e.sources[i], 0.01f, vec3(0.0f, 0.0f, 0.0f));
 	//	alSourcePause(e.sources[i]);
-		playAudio(e.choice[i], e.sources[i]);	
+		playAudio(e.choice[i], e.sources[i], prevChoices[i]);	
 	}
 
 }

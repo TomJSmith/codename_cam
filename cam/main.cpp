@@ -64,7 +64,7 @@ int main() {
 			audio.playSounds(*root);
 			physics.Update(dt);
 
-			audio.playAudio(5, source);
+			audio.playAudio(5, source, 5);
 			Entity::DeleteDestroyed();
 
 			glfwPollEvents();

@@ -15,6 +15,7 @@ namespace Events {
 	struct Sound {
 		std::vector<ALuint> &sources;
 		std::vector<int> &choice;
+		std::vector<int> &pChoice;
 	};
 	struct Infected {
 		Entity* other;
