@@ -9,6 +9,8 @@ import sys
 import os
 import runner
 import random
+from entity import *
+from component import *
 
 # there might be a better way to do this... needed a_star in path but dont know where to tell Visual Studio that
 sys.path.insert(0, os.getcwd() + "\..\..\cam\Scripts")
@@ -26,7 +28,9 @@ class RunnerAi:
             (self.runner_e.transform().global_position().x, self.runner_e.transform().global_position().z))
 
     def infected(self, event):
-        event.getother().fire_event(RunnerDestroyed())
+        thisEvent = RunnerDestroyed()
+        thisEvent.other = self.entity
+        event.getother().fire_event(thisEvent)
         print("infected yo")
         self.entity.destroy()
 
@@ -35,6 +39,7 @@ class RunnerAi:
         self.started = True
 
     def start(self):
+        self.dead = False
         self.started = False
         self.controller = aicontroller.aiController(5)
         config = vehicle.Configuration()
@@ -85,7 +90,7 @@ class RunnerAi:
 
 
     def create_nav_mesh(self):
-        _navmesh = navmesh.NavMesh('nav_mesh.fbx', Vec3(1.0, 1.0, 1.0))
+        _navmesh = navmesh.NavMesh('nav_mesh.fbx', Vec3(2.0, 2.0, 2.0))
         graph = _navmesh.getSimpleGraph()
         map = {}
         for node in graph:
@@ -180,6 +185,7 @@ class RunnerAi:
     def update(self, dt):
         if not self.started:
             return
+
 
         myPos = (self.entity.transform().global_position().x, self.entity.transform().global_position().z)
         if self.frame_count % 30 == 0 or self.frame_count == -1:

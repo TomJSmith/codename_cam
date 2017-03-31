@@ -26,7 +26,7 @@ class ChaserAi:
 
     def runnerdestroyed(self, event):
         print("Removing runner")
-        self.remove_runner()
+        self.remove_runner(event.getother())
 
     def start_game(self, event):
         self.started = True
@@ -81,7 +81,7 @@ class ChaserAi:
 
     def create_nav_mesh(self):
     # global physics
-        _navmesh = navmesh.NavMesh('nav_mesh.fbx', Vec3(1.0, 1.0, 1.0))
+        _navmesh = navmesh.NavMesh('nav_mesh.fbx', Vec3(2.0, 2.0, 2.0))
         graph = _navmesh.getSimpleGraph()
         self.map = {}
         for node in graph:
@@ -126,16 +126,18 @@ class ChaserAi:
 
         return arrayVecs
 
-    def remove_runner(self):
-        self.runner_e.pop(self.targetRunner)
-        self.targetNodeXZ.pop(self.targetRunner)
-        self.runnerPos.pop(self.targetRunner)
+    def remove_runner(self, other):
+        for i in range(len(self.runner_e)):
+            if self.runner_e[i].id == other.id:
+                self.runner_e.pop(i)
+                self.targetNodeXZ.pop(i)
+                self.runnerPos.pop(i)
+                break
         self.targetRunner = self.closestRunner()
-        print("Destroyed runner " + str(self.targetRunner) + ", next closest target: "
-              + str(self.targetRunner) + ". Runners Left: " + str(len(self.runner_e)))
+        print("Infected runner. Runners Left: " + str(len(self.runner_e)))
 
 
-    def drive(self):
+    def drive(self): 
         # global _controller
         # global self.reachedGoal
         # global currentNodeIndex
