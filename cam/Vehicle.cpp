@@ -355,6 +355,7 @@ void Vehicle::Drive()
 	
 	controller_->UpdateState();
 	prevChoice = soundChoice;
+	soundPosition = entity_->GetTransform().position;
 	switch (controller_->getAcceleration())
 	{
 	case C_FAST:
@@ -470,6 +471,7 @@ void Vehicle::getSource(Events::Sound event)
 	event.sources.push_back(source);
 	event.choice.push_back(soundChoice);
 	event.pChoice.push_back(prevChoice);
+	event.soundPosition.push_back(soundPosition);
 }
 
 void Vehicle::RegisterHandlers()

@@ -104,11 +104,11 @@ void Audio::initAudio()
 
 
 
-	background.source = sourceSetup(background.source, 0.4f, glm::vec3(0.0f, 0.0f, 0.0f));
-	horn.source = sourceSetup(horn.source, 0.1f, glm::vec3(0.0f, 0.0f, 0.0f));
-	speedUp.source = sourceSetup(speedUp.source, 0.3f, glm::vec3(0.0f, 0.0f, 0.0f));
-	speedDown.source = sourceSetup(speedDown.source, 0.2f, glm::vec3(0.0f, 0.0f, 0.0f));
-	idle.source = sourceSetup(idle.source, 0.2f, glm::vec3(0.0f, 0.0f, 0.0f));
+	background.source = sourceSetup(background.source, 0.2f, glm::vec3(0.0f, 0.0f, 0.0f), false);
+	horn.source = sourceSetup(horn.source, 0.1f, glm::vec3(0.0f, 0.0f, 0.0f), false);
+	speedUp.source = sourceSetup(speedUp.source, 0.3f, glm::vec3(0.0f, 0.0f, 0.0f), false);
+	speedDown.source = sourceSetup(speedDown.source, 0.3f, glm::vec3(0.0f, 0.0f, 0.0f), false);
+	idle.source = sourceSetup(idle.source, 0.3f, glm::vec3(0.0f, 0.0f, 0.0f), false);
 
 
 	/*Buffer Generation this holds the raw audio stream*/
@@ -211,7 +211,8 @@ void Audio::playAudio(int choice, ALuint source, int prevChoice)
 	{
 		alBufferData(toPlay.buffer, toPlay.format, (ALvoid*)toPlay.songBuf, (ALsizei)toPlay.dataSize, (ALsizei)toPlay.sampleRate);
 		checkError();
-
+		alSourcei(source, AL_SOURCE_RELATIVE, TRUE);
+		
 		alSourcei(source, AL_BUFFER, toPlay.buffer);
 		checkError();
 		alSourcePlay(source);		
@@ -230,14 +231,30 @@ void Audio::cleanUpAudio(wavFile wav)
 	alcCloseDevice(Device);
 }
 /*Modify volume, pitch distance*/
-ALuint Audio::sourceSetup(ALuint source, float vol, glm::vec3 pos)
+ALuint Audio::sourceSetup(ALuint source, float vol, glm::vec3 pos, bool backSound)
 {
+	ALfloat x, y, z;
+	alGetListener3f(AL_POSITION, &x, &y, &z);
+	vec3 lisPos = vec3((float)x, (float)y, (float)z);
+	//float dist = glm::length(lisPos - pos);
+	//alSourcef(source, AL_REFERENCE_DISTANCE, 1.0f);
+	//alSourcef(source, AL_ROLLOFF_FACTOR, 1.0f);
+	//dist = fmax(dist, AL_REFERENCE_DISTANCE);
+//	dist = fmin(dist, AL_MAX_DISTANCE);
+
+	/*Either this or maybe i need to set the reference_dist to where the listener currenty is all the time*/
+	//ALfloat gain = AL_REFERENCE_DISTANCE / (AL_REFERENCE_DISTANCE + AL_ROLLOFF_FACTOR * (dist - AL_REFERENCE_DISTANCE));
+	//cout << "Gain: " << gain << endl;
+	if (!backSound)
+		alDistanceModel(AL_INVERSE_DISTANCE);
+	else
+		alDistanceModel(AL_NONE);
 
 	alSourcef(source, AL_PITCH, 1.0f);
 	checkError();
 
-	alSourcef(source, AL_GAIN, vol);
-	checkError();
+	//alSourcef(source, AL_GAIN, gain);
+	//checkError();
 
 	alSource3f(source, AL_POSITION, pos.x, pos.y, pos.z);
 	checkError();
@@ -409,14 +426,18 @@ void Audio::playSounds(Entity &entity)
 	vector<int> choice;
 	vector<ALuint> sources;
 	vector<int> prevChoices;
-	Events::Sound e{sources, choice, prevChoices};
+	vector<vec3> soundPos;
+	Events::Sound e{sources, choice, prevChoices, soundPos};
 	
 	entity.BroadcastEvent(e);
 
 	for (int i = 0; i < e.sources.size(); i++)
 	{
-		e.sources[i] = sourceSetup(e.sources[i], 0.01f, vec3(0.0f, 0.0f, 0.0f));
-	//	alSourcePause(e.sources[i]);
+		e.sources[i] = sourceSetup(e.sources[i], 0.01f, soundPos[i], false);
+		//alSourcei(e.sources[i], AL_SOURCE_RELATIVE, AL_TRUE);
+		//alSourcef(e.sources[i], AL_ROLLOFF_FACTOR, 0.0f);
+	//	alSourcePause(e.sources[i]); 
+		 
 		playAudio(e.choice[i], e.sources[i], prevChoices[i]);	
 	}
 

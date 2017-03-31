@@ -35,7 +35,7 @@ public:
 	void initAudio();
 	void playAudio(int choice, ALuint source, int prevChoice);
 	void cleanUpAudio(wavFile wav);
-	ALuint sourceSetup(ALuint source, float vol, glm::vec3 pos);
+	ALuint sourceSetup(ALuint source, float vol, glm::vec3 pos, bool backSound);
 	
 	void playSounds(Entity &entity);
 

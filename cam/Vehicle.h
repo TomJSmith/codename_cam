@@ -120,6 +120,7 @@ private:
 	ALuint source;
 	int soundChoice;
 	int prevChoice;
+	vec3 soundPosition;
 	std::function<void(Events::Sound)> handler_;
 };
 
