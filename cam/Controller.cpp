@@ -24,7 +24,10 @@ Controller::Controller(int currContIndex) {
 
 Controller::~Controller() {
 }
-
+int Controller::getPlayer()
+{
+	return i;
+}
 void Controller::UpdateState() {
 	//ZeroMemory(&state, sizeof(XINPUT_STATE));
 	XInputGetState(i, &state);

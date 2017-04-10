@@ -17,6 +17,7 @@ namespace Events {
 		std::vector<int> &choice;
 		std::vector<int> &pChoice;
 		std::vector<vec3> &soundPosition;
+		std::vector<bool> &isPlayer;
 	};
 	struct Infected {
 		Entity* other;

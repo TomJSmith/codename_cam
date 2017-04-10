@@ -25,7 +25,7 @@ public:
 	virtual bool getSelect();
 	virtual bool getSecondary();
 	virtual float getDirectional();
-
+	virtual int getPlayer();
 
 	
 

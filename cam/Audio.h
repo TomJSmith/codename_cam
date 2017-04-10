@@ -33,7 +33,7 @@ public:
 	Audio();
 	~Audio();
 	void initAudio();
-	void playAudio(int choice, ALuint source, int prevChoice);
+	void playAudio(int choice, ALuint source, int prevChoice, bool isPlayer, glm::vec3 soundPos);
 	void cleanUpAudio(wavFile wav);
 	ALuint sourceSetup(ALuint source, float vol, glm::vec3 pos, bool backSound);
 	
@@ -43,7 +43,8 @@ private:
 	void checkError();
 	char* Audio::findPathToFile();
 	void list_audio_devices(const ALCchar *devices);
-	
+	glm::vec3 prevLisPos;
+	bool first = true;
 	ALenum formatWav(wavFile wav);
 	wavFile openWavFile(string fileName, wavFile toPlay);
 	wavFile background;

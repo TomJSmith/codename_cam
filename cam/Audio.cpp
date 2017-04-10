@@ -165,7 +165,7 @@ void Audio::initAudio()
 I think its to do with it constantly changing toPlay to one of the wav files need to find a better way to set toPlay to a wav file
 */
 
-void Audio::playAudio(int choice, ALuint source, int prevChoice)
+void Audio::playAudio(int choice, ALuint source, int prevChoice, bool isPlayer, glm::vec3 soundPos)
 {
 	wavFile toPlay;
 	//if(choice == 0)
@@ -196,6 +196,11 @@ void Audio::playAudio(int choice, ALuint source, int prevChoice)
 	//toPlay->source = source;
 	/*This just forces it to play one song until the song is finished*/
 	ALint source_state;
+	if (isPlayer)
+	{	
+		alListener3f(AL_POSITION, soundPos.x, soundPos.y, soundPos.z);
+		checkError();
+	}
 	//cout << "Source: " << source << endl;
 	if (prevChoice != choice)
 		alSourceStop(source);
@@ -249,7 +254,9 @@ ALuint Audio::sourceSetup(ALuint source, float vol, glm::vec3 pos, bool backSoun
 		alDistanceModel(AL_INVERSE_DISTANCE);
 	else
 		alDistanceModel(AL_NONE);
-
+	float volAdj;
+	alGetSourcef(source, AL_GAIN, &volAdj);
+	alSourcef(source, AL_GAIN, volAdj + 0.01f);
 	alSourcef(source, AL_PITCH, 1.0f);
 	checkError();
 
@@ -427,18 +434,24 @@ void Audio::playSounds(Entity &entity)
 	vector<ALuint> sources;
 	vector<int> prevChoices;
 	vector<vec3> soundPos;
-	Events::Sound e{sources, choice, prevChoices, soundPos};
+	vector<bool> isPlayer;
+	Events::Sound e{sources, choice, prevChoices, soundPos, isPlayer};
 	
 	entity.BroadcastEvent(e);
-
+	int count = 1;
 	for (int i = 0; i < e.sources.size(); i++)
 	{
 		e.sources[i] = sourceSetup(e.sources[i], 0.01f, soundPos[i], false);
 		//alSourcei(e.sources[i], AL_SOURCE_RELATIVE, AL_TRUE);
 		//alSourcef(e.sources[i], AL_ROLLOFF_FACTOR, 0.0f);
 	//	alSourcePause(e.sources[i]); 
-		 
-		playAudio(e.choice[i], e.sources[i], prevChoices[i]);	
+		if (isPlayer[i])
+		{
+			cout << "Number of players"<< count << endl;
+			count++;
+		}
+		playAudio(e.choice[i], e.sources[i], prevChoices[i], isPlayer[i], soundPos[i]);	
+		
 	}
 
 }
