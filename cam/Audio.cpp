@@ -78,7 +78,8 @@ void Audio::initAudio()
 
 	alListener3f(AL_POSITION, 0, 0, 1.0f);
 	checkError();
-
+	alListenerf(AL_GAIN, 0.9f);
+	checkError();
 	alListener3f(AL_VELOCITY, 0, 0, 0);
 	checkError();
 
@@ -129,7 +130,7 @@ void Audio::initAudio()
 	checkError();
 
 
-	string backgroundLoc = Util::AudioDirectory + "Background.wav";
+	string backgroundLoc = Util::AudioDirectory + "backgroundMono.wav";
 	string hornLoc = Util::AudioDirectory + "Horn.wav";
 	string idleLoc = Util::AudioDirectory + "Idle.wav";
 	string speedUpLoc = Util::AudioDirectory + "SpeedingUp.wav";
@@ -165,7 +166,7 @@ void Audio::initAudio()
 I think its to do with it constantly changing toPlay to one of the wav files need to find a better way to set toPlay to a wav file
 */
 
-void Audio::playAudio(int choice, ALuint source, int prevChoice, bool isPlayer, glm::vec3 soundPos)
+void Audio::playAudio(int choice, ALuint source, int prevChoice, bool isPlayer, glm::vec3 soundPos, glm::vec3 forwardVec)
 {
 	wavFile toPlay;
 	//if(choice == 0)
@@ -198,6 +199,10 @@ void Audio::playAudio(int choice, ALuint source, int prevChoice, bool isPlayer, 
 	ALint source_state;
 	if (isPlayer)
 	{	
+		
+		forwardVec = forwardVec / glm::length(forwardVec);
+		ALfloat oriLis[] = {forwardVec.x, forwardVec.y, forwardVec.z, 0.0f, 1.0f, 0.0f};
+		alListenerfv(AL_ORIENTATION, oriLis);
 		alListener3f(AL_POSITION, soundPos.x, soundPos.y, soundPos.z);
 		checkError();
 	}
@@ -254,6 +259,7 @@ ALuint Audio::sourceSetup(ALuint source, float vol, glm::vec3 pos, bool backSoun
 		alDistanceModel(AL_INVERSE_DISTANCE);
 	else
 		alDistanceModel(AL_NONE);
+	
 	float volAdj;
 	alGetSourcef(source, AL_GAIN, &volAdj);
 	alSourcef(source, AL_GAIN, volAdj + 0.01f);
@@ -278,6 +284,8 @@ ALuint Audio::sourceSetup(ALuint source, float vol, glm::vec3 pos, bool backSoun
 ALenum Audio::formatWav(wavFile wav)
 {
 	ALenum format;
+	if (wav.channels == 2)
+		cout << "STEREO SOUNDS" << endl;
 	if (wav.bitsPerSample == 8)
 	{
 		if (wav.channels == 1)
@@ -435,7 +443,8 @@ void Audio::playSounds(Entity &entity)
 	vector<int> prevChoices;
 	vector<vec3> soundPos;
 	vector<bool> isPlayer;
-	Events::Sound e{sources, choice, prevChoices, soundPos, isPlayer};
+	vector<vec3> forwardVecs;
+	Events::Sound e{sources, choice, prevChoices, soundPos, isPlayer, forwardVecs};
 	
 	entity.BroadcastEvent(e);
 	int count = 1;
@@ -450,7 +459,7 @@ void Audio::playSounds(Entity &entity)
 			cout << "Number of players"<< count << endl;
 			count++;
 		}
-		playAudio(e.choice[i], e.sources[i], prevChoices[i], isPlayer[i], soundPos[i]);	
+		playAudio(e.choice[i], e.sources[i], prevChoices[i], isPlayer[i], soundPos[i], forwardVecs[i]);	
 		
 	}
 

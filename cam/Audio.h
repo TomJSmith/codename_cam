@@ -33,7 +33,7 @@ public:
 	Audio();
 	~Audio();
 	void initAudio();
-	void playAudio(int choice, ALuint source, int prevChoice, bool isPlayer, glm::vec3 soundPos);
+	void playAudio(int choice, ALuint source, int prevChoice, bool isPlayer, glm::vec3 soundPos, glm::vec3 forwardVec);
 	void cleanUpAudio(wavFile wav);
 	ALuint sourceSetup(ALuint source, float vol, glm::vec3 pos, bool backSound);
 	

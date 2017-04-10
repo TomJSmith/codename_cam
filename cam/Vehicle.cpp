@@ -477,6 +477,7 @@ void Vehicle::getSource(Events::Sound event)
 	event.pChoice.push_back(prevChoice);
 	event.soundPosition.push_back(soundPosition);
 	event.isPlayer.push_back(player);
+	event.forwardVecs.push_back(entity_->GetTransform().Forward());
 }
 
 void Vehicle::RegisterHandlers()
