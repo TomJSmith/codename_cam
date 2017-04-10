@@ -9,6 +9,7 @@ from start_game import *
 from entity import *
 from component import *
 from oil_slick import *
+from camera_control import *
 
 class VehicleScript:
     def start(self):
@@ -58,7 +59,7 @@ class VehicleScript:
 
         dims = physics.PxVec3(3, 1, 5)
 
-        c.position = physics.PxVec3(-20, 2, -90)
+        c.position = physics.PxVec3(-20, 5, -90)
         c.chassis_dimensions = dims
         c.steer_angle = math.pi * .10
         c.torque = 10000
@@ -72,11 +73,16 @@ class VehicleScript:
         c.chassis_offset = physics.PxVec3(0, -dims.y, 0)
 
         self.vehicle = vehicle.Vehicle(self.physics, self.controller, c)
-        cam = camera.Camera(self.vehicle)
+        # cam = camera.Camera(self.physics)
         mesh = Mesh(ModelShader("chaser_texture.jpg" if chaser else "runner_texture.jpg"), "chaser_mesh.fbx" if chaser else "runner_mesh.fbx", physics.Vec3(0.1, 0.1, 0.6), physics.Vec3(1, 1, 1), 4)
         entity.add_component(self.vehicle)
-        entity.add_component(cam)
+        # entity.add_component(cam)
         entity.add_component(mesh)
+
+        cam = Entity.create(self.entity.get_parent()).lock()
+        cam.global_position = self.entity.global_position + physics.Vec3(0.0, 10.0, -30)
+        cam.add_component(CameraControl(self.entity), self.physics)
+
         if chaser:
             entity.register_handler(RunnerDestroyed, self.runnerdestroyed)
         else:

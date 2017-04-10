@@ -108,7 +108,7 @@ mat4 Entity::GetGlobalTransform() const
 
 quaternion Entity::GetGlobalRotation() const
 {
-	quaternion ret(1.0f, vec3(0.0f, 0.0f, 0.0f));
+	quaternion ret;
 	auto e = this;
 
 	while (e) {
@@ -121,13 +121,23 @@ quaternion Entity::GetGlobalRotation() const
 
 vec3 Entity::GetGlobalPosition() const
 {
-	vec3 ret(0.0f, 0.0f, 0.0f);
-	auto e = this;
+	vec3 ret = transform_.position;
+	auto e = parent_;
 
 	while (e) {
-		ret = e->transform_.position + ret;
+		ret = e->transform_.position + e->transform_.rotation * ret;
 		e = e->parent_;
 	}
 
 	return ret;
+}
+
+void Entity::SetGlobalRotation(const quaternion &rot)
+{
+	transform_.rotation = (parent_ ? glm::inverse(parent_->GetGlobalRotation()) : quaternion()) * rot;
+}
+
+void Entity::SetGlobalPosition(const vec3 &pos)
+{
+	transform_.position = (parent_ ? -parent_->GetGlobalPosition() : vec3(0.0f, 0.0f, 0.0f)) + pos;
 }

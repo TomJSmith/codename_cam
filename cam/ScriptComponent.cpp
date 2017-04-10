@@ -36,6 +36,26 @@ float length(const vec3 &v) {
 	return glm::length(v);
 }
 
+vec3 normal(const vec3 &v) {
+	return glm::normalize(v);
+}
+
+std::shared_ptr<PxRaycastHit> Raycast(Physics &physics, vec3 origin, vec3 direction, float dist)
+{
+	std::shared_ptr<PxRaycastHit> ret;
+	PxRaycastBuffer hit;
+	if (physics.GetScene()->raycast(PxVec3(origin.x, origin.y, origin.z), PxVec3(direction.x, direction.y, direction.z), dist, hit, PxHitFlags(PxHitFlag::eDEFAULT), PxQueryFilterData(PxFilterData{ 0, 0, 0, Physics::DRIVABLE_SURFACE }, PxQueryFlag::eDYNAMIC | PxQueryFlag::eSTATIC))) {
+		if (hit.getNbTouches() > 0) {
+			ret.reset(new PxRaycastHit(hit.getTouch(0)));
+		}
+		else {
+			ret.reset(new PxRaycastHit(hit.block));
+		}
+	}
+
+	return ret;
+}
+
 BOOST_PYTHON_MODULE(physics) {
 	python::class_<PxVec3>("PxVec3")
 		.def(python::init<float, float, float>())
@@ -68,6 +88,7 @@ BOOST_PYTHON_MODULE(physics) {
 		.def(python::self *= float())
 		.def(python::self /= float())
 		.def("dot", &dot3)
+		.def("normal", &normal)
 		.staticmethod("dot");
 
 	python::class_<vec2>("Vec2")
@@ -90,8 +111,11 @@ BOOST_PYTHON_MODULE(physics) {
 		.staticmethod("dot");
 
 	python::class_<quaternion>("Quaternion")
+		.def(python::self * vec3())
 		.def("axis_angle", &glm::angleAxis<float, glm::defaultp>)
-		.staticmethod("axis_angle");
+		.staticmethod("axis_angle")
+		.def("look_at", &LookAt)
+		.staticmethod("look_at");
 
 	python::class_<PxQuat>("PxQuat")
 		.def(python::init<float, float, float, float>())
@@ -108,7 +132,11 @@ BOOST_PYTHON_MODULE(physics) {
 		.def("right", &Transform::Right)
 		.def("global_position", &Transform::GlobalPosition);
 
-	python::class_<Physics>("Physics");
+	python::class_<Physics>("Physics")
+		.def("raycast", &Raycast);
+
+	python::class_<PxRaycastHit, std::shared_ptr<PxRaycastHit>>("RaycastHit")
+		.add_property("position", &PxRaycastHit::position);
 }
 
 BOOST_PYTHON_MODULE(controller) {
@@ -282,6 +310,8 @@ BOOST_PYTHON_MODULE(entity) {
 		.def("register_handler", RegisterScriptEventHandler)
 		.def("destroy", &Entity::Destroy)
 		.def("transform", &Entity::GetTransform, python::return_internal_reference<>())
+		.add_property("global_rotation", &Entity::GetGlobalRotation, &Entity::SetGlobalRotation)
+		.add_property("global_position", &Entity::GetGlobalPosition, &Entity::SetGlobalPosition)
 		.def("create", &Create)
 		.staticmethod("create");
 
@@ -353,7 +383,7 @@ BOOST_PYTHON_MODULE(vehicle) {
 }
 
 BOOST_PYTHON_MODULE(camera) {
-	python::class_<Camera, std::shared_ptr<Camera>, python::bases<Component>>("Camera", python::init<std::shared_ptr<Vehicle>>());
+	python::class_<Camera, std::shared_ptr<Camera>, python::bases<Component>>("Camera", python::init<Physics &>());
 }
 
 ScriptComponent::~ScriptComponent()

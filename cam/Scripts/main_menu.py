@@ -8,6 +8,7 @@ import sys
 import os
 sys.path.insert(0, os.getcwd() + "\..\..\cam\Scripts")
 from runner_ai import *
+from camera_control import *
 
 def set_position(marker, item):
     marker.position = item.position + Vec2(-0.2, 0.0)
@@ -37,6 +38,10 @@ class MainMenu:
         vehicle = ScriptComponent("vehicle_script", self.physics)
         player.add_component(vehicle)
         player.add_component(ScriptComponent("powerup_manager", self.physics))
+
+        cam = Entity.create(e).lock()
+        cam.global_position = player.global_position + Vec3(0.0, 10.0, -30)
+        cam.add_component(CameraControl(player), self.physics)
 
         runner = Entity.create(e).lock()
         mesh = Mesh(ModelShader("runner_texture_green.jpg"), "runner_mesh.fbx", Vec3(1.0, 0.84, 0.0), Vec3(1, 1, 1), 4)

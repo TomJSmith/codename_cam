@@ -4,7 +4,7 @@
 
 Transform::Transform() :
 	position(0.0f, 0.0f, 0.0f),
-	rotation(1.0f, 0.0f, 0.0f, 0.0f),
+	rotation(),
 	scale(1.0f, 1.0f, 1.0f)
 {}
 
@@ -43,4 +43,22 @@ vec3 Transform::GlobalPosition() const
 {
 	vec3 ret = Matrix() * vec4(0.0f, 0.0f, 0.0f, 1.0f);
 	return ret;
+}
+
+quaternion LookAt(const vec3 &origin, const vec3 &target, const vec3 &up)
+{
+	//return quaternion(glm::lookAt(origin, target, up));
+	vec3 dir = glm::normalize(target - origin);
+	float dot = glm::dot(vec3(0, 0, 1), dir);
+
+	if (std::fabs(dot + 1.0f) < 0.0001f) {
+		return glm::angleAxis(3.14159f, glm::vec3(0, 1, 0));
+	}
+	else if (std::fabs(dot - 1.0f) < 0.0001f) {
+		return quaternion();
+	}
+
+	float angle = std::acosf(dot);
+	vec3 cross = glm::normalize(glm::cross(vec3(0, 0, 1), dir));
+	return glm::angleAxis(angle, cross);
 }

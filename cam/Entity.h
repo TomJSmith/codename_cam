@@ -67,6 +67,9 @@ class Entity {
 	quaternion GetGlobalRotation() const;
 	vec3 GetGlobalPosition() const;
 
+	void SetGlobalRotation(const quaternion &rot);
+	void SetGlobalPosition(const vec3 &pos);
+
 	template <class T>
 	void RegisterEventHandler(T handler)
 	{

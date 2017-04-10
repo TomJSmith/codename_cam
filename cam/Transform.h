@@ -28,3 +28,5 @@ public:
 	vec3 scale;
 };
 
+quaternion LookAt(const vec3 &origin, const vec3 &target, const vec3 &up);
+
