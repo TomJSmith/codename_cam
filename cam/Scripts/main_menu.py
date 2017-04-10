@@ -44,11 +44,8 @@ class MainMenu:
         cam.add_component(CameraControl(player), self.physics)
 
         runner = Entity.create(e).lock()
-        mesh = Mesh(ModelShader("runner_texture_green.jpg"), "runner_mesh.fbx", Vec3(1.0, 0.84, 0.0), Vec3(1, 1, 1), 4)
-        #ai = ScriptComponent("runner_ai", self.physics)
-        ai = RunnerAi(Vec3(10.0, 2.0, -100.0))
-        runner.add_component(mesh)
-        runner.add_component(ai, self.physics)
+        runner.add_component(Mesh(ModelShader("runner_texture_green.jpg"), "runner_mesh.fbx", Vec3(1.0, 0.84, 0.0), Vec3(1, 1, 1), 4))
+        runner.add_component(RunnerAi(Vec3(10.0, 2.0, -100.0)), self.physics)
 
         runner2 = Entity.create(e).lock()
         runner2.add_component(Mesh(ModelShader("runner_texture_green.jpg"), "runner_mesh.fbx", Vec3(1.0, 0.84, 0.0), Vec3(1, 1, 1), 4))
