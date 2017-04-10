@@ -79,9 +79,9 @@ class VehicleScript:
         # entity.add_component(cam)
         entity.add_component(mesh)
 
-        cam = Entity.create(self.entity.get_parent()).lock()
-        cam.global_position = self.entity.global_position + physics.Vec3(0.0, 10.0, -30)
-        cam.add_component(CameraControl(self.entity), self.physics)
+        # cam = Entity.create(self.entity.get_parent()).lock()
+        # cam.global_position = self.entity.global_position + physics.Vec3(0.0, 10.0, -30)
+        # cam.add_component(CameraControl(self.entity), self.physics)
 
         if chaser:
             entity.register_handler(RunnerDestroyed, self.runnerdestroyed)
