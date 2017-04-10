@@ -120,6 +120,7 @@ private:
 	ALuint source;
 	int soundChoice;
 	int prevChoice;
+	bool player = false;
 	vec3 soundPosition;
 	std::function<void(Events::Sound)> handler_;
 };

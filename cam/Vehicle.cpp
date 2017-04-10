@@ -328,6 +328,9 @@ Vehicle::Vehicle(Physics &physics, std::shared_ptr<Controller> controller, Confi
 	wheels->free();
 
 	alGenSources(1, &source); //sound stuff
+	
+	if (controller->getPlayer() == 0)
+		player = true;
 
 	physics_.RegisterVehicle(this);
 }
@@ -335,6 +338,7 @@ Vehicle::Vehicle(Physics &physics, std::shared_ptr<Controller> controller, Confi
 Vehicle::Vehicle(Physics &physics, std::shared_ptr<aiController> aicontroller, Configuration &config) :
 	Vehicle(physics, std::shared_ptr<Controller>(aicontroller), config)
 {
+	player = false;
 }
 
 Vehicle::~Vehicle()
@@ -472,6 +476,8 @@ void Vehicle::getSource(Events::Sound event)
 	event.choice.push_back(soundChoice);
 	event.pChoice.push_back(prevChoice);
 	event.soundPosition.push_back(soundPosition);
+	event.isPlayer.push_back(player);
+	event.forwardVecs.push_back(entity_->GetTransform().Forward());
 }
 
 void Vehicle::RegisterHandlers()
