@@ -138,7 +138,6 @@ class RunnerAi:
         return arrayVecs
 
     def drive(self):
-        # currTarget = Vec3(self.targetNodeXZ[0], 0, self.targetNodeXZ[1])
         if len(self.currentPath) > self.currentNodeIndex:
             currTarget = self.currentPath[self.currentNodeIndex]
         else:
@@ -157,6 +156,7 @@ class RunnerAi:
         right.y = 0
         forward.y = 0
         distanceToGoal = direction.length()
+
 
         direction.x = direction.x / direction.length()
         direction.y = direction.y / direction.length()

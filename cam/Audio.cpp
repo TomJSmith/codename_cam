@@ -456,7 +456,6 @@ void Audio::playSounds(Entity &entity)
 	//	alSourcePause(e.sources[i]); 
 		if (isPlayer[i])
 		{
-			cout << "Number of players"<< count << endl;
 			count++;
 		}
 		playAudio(e.choice[i], e.sources[i], prevChoices[i], isPlayer[i], soundPos[i], forwardVecs[i]);	
