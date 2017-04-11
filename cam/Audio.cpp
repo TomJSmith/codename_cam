@@ -190,7 +190,7 @@ void Audio::playAudio(int choice, ALuint source, int prevChoice, bool isPlayer, 
 		toPlay = horn;
 		break;
 	default:
-		cout << "Invalid song choice" << endl;
+		//cout << "Invalid song choice" << endl;
 		return;
 
 	}

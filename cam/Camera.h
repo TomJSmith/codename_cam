@@ -13,7 +13,7 @@ class RigidBody;
 class Camera : public Component
 {
 public:
-	Camera(std::shared_ptr<Vehicle> target);
+	Camera(Physics &physics);
 	~Camera();
 
 protected:
@@ -21,8 +21,12 @@ protected:
 
 private:
 	std::function<void(Events::Render)> handler_;
-	//Physics &physics_;
-	std::weak_ptr<Vehicle> target_;
-	//std::weak_ptr<Entity> child_;
+	Physics &physics_;
+
+	std::weak_ptr<Entity> target_;
+	std::weak_ptr<Entity> cam_;
+
+	PxRigidDynamic *camrb_;
+	PxRigidDynamic *targetrb_;
 };
 

@@ -1,4 +1,5 @@
 from physics import *
+from component import *
 from events import *
 import controller
 import aicontroller
@@ -12,23 +13,27 @@ import os
 sys.path.insert(0, os.getcwd() + "\\Scripts")
 from start_game import *
 from a_star import *
-
-v = None
-
+from vehicle_script import *
+from chaser import *
+import runner
 
 class ChaserAi:
-    def __init__(self, position, manager, start=False):
-        self.startingPosition = position
+    def __init__(self, manager, start=False):
         self.started = start
         self.manager = manager
+        self.controller = aicontroller.aiController(4)
 
     def start_game(self, event):
+        print "chaser started"
         self.started = True
 
     def runnerdestroyed(self, event):
+        print "runner destroyed"
         self.targetRunner = self.closestRunner()
 
     def start(self):
+        self.entity.add_component(Chaser(), self.physics)
+        self.startingPosition = self.entity.global_position
         self.reachedGoal = False
         self.backUp = False
 
@@ -44,30 +49,12 @@ class ChaserAi:
         self.stuck = False
         self.stuck_flag = False
 
-        self.controller = aicontroller.aiController(4)
-        config = vehicle.Configuration()
         self.map = self.create_nav_mesh()
         self.astar = A_star(self.map)
 
-        dims = PxVec3(3, 1, 5)
-        config.position = PxVec3(self.startingPosition.x, self.startingPosition.y, self.startingPosition.z)
-        config.rotation = PxQuat(0, 1, 0, 0)
-        config.chassis_dimensions = dims
-        config.steer_angle = math.pi * .18
-        config.torque = 10000
-        config.wheel_radius = 0.5
-        config.wheel_width = 0.4
-        config.wheel_mass = 10
-        config.omega = 100
-        config.chassis_mass = 1000
-        config.wheel_moi = 20
-        config.chassis_moi = PxVec3(config.chassis_mass, config.chassis_mass / 10, config.chassis_mass)
-        config.chassis_offset = PxVec3(0, -dims.y, 0)
-
-        self.vehicle = vehicle.Vehicle(self.physics, self.controller, config)
-        self.entity.add_component(self.vehicle)
+        self.entity.add_component(VehicleScript(self.startingPosition, self.controller), self.physics)
         self.entity.register_handler(GameStarted, self.start_game)
-        self.entity.register_handler(RunnerDestroyed, self.runnerdestroyed)
+        self.entity.register_handler(runner.RunnerDestroyed, self.runnerdestroyed)
         self.currentNodeXZ = self.astar.findCurrentNode(
             (self.entity.transform().global_position().x, self.entity.transform().global_position().z))
         self.manager.chaserXZ.append(self.currentNodeXZ)
@@ -75,7 +62,6 @@ class ChaserAi:
         self.manager.chaser_e.append(self.entity)
 
     def create_nav_mesh(self):
-    # global physics
         _navmesh = navmesh.NavMesh('nav_mesh.fbx', Vec3(2.0, 2.0, 2.0))
         graph = _navmesh.getSimpleGraph()
         self.map = {}
@@ -122,12 +108,6 @@ class ChaserAi:
         return arrayVecs
 
     def drive(self):
-        # global _controller
-        # global self.reachedGoal
-        # global currentNodeIndex
-        # global currentPath
-        # global self.frame_count
-
         if not self.reachedGoal:
             currTarget = self.currentPath[self.currentNodeIndex]
         else:
@@ -138,9 +118,6 @@ class ChaserAi:
         right = self.entity.transform().right()
         test = self.entity.transform().position
 
-        # print "Current Target X: ", currTarget.x
-        # print "Current Target Y: ", currTarget.y
-        # print "Current Target Z: ", currTarget.z
         test.y = 0
         direction.y = 0
         right.y = 0
@@ -176,8 +153,6 @@ class ChaserAi:
             self.controller.setReverse(1)
             self.controller.setAccel(1)
         else:
-            # print("Goal : " + str((currTarget.x, currTarget.z)))
-            # print("Chaser Position : " + str((self.entity().transform().global_position().x, self.entity().transform().global_position().z)))
             self.controller.setReverse(0)
             if self.reachedGoal or not self.astar.map[(currTarget.x, currTarget.z)].inNode((self.currPosition.x, self.currPosition.z)):
                 self.controller.setAccel(1)

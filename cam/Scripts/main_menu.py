@@ -3,16 +3,19 @@ from controller import *
 from physics import *
 from ui import *
 from entity import *
-
 import sys
 import os
 
 sys.path.insert(0, os.getcwd() + "\..\..\cam\Scripts")
+
+from chaser import *
+from runner import *
+from player import *
 from runner_ai import *
+from camera_control import *
 from chaser_ai import *
 from vehicle_script import *
 from ChaserManager import *
-
 
 def set_position(marker, item):
     marker.position = item.position + Vec2(-0.2, 0.0)
@@ -37,37 +40,27 @@ class MainMenu:
         manager_entity.add_component(manager, self.physics)
 
         ai = Entity.create(e).lock()
-        mesh = Mesh(ModelShader("chaser_texture.jpg"), "chaser_mesh.fbx", Vec3(1.0, 0.84, 0.0), Vec3(1, 1, 1), 4)
-        chaser = ScriptComponent("chaser", self.physics)
-        ai.add_component(mesh)
-        ai.add_component(ChaserAi(Vec3(10.0, 2.0, 10.0), manager), self.physics)
-        ai.add_component(chaser)
+        ai.global_position += Vec3(0.0, 2.0, 0.0)
+        ai.add_component(ChaserAi(manager), self.physics)
 
         player = Entity.create(e).lock()
-        player.add_component(VehicleScript(Vec3(-20.0, 2.0, -90.0), manager), self.physics)
-        player.add_component(ScriptComponent("powerup_manager", self.physics))
-		
-        
-        runner = Entity.create(e).lock()
+        player.add_component(Player(manager), self.physics)
 
-        runner.add_component(
-            Mesh(ModelShader("runner_texture_green.jpg"), "runner_mesh.fbx", Vec3(1.0, 0.84, 0.0), Vec3(1, 1, 1), 4))
-        runner.add_component(RunnerAi(Vec3(10.0, 2.0, -100.0), manager), self.physics)
+        runner = Entity.create(e).lock()
+        runner.global_position = Vec3(10.0, 2.0, -100.0)
+        runner.add_component(RunnerAi(manager), self.physics)
 
         runner2 = Entity.create(e).lock()
-        runner2.add_component(
-            Mesh(ModelShader("runner_texture_green.jpg"), "runner_mesh.fbx", Vec3(1.0, 0.84, 0.0), Vec3(1, 1, 1), 4))
-        runner2.add_component(RunnerAi(Vec3(-5.0, 2.0, 100.0), manager), self.physics)
+        runner2.global_position = Vec3(-5.0, 2.0, 100.0)
+        runner2.add_component(RunnerAi(manager), self.physics)
 
         runner3 = Entity.create(e).lock()
-        runner3.add_component(
-            Mesh(ModelShader("runner_texture_green.jpg"), "runner_mesh.fbx", Vec3(1.0, 0.84, 0.0), Vec3(1, 1, 1), 4))
-        runner3.add_component(RunnerAi(Vec3(90.0, 2.0, -10.0), manager), self.physics)
+        runner3.global_position = Vec3(90.0, 2.0, -10.0)
+        runner3.add_component(RunnerAi(manager), self.physics)
 
         runner4 = Entity.create(e).lock()
-        runner4.add_component(
-            Mesh(ModelShader("runner_texture_green.jpg"), "runner_mesh.fbx", Vec3(1.0, 0.84, 0.0), Vec3(1, 1, 1), 4))
-        runner4.add_component(RunnerAi(Vec3(0.0, 2.0, -90.0), manager), self.physics)
+        runner4.global_position = Vec3(0.0, 2.0, -90.0)
+        runner4.add_component(RunnerAi(manager), self.physics)
 
         o = Entity.create(e).lock()
         o.transform().position = Vec3(0.0, 0.0, 60)

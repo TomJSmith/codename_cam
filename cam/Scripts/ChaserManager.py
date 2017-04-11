@@ -3,6 +3,7 @@ import sys
 import os
 from physics import *
 from events import *
+import runner
 
 sys.path.insert(0, os.getcwd() + "\\Scripts")
 from a_star import *
@@ -19,30 +20,30 @@ class ChaserManager:
         self.frame_count = -1
 
     def start(self):
-        self.entity.register_runnercreated_handler(self.runnercreated)
-        self.entity.register_handler(RunnerDestroyed, self.runnerdestroyed)
+        self.entity.register_handler(runner.RunnerCreated, self.runnercreated)
+        self.entity.register_handler(runner.RunnerDestroyed, self.runnerdestroyed)
 
     def runnerdestroyed(self, event):
         print("Removing runner")
-        self.remove_runner(event.getother())
-        event.getother().fire_event(Revived())
+        self.remove_runner(event.runner)
+        event.runner.fire_event(Revived())
 
     def remove_runner(self, other):
         for i in range(len(self.runner_e)):
             if self.runner_e[i].id == other.id:
+                print("Infected runner. Runners Left: " + str(len(self.runner_e) - 1))
                 self.runner_e.pop(i)
                 self.runnerXZ.pop(i)
                 self.runnerPos.pop(i)
                 break
 
-        print("Infected runner. Runners Left: " + str(len(self.runner_e)))
 
     def runnercreated(self, event):
         self.runner_e.append(event.get_runner())
         self.runnerXZ.append(self.astar.findCurrentNode(
             (event.get_runner().transform().global_position().x, event.get_runner().transform().global_position().z)))
         self.runnerPos.append(
-            (event.get_runner().transform().global_position().x, event.get_runner().transform().global_position().z))
+            (event.runner.global_position.x, event.runner.global_position.z))
 
 
     def create_nav_mesh(self):

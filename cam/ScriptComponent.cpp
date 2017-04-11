@@ -36,6 +36,26 @@ float length(const vec3 &v) {
 	return glm::length(v);
 }
 
+vec3 normal(const vec3 &v) {
+	return glm::normalize(v);
+}
+
+std::shared_ptr<PxRaycastHit> Raycast(Physics &physics, vec3 origin, vec3 direction, float dist)
+{
+	std::shared_ptr<PxRaycastHit> ret;
+	PxRaycastBuffer hit;
+	if (physics.GetScene()->raycast(PxVec3(origin.x, origin.y, origin.z), PxVec3(direction.x, direction.y, direction.z), dist, hit, PxHitFlags(PxHitFlag::eDEFAULT), PxQueryFilterData(PxFilterData{ 0, 0, 0, Physics::DRIVABLE_SURFACE }, PxQueryFlag::eDYNAMIC | PxQueryFlag::eSTATIC))) {
+		if (hit.getNbTouches() > 0) {
+			ret.reset(new PxRaycastHit(hit.getTouch(0)));
+		}
+		else {
+			ret.reset(new PxRaycastHit(hit.block));
+		}
+	}
+
+	return ret;
+}
+
 BOOST_PYTHON_MODULE(physics) {
 	python::class_<PxVec3>("PxVec3")
 		.def(python::init<float, float, float>())
@@ -68,6 +88,7 @@ BOOST_PYTHON_MODULE(physics) {
 		.def(python::self *= float())
 		.def(python::self /= float())
 		.def("dot", &dot3)
+		.def("normal", &normal)
 		.staticmethod("dot");
 
 	python::class_<vec2>("Vec2")
@@ -90,8 +111,11 @@ BOOST_PYTHON_MODULE(physics) {
 		.staticmethod("dot");
 
 	python::class_<quaternion>("Quaternion")
+		.def(python::self * vec3())
 		.def("axis_angle", &glm::angleAxis<float, glm::defaultp>)
-		.staticmethod("axis_angle");
+		.staticmethod("axis_angle")
+		.def("look_at", &LookAt)
+		.staticmethod("look_at");
 
 	python::class_<PxQuat>("PxQuat")
 		.def(python::init<float, float, float, float>())
@@ -108,7 +132,11 @@ BOOST_PYTHON_MODULE(physics) {
 		.def("right", &Transform::Right)
 		.def("global_position", &Transform::GlobalPosition);
 
-	python::class_<Physics>("Physics");
+	python::class_<Physics>("Physics")
+		.def("raycast", &Raycast);
+
+	python::class_<PxRaycastHit, std::shared_ptr<PxRaycastHit>>("RaycastHit")
+		.add_property("position", &PxRaycastHit::position);
 }
 
 BOOST_PYTHON_MODULE(controller) {
@@ -129,9 +157,9 @@ BOOST_PYTHON_MODULE(aicontroller) {
 		.def("setAccel", &aiController::setAccel);
 }
 
-BOOST_PYTHON_MODULE(runner) {
-	python::class_<Runner, std::shared_ptr<Runner>>("Runner", python::init<>());
-}
+//BOOST_PYTHON_MODULE(runner) {
+	////python::class_<Runner, std::shared_ptr<Runner>>("Runner", python::init<>());
+//}
 
 
 BOOST_PYTHON_MODULE(navmesh) {
@@ -157,12 +185,12 @@ BOOST_PYTHON_MODULE(ui) {
 // This makes sure Python doesn't try to delete the object on us after the script is
 // done with it.
 template <class T>
-void AddComponent(Entity &e, std::shared_ptr<T> c) {
-	e.AddComponent(std::shared_ptr<Component>(c));
+std::weak_ptr<Component> AddComponent(Entity &e, std::shared_ptr<T> c) {
+	return e.AddComponent(std::shared_ptr<Component>(c));
 }
 
-void AddScriptComponent(Entity &e, boost::python::object component, Physics &physics) {
-	e.AddComponent(std::make_shared<ScriptComponent>(component, physics));
+std::weak_ptr<Component> AddScriptComponent(Entity &e, boost::python::object component, Physics &physics) {
+	return e.AddComponent(std::make_shared<ScriptComponent>(component, physics));
 }
 
 // For this, we just need a template so we can pass a Python function (as python::object)
@@ -214,8 +242,8 @@ void FireScriptEvent(Entity &e, python::object event) {
 }
 
 BOOST_PYTHON_MODULE(events) {
-	python::class_<Events::RunnerCreated>("RunnerCreated")
-		.def("get_runner", &Events::RunnerCreated::GetRunner, python::return_internal_reference<>());
+	//python::class_<Events::RunnerCreated>("RunnerCreated")
+	//	.def("get_runner", &Events::RunnerCreated::GetRunner, python::return_internal_reference<>());
 	python::class_<Events::Infected>("Infected")
 		.def_readwrite("other", &Events::Infected::other)
 		.def("getother", &Events::Infected::GetOther, python::return_internal_reference<>());
@@ -227,9 +255,9 @@ BOOST_PYTHON_MODULE(events) {
 		.def("entity", &Events::TriggerEnter::GetEntity, python::return_internal_reference<>());
 	python::class_<Events::TriggerExit>("TriggerExit")
 		.def("entity", &Events::TriggerExit::GetEntity, python::return_internal_reference<>());
-	python::class_<Events::RunnerDestroyed>("RunnerDestroyed")
-		.def_readwrite("other", &Events::RunnerDestroyed::other)
-		.def("getother", &Events::RunnerDestroyed::GetOther, python::return_internal_reference<>());
+	//python::class_<Events::RunnerDestroyed>("RunnerDestroyed")
+	//	.def_readwrite("other", &Events::RunnerDestroyed::other)
+	//	.def("getother", &Events::RunnerDestroyed::GetOther, python::return_internal_reference<>());
 	python::class_<Events::Revived>("Revived");
 
 }
@@ -246,7 +274,7 @@ BOOST_PYTHON_MODULE(entity) {
 		.def("get_parent", &Entity::GetParent, python::return_internal_reference<>())
 		.def("add_component", AddComponent<Vehicle>)
 		.def("add_component", AddComponent<Camera>)
-		.def("add_component", AddComponent<Runner>)
+		//.def("add_component", AddComponent<Runner>)
 		.def("add_component", AddComponent<Image>)
 		.def("add_component", AddComponent<Mesh>)
 		.def("add_component", AddComponent<RigidBody>)
@@ -257,44 +285,49 @@ BOOST_PYTHON_MODULE(entity) {
 		.def("fire_event", &Entity::FireEvent<Events::Infected>)
 		.def("fire_event", &Entity::FireEvent<Events::Destroyed>)
 		.def("fire_event", &Entity::FireEvent<Events::Collided>)
-		.def("fire_event", &Entity::FireEvent<Events::RunnerDestroyed>)
-		.def("fire_event", &Entity::FireEvent<Events::RunnerCreated>)
+		//.def("fire_event", &Entity::FireEvent<Events::RunnerDestroyed>)
+		//.def("fire_event", &Entity::FireEvent<Events::RunnerCreated>)
 		.def("fire_event", &Entity::FireEvent<Events::TriggerEnter>)
 		.def("fire_event", &Entity::FireEvent<Events::TriggerExit>)
 		.def("fire_event", &Entity::FireEvent<Events::Revived>)
 //		.def("fire_event", &Entity::FireEvent<Events::StartGame>)
 		.def("fire_event", FireScriptEvent)
-		.def("broadcast_event", &Entity::BroadcastEvent<Events::RunnerCreated>)
+		//.def("broadcast_event", &Entity::BroadcastEvent<Events::RunnerCreated>)
 		.def("broadcast_event", &Entity::BroadcastEvent<Events::Infected>)
 		.def("broadcast_event", &Entity::BroadcastEvent<Events::Destroyed>)
 		.def("broadcast_event", &Entity::BroadcastEvent<Events::Collided>)
 		.def("broadcast_event", &Entity::BroadcastEvent<Events::TriggerEnter>)
 		.def("broadcast_event", &Entity::BroadcastEvent<Events::TriggerExit>)
-		.def("broadcast_event", &Entity::BroadcastEvent<Events::RunnerDestroyed>)
+		//.def("broadcast_event", &Entity::BroadcastEvent<Events::RunnerDestroyed>)
 		.def("broadcast_event", &Entity::BroadcastEvent<Events::Revived>)
 //		.def("broadcast_event", &Entity::BroadcastEvent<Events::StartGame>)
 		.def("broadcast_event", BroadcastScriptEvent)
-		.def("register_runnercreated_handler", RegisterEventHandler<Events::RunnerCreated>)
+		//.def("register_runnercreated_handler", RegisterEventHandler<Events::RunnerCreated>)
 		.def("register_infected_handler", RegisterEventHandler<Events::Infected>)
 		.def("register_destroyed_handler", RegisterEventHandler<Events::Destroyed>)
 		.def("register_collided_handler", RegisterEventHandler<Events::Collided>)
 		.def("register_triggerenter_handler", RegisterEventHandler<Events::TriggerEnter>)
 		.def("register_triggerexit_handler", RegisterEventHandler<Events::TriggerExit>)
-		.def("register_runnerdestroyed_handler", RegisterEventHandler<Events::RunnerDestroyed>)
-		.def("register_runnerdestroyed_handler", RegisterEventHandler<Events::Revived>)
+		//.def("register_runnerdestroyed_handler", RegisterEventHandler<Events::RunnerDestroyed>)
+		//.def("register_runnerdestroyed_handler", RegisterEventHandler<Events::Revived>)
 //		.def("register_start_game_handler", RegisterEventHandler<Events::StartGame>)
 		.def("register_handler", RegisterScriptEventHandler)
 		.def("destroy", &Entity::Destroy)
 		.def("transform", &Entity::GetTransform, python::return_internal_reference<>())
+		.add_property("global_rotation", &Entity::GetGlobalRotation, &Entity::SetGlobalRotation)
+		.add_property("global_position", &Entity::GetGlobalPosition, &Entity::SetGlobalPosition)
 		.def("create", &Create)
 		.staticmethod("create");
 
 	python::class_<std::weak_ptr<Entity>>("EntityPtr")
 		.def("lock", &std::weak_ptr<Entity>::lock);
+
+	python::class_<std::weak_ptr<Component>>("ComponentPtr")
+		.def("lock", &std::weak_ptr<Component>::lock);
 }
 
 BOOST_PYTHON_MODULE(component) {
-	python::class_<Component>("Component");
+	python::class_<Component, std::shared_ptr<Component>>("Component");
 
 	python::class_<ModelShader, std::shared_ptr<ModelShader>>("ModelShader")
 		.def(python::init<const char *>());
@@ -357,7 +390,7 @@ BOOST_PYTHON_MODULE(vehicle) {
 }
 
 BOOST_PYTHON_MODULE(camera) {
-	python::class_<Camera, std::shared_ptr<Camera>, python::bases<Component>>("Camera", python::init<std::shared_ptr<Vehicle>>());
+	python::class_<Camera, std::shared_ptr<Camera>, python::bases<Component>>("Camera", python::init<Physics &>());
 }
 
 ScriptComponent::~ScriptComponent()
@@ -374,6 +407,10 @@ void ScriptComponent::RegisterHandlers()
 void ScriptComponent::Update(seconds dt)
 {
 	Call("update", dt.count());
+}
+
+void ScriptComponent::Destroy()
+{
 }
 
 void ScriptComponent::InitPython()
@@ -394,7 +431,7 @@ void ScriptComponent::InitPython()
 			initevents();
 			initcamera();
 			initnavmesh();
-			initrunner();
+			//initrunner();
 			initui();
 
 			initialized = true;
@@ -441,12 +478,12 @@ namespace boost {
 		return c;
 	}
 
-	template <>
-	Runner const volatile * get_pointer<class Runner const volatile>(
-		class Runner const volatile *c
-		) {
-		return c;
-	}
+	//template <>
+	//Runner const volatile * get_pointer<class Runner const volatile>(
+	//	class Runner const volatile *c
+	//	) {
+	//	return c;
+	//}
 
 	template <>
 	ScriptComponent const volatile * get_pointer<class ScriptComponent const volatile>(

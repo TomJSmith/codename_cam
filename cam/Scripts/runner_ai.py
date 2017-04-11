@@ -11,51 +11,28 @@ import runner
 import random
 from entity import *
 from component import *
-from chaser_ai import *
 
 # there might be a better way to do this... needed a_star in path but dont know where to tell Visual Studio that
 sys.path.insert(0, os.getcwd() + "\..\..\cam\Scripts")
 import positionSetter
+from chaser_ai import *
 from a_star import *
 from start_game import *
+from runner import *
+from chaser import *
 
 class RunnerAi:
-    def __init__(self, position, manager):
-        self.startingPosition = position
+    def __init__(self, manager):
         self.manager = manager
-
-    def infected(self, event):
-        thisEvent = RunnerDestroyed()
-        thisEvent.other = self.entity
-        print("infected AI")
-        e = self.entity
-        while e.get_parent():
-            e = e.get_parent()
-        e.broadcast_event(thisEvent)
-
-    def revived(self, event):
-        e = self.entity
-        while e.get_parent():
-            e = e.get_parent()
-
-        self.entity.destroy()
-        ai = Entity.create(e).lock()
-        mesh = Mesh(ModelShader("chaser_texture.jpg"), "chaser_mesh.fbx", Vec3(1.0, 0.84, 0.0), Vec3(1, 1, 1), 4)
-        chaser = ScriptComponent("chaser", self.physics)
-        ai.add_component(mesh)
-        ai.add_component(ChaserAi(Vec3(self.entity.transform().global_position().x, 20.0, self.entity.transform().global_position().z), self.manager, start=True), self.physics)
-        ai.add_component(chaser)
-
-
+        self.controller = aicontroller.aiController(5)
 
     def start_game(self, event):
         self.started = True
 
     def start(self):
+        self.startingPosition = self.entity.global_position
         self.dead = False
         self.started = False
-        self.controller = aicontroller.aiController(5)
-        config = vehicle.Configuration()
         self.map = self.create_nav_mesh()
         self.astar = A_star(self.map)
         self.count = 0
@@ -75,28 +52,10 @@ class RunnerAi:
         self.closeNodeTarget = None
         self.currentNodeIndex = 0
 
-        dims = PxVec3(3, 1, 5)
-        config.position = PxVec3(self.startingPosition.x, self.startingPosition.y, self.startingPosition.z)
-        config.rotation = PxQuat(0, 1, 0, 0)
-        config.chassis_dimensions = dims
-        config.steer_angle = math.pi * .12
-        config.torque = 10000
-        config.wheel_radius = 0.5
-        config.wheel_width = 0.4
-        config.wheel_mass = 10
-        config.omega = 100
-        config.chassis_mass = 1000
-        config.wheel_moi = 20
-        config.chassis_moi = PxVec3(config.chassis_mass, config.chassis_mass / 10, config.chassis_mass)
-        config.chassis_offset = PxVec3(0, -dims.y, 0)
+        self.entity.add_component(Runner(self.manager, self.controller), self.physics)
 
-        self.vehicle = vehicle.Vehicle(self.physics, self.controller, config)
-        r = runner.Runner()
-        self.entity.add_component(self.vehicle)
-        self.entity.add_component(r)
-        self.entity.register_handler(Infected, self.infected)
+        self.vehicle = self.entity.add_component(VehicleScript(self.startingPosition, self.controller), self.physics)
         self.entity.register_handler(GameStarted, self.start_game)
-        self.entity.register_handler(Revived, self.revived)
 
         self.currentNodeXZ = self.astar.findCurrentNode(
             (self.entity.transform().global_position().x, self.entity.transform().global_position().z))
@@ -148,9 +107,6 @@ class RunnerAi:
         right = self.entity.transform().right()
         test = self.entity.transform().position
 
-        # print "Current Target X: ", currTarget.x
-        # print "Current Target Y: ", currTarget.y
-        # print "Current Target Z: ", currTarget.z
         test.y = 0
         direction.y = 0
         right.y = 0
@@ -183,8 +139,6 @@ class RunnerAi:
             self.controller.setAccel(1)
 
         else:
-            #print("Goal : " + str((currTarget.x, currTarget.z)))
-            #print("Chaser Position : " + str((self.entity().transform().global_position().x, self.entity().transform().global_position().z)))
             self.controller.setReverse(0)
             if self.astar.map[(currTarget.x, currTarget.z)].inNode((self.currPosition.x, self.currPosition.z)):
                 if (self.currentNodeIndex+1) >= len(self.currentPath):

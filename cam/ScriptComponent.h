@@ -51,6 +51,7 @@ class ScriptComponent : public Component {
 	~ScriptComponent();
 
 	virtual void Update(seconds dt) override;
+	virtual void Destroy() override;
 
 	Physics &GetPhysics() const { return physics_; }
 
