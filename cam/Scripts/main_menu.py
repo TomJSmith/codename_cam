@@ -6,12 +6,17 @@ from entity import *
 
 import sys
 import os
+
 sys.path.insert(0, os.getcwd() + "\..\..\cam\Scripts")
 from runner_ai import *
 from camera_control import *
+from chaser_ai import *
+from vehicle_script import *
+from ChaserManager import *
 
 def set_position(marker, item):
     marker.position = item.position + Vec2(-0.2, 0.0)
+
 
 class MainMenu:
     def start_game(self):
@@ -21,22 +26,25 @@ class MainMenu:
             e = e.get_parent()
 
         level = Entity.create(e).lock()
-        mesh = Mesh(ModelShader("map_texture.jpg"), "map_mesh.fbx", Vec3(0.2, 0.4, 0.2), Vec3(2.0, 2.0, 2.0), 4) # TODO hacky hacky hardcoded opengl constant, 4 is GL_TRIANGLES
+        mesh = Mesh(ModelShader("map_texture.jpg"), "map_mesh.fbx", Vec3(0.2, 0.4, 0.2), Vec3(2.0, 2.0, 2.0),
+                    4)  # TODO hacky hacky hardcoded opengl constant, 4 is GL_TRIANGLES
         body = RigidBody(self.physics, "map_mesh.fbx", 2.0, False)
         level.add_component(mesh)
         level.add_component(body)
 
+        manager_entity = Entity.create(e).lock()
+        manager = ChaserManager()
+        manager_entity.add_component(manager, self.physics)
+
         ai = Entity.create(e).lock()
         mesh = Mesh(ModelShader("chaser_texture.jpg"), "chaser_mesh.fbx", Vec3(1.0, 0.84, 0.0), Vec3(1, 1, 1), 4)
-        vehicle = ScriptComponent("chaser_ai", self.physics)
         chaser = ScriptComponent("chaser", self.physics)
         ai.add_component(mesh)
-        ai.add_component(vehicle)
+        ai.add_component(ChaserAi(Vec3(10.0, 2.0, 10.0), manager), self.physics)
         ai.add_component(chaser)
 
         player = Entity.create(e).lock()
-        vehicle = ScriptComponent("vehicle_script", self.physics)
-        player.add_component(vehicle)
+        player.add_component(VehicleScript(Vec3(-20.0, 2.0, -90.0), manager), self.physics)
         player.add_component(ScriptComponent("powerup_manager", self.physics))
 
         cam = Entity.create(e).lock()
@@ -44,20 +52,24 @@ class MainMenu:
         cam.add_component(CameraControl(player), self.physics)
 
         runner = Entity.create(e).lock()
-        runner.add_component(Mesh(ModelShader("runner_texture_green.jpg"), "runner_mesh.fbx", Vec3(1.0, 0.84, 0.0), Vec3(1, 1, 1), 4))
-        runner.add_component(RunnerAi(Vec3(10.0, 2.0, -100.0)), self.physics)
+        runner.add_component(
+            Mesh(ModelShader("runner_texture_green.jpg"), "runner_mesh.fbx", Vec3(1.0, 0.84, 0.0), Vec3(1, 1, 1), 4))
+        runner.add_component(RunnerAi(Vec3(10.0, 2.0, -100.0), manager), self.physics)
 
         runner2 = Entity.create(e).lock()
-        runner2.add_component(Mesh(ModelShader("runner_texture_green.jpg"), "runner_mesh.fbx", Vec3(1.0, 0.84, 0.0), Vec3(1, 1, 1), 4))
-        runner2.add_component(RunnerAi(Vec3(-5.0, 0.0, 100.0)), self.physics)
+        runner2.add_component(
+            Mesh(ModelShader("runner_texture_green.jpg"), "runner_mesh.fbx", Vec3(1.0, 0.84, 0.0), Vec3(1, 1, 1), 4))
+        runner2.add_component(RunnerAi(Vec3(-5.0, 2.0, 100.0), manager), self.physics)
 
         runner3 = Entity.create(e).lock()
-        runner3.add_component(Mesh(ModelShader("runner_texture_green.jpg"), "runner_mesh.fbx", Vec3(1.0, 0.84, 0.0), Vec3(1, 1, 1), 4))
-        runner3.add_component(RunnerAi(Vec3(90.0, 2.0, -10.0)), self.physics)
+        runner3.add_component(
+            Mesh(ModelShader("runner_texture_green.jpg"), "runner_mesh.fbx", Vec3(1.0, 0.84, 0.0), Vec3(1, 1, 1), 4))
+        runner3.add_component(RunnerAi(Vec3(90.0, 2.0, -10.0), manager), self.physics)
 
         runner4 = Entity.create(e).lock()
-        runner4.add_component(Mesh(ModelShader("runner_texture_green.jpg"), "runner_mesh.fbx", Vec3(1.0, 0.84, 0.0), Vec3(1, 1, 1), 4))
-        runner4.add_component(RunnerAi(Vec3(0.0, 2.0, -90.0)), self.physics)
+        runner4.add_component(
+            Mesh(ModelShader("runner_texture_green.jpg"), "runner_mesh.fbx", Vec3(1.0, 0.84, 0.0), Vec3(1, 1, 1), 4))
+        runner4.add_component(RunnerAi(Vec3(0.0, 2.0, -90.0), manager), self.physics)
 
         o = Entity.create(e).lock()
         o.transform().position = Vec3(0.0, 0.0, 60)
@@ -84,7 +96,7 @@ class MainMenu:
 
     def update(self, dt):
         self.control.update()
-        if self.control.direction == 7: # down - probably shouldn't hardcode these...
+        if self.control.direction == 7:  # down - probably shouldn't hardcode these...
             if self.selected != self.quitgame:
                 self.selected = self.quitgame
                 set_position(self.marker, self.quitgame)

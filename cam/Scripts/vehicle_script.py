@@ -12,9 +12,13 @@ from oil_slick import *
 from camera_control import *
 
 class VehicleScript:
+    def __init__(self, position, manager):
+        self.startingPosition = position
+        self.manager = manager
+
     def start(self):
         self.controller = controller.Controller(0)
-        self.create_vehicle(self.entity)
+        self.create_vehicle(self.entity, self.startingPosition)
         self.dead = False
         self.killed_by = None
         self.vehicle.set_active(False)
@@ -45,21 +49,19 @@ class VehicleScript:
 
         self.entity.destroy()
         e = Entity.create(e).lock()
-        self.create_vehicle(e, True)
-        chaser = ScriptComponent("chaser", self.physics)
-        e.add_component(chaser)
+        self.create_vehicle(e, Vec3(self.entity.transform().global_position().x, 15.0, self.entity.transform().global_position().z), True)
 
     def runnerdestroyed(self, event):
         thisEvent = RunnerDestroyed()
         thisEvent.other = event.getother()
         self.killed_by.fire_event(thisEvent)
 
-    def create_vehicle(self, entity, chaser = False):
+    def create_vehicle(self, entity, position, chaser = False):
         c = vehicle.Configuration()
 
         dims = physics.PxVec3(3, 1, 5)
 
-        c.position = physics.PxVec3(-20, 5, -90)
+        c.position = physics.PxVec3(position.x, position.y, position.z)
         c.chassis_dimensions = dims
         c.steer_angle = math.pi * .10
         c.torque = 10000
@@ -85,6 +87,8 @@ class VehicleScript:
 
         if chaser:
             entity.register_handler(RunnerDestroyed, self.runnerdestroyed)
+            chaser = ScriptComponent("chaser", self.physics)
+            entity.add_component(chaser)
         else:
             r = runner.Runner()
             entity.add_component(r)
