@@ -23,36 +23,8 @@ from chaser import *
 
 class RunnerAi:
     def __init__(self, manager):
-        # self.startingPosition = position
         self.manager = manager
         self.controller = aicontroller.aiController(5)
-
-    def infected(self, event):
-        thisEvent = RunnerDestroyed()
-        thisEvent.other = self.entity
-        print("infected AI")
-        e = self.entity
-        while e.get_parent():
-            e = e.get_parent()
-        e.broadcast_event(thisEvent)
-
-    def revived(self, event):
-        e = self.entity
-        while e.get_parent():
-            e = e.get_parent()
-
-        self.entity.destroy()
-        ai = Entity.create(e).lock()
-        # ai.add_component(Chaser(), self.physics)
-        ai.add_component(ChaserAi(manager), self.physics)
-        # mesh = Mesh(ModelShader("chaser_texture.jpg"), "chaser_mesh.fbx", Vec3(1.0, 0.84, 0.0), Vec3(1, 1, 1), 4)
-        # chaser = ScriptComponent("chaser", self.physics)
-        # chaser = Chaser()
-        # ai.add_component(mesh)
-        # ai.add_component(ChaserAi(Vec3(self.entity.transform().global_position().x, 20.0, self.entity.transform().global_position().z), self.manager, start=True), self.physics)
-        # ai.add_component(chaser)
-
-
 
     def start_game(self, event):
         self.started = True
@@ -61,7 +33,6 @@ class RunnerAi:
         self.startingPosition = self.entity.global_position
         self.dead = False
         self.started = False
-        # config = vehicle.Configuration()
         self.map = self.create_nav_mesh()
         self.astar = A_star(self.map)
         self.count = 0
@@ -83,28 +54,8 @@ class RunnerAi:
 
         self.entity.add_component(Runner(self.manager, self.controller), self.physics)
 
-        # dims = PxVec3(3, 1, 5)
-        # config.position = PxVec3(self.startingPosition.x, self.startingPosition.y, self.startingPosition.z)
-        # config.rotation = PxQuat(0, 1, 0, 0)
-        # config.chassis_dimensions = dims
-        # config.steer_angle = math.pi * .12
-        # config.torque = 10000
-        # config.wheel_radius = 0.5
-        # config.wheel_width = 0.4
-        # config.wheel_mass = 10
-        # config.omega = 100
-        # config.chassis_mass = 1000
-        # config.wheel_moi = 20
-        # config.chassis_moi = PxVec3(config.chassis_mass, config.chassis_mass / 10, config.chassis_mass)
-        # config.chassis_offset = PxVec3(0, -dims.y, 0)
-
         self.vehicle = self.entity.add_component(VehicleScript(self.startingPosition, self.controller), self.physics)
-        # r = runner.Runner()
-        # self.entity.add_component(self.vehicle)
-        # self.entity.add_component(r)
-        self.entity.register_handler(Infected, self.infected)
         self.entity.register_handler(GameStarted, self.start_game)
-        self.entity.register_handler(Revived, self.revived)
 
         self.currentNodeXZ = self.astar.findCurrentNode(
             (self.entity.transform().global_position().x, self.entity.transform().global_position().z))
@@ -146,7 +97,6 @@ class RunnerAi:
         return arrayVecs
 
     def drive(self):
-        # currTarget = Vec3(self.targetNodeXZ[0], 0, self.targetNodeXZ[1])
         if len(self.currentPath) > self.currentNodeIndex:
             currTarget = self.currentPath[self.currentNodeIndex]
         else:
@@ -157,9 +107,6 @@ class RunnerAi:
         right = self.entity.transform().right()
         test = self.entity.transform().position
 
-        # print "Current Target X: ", currTarget.x
-        # print "Current Target Y: ", currTarget.y
-        # print "Current Target Z: ", currTarget.z
         test.y = 0
         direction.y = 0
         right.y = 0
@@ -191,8 +138,6 @@ class RunnerAi:
             self.controller.setAccel(1)
 
         else:
-            #print("Goal : " + str((currTarget.x, currTarget.z)))
-            #print("Chaser Position : " + str((self.entity().transform().global_position().x, self.entity().transform().global_position().z)))
             self.controller.setReverse(0)
             if self.astar.map[(currTarget.x, currTarget.z)].inNode((self.currPosition.x, self.currPosition.z)):
                 if (self.currentNodeIndex+1) >= len(self.currentPath):

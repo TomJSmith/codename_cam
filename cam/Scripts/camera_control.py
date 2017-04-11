@@ -1,5 +1,6 @@
 ﻿from camera import *
 from physics import *
+import runner
 
 class CameraControl:
     def __init__(self, target):
@@ -8,6 +9,11 @@ class CameraControl:
     def start(self):
         self.offset = self.entity.global_position - self.target.global_position
         self.entity.add_component(Camera(self.physics))
+        self.entity.register_handler(runner.RunnerDestroyed, self.runnerdestroyed)
+
+    def runnerdestroyed(self, event):
+        if self.target == event.runner:
+            self.target = None
 
     def update(self, dt):
         # t = self.target.lock()

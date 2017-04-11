@@ -27,6 +27,10 @@ class ChaserAi:
         print "chaser started"
         self.started = True
 
+    def runnerdestroyed(self, event):
+        print "runner destroyed"
+        self.targetRunner = self.closestRunner()
+
     def start(self):
         self.entity.add_component(Chaser(), self.physics)
         self.startingPosition = self.entity.global_position
@@ -50,6 +54,7 @@ class ChaserAi:
 
         self.entity.add_component(VehicleScript(self.startingPosition, self.controller), self.physics)
         self.entity.register_handler(GameStarted, self.start_game)
+        self.entity.register_handler(runner.RunnerDestroyed, self.runnerdestroyed)
         self.currentNodeXZ = self.astar.findCurrentNode(
             (self.entity.transform().global_position().x, self.entity.transform().global_position().z))
 

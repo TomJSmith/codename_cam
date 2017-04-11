@@ -28,12 +28,12 @@ class ChaserManager:
     def remove_runner(self, other):
         for i in range(len(self.runner_e)):
             if self.runner_e[i].id == other.id:
+                print("Infected runner. Runners Left: " + str(len(self.runner_e) - 1))
                 self.runner_e.pop(i)
                 self.targetNodeXZ.pop(i)
                 self.runnerPos.pop(i)
                 break
 
-        print("Infected runner. Runners Left: " + str(len(self.runner_e)))
 
     def runnercreated(self, event):
         self.runner_e.append(event.runner)
