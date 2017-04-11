@@ -1,7 +1,7 @@
 #include "Audio.h"
 
 #include "Util.h"
-
+#include "Entity.h"
 Audio::Audio()
 {
 }
@@ -78,7 +78,8 @@ void Audio::initAudio()
 
 	alListener3f(AL_POSITION, 0, 0, 1.0f);
 	checkError();
-
+	alListenerf(AL_GAIN, 0.9f);
+	checkError();
 	alListener3f(AL_VELOCITY, 0, 0, 0);
 	checkError();
 
@@ -104,11 +105,11 @@ void Audio::initAudio()
 
 
 
-	background.source = sourceSetup(background.source);
-	horn.source = sourceSetup(horn.source);
-	speedUp.source = sourceSetup(speedUp.source);
-	speedDown.source = sourceSetup(speedDown.source);
-	idle.source = sourceSetup(idle.source);
+	background.source = sourceSetup(background.source, 0.2f, glm::vec3(0.0f, 0.0f, 0.0f), false);
+	horn.source = sourceSetup(horn.source, 0.1f, glm::vec3(0.0f, 0.0f, 0.0f), false);
+	speedUp.source = sourceSetup(speedUp.source, 0.3f, glm::vec3(0.0f, 0.0f, 0.0f), false);
+	speedDown.source = sourceSetup(speedDown.source, 0.3f, glm::vec3(0.0f, 0.0f, 0.0f), false);
+	idle.source = sourceSetup(idle.source, 0.3f, glm::vec3(0.0f, 0.0f, 0.0f), false);
 
 
 	/*Buffer Generation this holds the raw audio stream*/
@@ -129,7 +130,7 @@ void Audio::initAudio()
 	checkError();
 
 
-	string backgroundLoc = Util::AudioDirectory + "Background.wav";
+	string backgroundLoc = Util::AudioDirectory + "backgroundMono.wav";
 	string hornLoc = Util::AudioDirectory + "Horn.wav";
 	string idleLoc = Util::AudioDirectory + "Idle.wav";
 	string speedUpLoc = Util::AudioDirectory + "SpeedingUp.wav";
@@ -165,49 +166,66 @@ void Audio::initAudio()
 I think its to do with it constantly changing toPlay to one of the wav files need to find a better way to set toPlay to a wav file
 */
 
-void Audio::playAudio(int choice)
+void Audio::playAudio(int choice, ALuint source, int prevChoice, bool isPlayer, glm::vec3 soundPos, glm::vec3 forwardVec)
 {
-	wavFile* toPlay;
+	wavFile toPlay;
+	//if(choice == 0)
+		//cout << "MY CHOICE: " << choice << endl;
+	
 	switch (choice)
 	{
-	case 0:
-		toPlay = &background;
+	case 5:
+		toPlay = background;
 		break;
 	case 1:
-		toPlay = &idle;
+		toPlay = idle;
 		break;
 	case 2:
-		toPlay = &speedUp;
+		toPlay = speedUp;
 		break;
 	case 3:
-		toPlay = &speedDown;
+		toPlay = speedDown;
 		break;
 	case 4:
-		toPlay = &horn;
+		toPlay = horn;
 		break;
 	default:
 		cout << "Invalid song choice" << endl;
 		return;
 
 	}
-
+	//toPlay->source = source;
 	/*This just forces it to play one song until the song is finished*/
 	ALint source_state;
-
-	alGetSourcei(toPlay->source, AL_SOURCE_STATE, &source_state);
+	if (isPlayer)
+	{	
+		
+		forwardVec = forwardVec / glm::length(forwardVec);
+		ALfloat oriLis[] = {forwardVec.x, forwardVec.y, forwardVec.z, 0.0f, 1.0f, 0.0f};
+		alListenerfv(AL_ORIENTATION, oriLis);
+		alListener3f(AL_POSITION, soundPos.x, soundPos.y, soundPos.z);
+		checkError();
+	}
+	//cout << "Source: " << source << endl;
+	if (prevChoice != choice)
+		alSourceStop(source);
+	alGetSourcei(source, AL_SOURCE_STATE, &source_state);
 	checkError();
 	if (source_state == AL_PLAYING)
 	{
+
+		//cout << "PLAY AUDIO SOURCE:  " << source << " IS PLAYING" << endl;
 		return;
 	}
 	else
 	{
-		alBufferData(toPlay->buffer, toPlay->format, (ALvoid*)toPlay->songBuf, (ALsizei)toPlay->dataSize, (ALsizei)toPlay->sampleRate);
+		alBufferData(toPlay.buffer, toPlay.format, (ALvoid*)toPlay.songBuf, (ALsizei)toPlay.dataSize, (ALsizei)toPlay.sampleRate);
 		checkError();
-
-		alSourcei(toPlay->source, AL_BUFFER, toPlay->buffer);
+		alSourcei(source, AL_SOURCE_RELATIVE, TRUE);
+		
+		alSourcei(source, AL_BUFFER, toPlay.buffer);
 		checkError();
-		alSourcePlay(toPlay->source);
+		alSourcePlay(source);		
 	}
 
 
@@ -223,16 +241,35 @@ void Audio::cleanUpAudio(wavFile wav)
 	alcCloseDevice(Device);
 }
 /*Modify volume, pitch distance*/
-ALuint Audio::sourceSetup(ALuint source)
+ALuint Audio::sourceSetup(ALuint source, float vol, glm::vec3 pos, bool backSound)
 {
+	ALfloat x, y, z;
+	alGetListener3f(AL_POSITION, &x, &y, &z);
+	vec3 lisPos = vec3((float)x, (float)y, (float)z);
+	//float dist = glm::length(lisPos - pos);
+	//alSourcef(source, AL_REFERENCE_DISTANCE, 1.0f);
+	//alSourcef(source, AL_ROLLOFF_FACTOR, 1.0f);
+	//dist = fmax(dist, AL_REFERENCE_DISTANCE);
+//	dist = fmin(dist, AL_MAX_DISTANCE);
 
+	/*Either this or maybe i need to set the reference_dist to where the listener currenty is all the time*/
+	//ALfloat gain = AL_REFERENCE_DISTANCE / (AL_REFERENCE_DISTANCE + AL_ROLLOFF_FACTOR * (dist - AL_REFERENCE_DISTANCE));
+	//cout << "Gain: " << gain << endl;
+	if (!backSound)
+		alDistanceModel(AL_INVERSE_DISTANCE);
+	else
+		alDistanceModel(AL_NONE);
+	
+	float volAdj;
+	alGetSourcef(source, AL_GAIN, &volAdj);
+	alSourcef(source, AL_GAIN, volAdj + 0.01f);
 	alSourcef(source, AL_PITCH, 1.0f);
 	checkError();
 
-	alSourcef(source, AL_GAIN, 1.0f);
-	checkError();
+	//alSourcef(source, AL_GAIN, gain);
+	//checkError();
 
-	alSource3f(source, AL_POSITION, 0, 0, 0);
+	alSource3f(source, AL_POSITION, pos.x, pos.y, pos.z);
 	checkError();
 
 	alSource3f(source, AL_VELOCITY, 0, 0, 0);
@@ -247,6 +284,8 @@ ALuint Audio::sourceSetup(ALuint source)
 ALenum Audio::formatWav(wavFile wav)
 {
 	ALenum format;
+	if (wav.channels == 2)
+		cout << "STEREO SOUNDS" << endl;
 	if (wav.bitsPerSample == 8)
 	{
 		if (wav.channels == 1)
@@ -395,4 +434,33 @@ void Audio::list_audio_devices(const ALCchar *devices)
 		next += (len + 2);
 	}
 	fprintf(stdout, "----------\n");
+}
+void Audio::playSounds(Entity &entity)
+{
+	//ALuint source;
+	vector<int> choice;
+	vector<ALuint> sources;
+	vector<int> prevChoices;
+	vector<vec3> soundPos;
+	vector<bool> isPlayer;
+	vector<vec3> forwardVecs;
+	Events::Sound e{sources, choice, prevChoices, soundPos, isPlayer, forwardVecs};
+	
+	entity.BroadcastEvent(e);
+	int count = 1;
+	for (int i = 0; i < e.sources.size(); i++)
+	{
+		e.sources[i] = sourceSetup(e.sources[i], 0.01f, soundPos[i], false);
+		//alSourcei(e.sources[i], AL_SOURCE_RELATIVE, AL_TRUE);
+		//alSourcef(e.sources[i], AL_ROLLOFF_FACTOR, 0.0f);
+	//	alSourcePause(e.sources[i]); 
+		if (isPlayer[i])
+		{
+			cout << "Number of players"<< count << endl;
+			count++;
+		}
+		playAudio(e.choice[i], e.sources[i], prevChoices[i], isPlayer[i], soundPos[i], forwardVecs[i]);	
+		
+	}
+
 }

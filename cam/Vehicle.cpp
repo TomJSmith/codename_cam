@@ -327,12 +327,19 @@ Vehicle::Vehicle(Physics &physics, std::shared_ptr<Controller> controller, Confi
 
 	wheels->free();
 
+	alGenSources(1, &source); //sound stuff
+	
+	if (controller->getPlayer() == 0)
+		player = true;
+
 	physics_.RegisterVehicle(this);
 }
 
 Vehicle::Vehicle(Physics &physics, std::shared_ptr<aiController> aicontroller, Configuration &config) :
 	Vehicle(physics, std::shared_ptr<Controller>(aicontroller), config)
-{}
+{
+	player = false;
+}
 
 Vehicle::~Vehicle()
 {
@@ -345,34 +352,34 @@ Vehicle::~Vehicle()
 	batchquery_->release();
 }
 
-void Vehicle::RegisterHandlers()
-{
-	auto t = actor_->getGlobalPose();
-	entity_->GetTransform().position = vec3(t.p.x, t.p.y, t.p.z);
-	entity_->GetTransform().rotation = quaternion(t.q.w, t.q.x, t.q.y, t.q.z);
-	actor_->userData = entity_;
-}
 
 void Vehicle::Drive()
 {
 	if (!active_) return;
 	
 	controller_->UpdateState();
+	prevChoice = soundChoice;
+	soundPosition = entity_->GetTransform().position;
 	switch (controller_->getAcceleration())
 	{
 	case C_FAST:
 		vehicle_->mDriveDynData.setCurrentGear(PxVehicleGearsData::eFIRST);
 		input_.setAnalogAccel(1.0f);
 		input_.setAnalogBrake(0.0f);
+		soundChoice = 2;
 		break;
 	case C_NEUTRAL:
 		input_.setAnalogAccel(0.0f);
+		soundChoice = 1;
 		break;
 	case C_REVERSE:
+		soundChoice = 3;
 		vehicle_->mDriveDynData.setCurrentGear(PxVehicleGearsData::eREVERSE);
 		input_.setAnalogAccel(0.5f);
 		break;
 	}
+
+	
 
 	switch (controller_->getBrake()) {
 	case true:
@@ -382,7 +389,8 @@ void Vehicle::Drive()
 		input_.setAnalogBrake(0.0f);
 		break;
 	}
-
+	if (prevSoundChoice != soundChoice)
+		changeSound = true;
 	input_.setAnalogSteer(controller_->getDirectional());
 }
 
@@ -461,3 +469,29 @@ void Vehicle::Update(seconds dt)
 		*vehicle_
 	);
 }
+
+void Vehicle::getSource(Events::Sound event)
+{
+	event.sources.push_back(source);
+	event.choice.push_back(soundChoice);
+	event.pChoice.push_back(prevChoice);
+	event.soundPosition.push_back(soundPosition);
+	event.isPlayer.push_back(player);
+	event.forwardVecs.push_back(entity_->GetTransform().Forward());
+}
+
+void Vehicle::RegisterHandlers()
+{
+	auto t = actor_->getGlobalPose();
+	entity_->GetTransform().position = vec3(t.p.x, t.p.y, t.p.z);
+	entity_->GetTransform().rotation = quaternion(t.q.w, t.q.x, t.q.y, t.q.z);
+	actor_->userData = entity_;
+
+	handler_ = [this](Events::Sound e) {
+		getSource(e);
+	};
+
+	entity_->RegisterEventHandler(&handler_);
+}
+
+

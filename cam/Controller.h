@@ -2,6 +2,8 @@
 
 #include "System.h"
 
+
+
 #define C_DOWN 7
 #define C_UP 6
 #define C_RIGHT 5
@@ -23,6 +25,10 @@ public:
 	virtual bool getSelect();
 	virtual bool getSecondary();
 	virtual float getDirectional();
+	virtual int getPlayer();
+
+	
+
 
 private:
 	int i;

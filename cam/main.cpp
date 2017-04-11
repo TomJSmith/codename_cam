@@ -42,6 +42,10 @@ int main() {
 
 		Audio audio;
 		audio.initAudio();
+		ALuint source;
+		alGenSources(1, &source);
+		source = audio.sourceSetup(source, 0.2f, glm::vec3(0.0f, 0.0f, 0.0f), true);
+
 		{
 			std::shared_ptr<Component> menu(std::make_shared<ScriptComponent>("main_menu", physics));
 			auto e = Entity::Create(root.get()).lock();
@@ -54,11 +58,13 @@ int main() {
 			auto currentTime = timer::now();
 			auto dt = seconds(currentTime - lastTime);
 			lastTime = currentTime;
-			
+
 			root->Update(dt);
 			renderer.Render(*root);
+
 			physics.Update(dt);
-			audio.playAudio(0);
+			audio.playSounds(*root);
+			audio.playAudio(5, source, 5, false, glm::vec3(0.0f,0.0f,0.0f), glm::vec3(0.0f, 0.0f, 0.0f));
 			Entity::DeleteDestroyed();
 
 			glfwPollEvents();

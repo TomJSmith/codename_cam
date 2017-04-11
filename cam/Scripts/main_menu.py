@@ -46,8 +46,10 @@ class MainMenu:
         player = Entity.create(e).lock()
         player.add_component(VehicleScript(Vec3(-20.0, 2.0, -90.0), manager), self.physics)
         player.add_component(ScriptComponent("powerup_manager", self.physics))
-
+		
+        
         runner = Entity.create(e).lock()
+
         runner.add_component(
             Mesh(ModelShader("runner_texture_green.jpg"), "runner_mesh.fbx", Vec3(1.0, 0.84, 0.0), Vec3(1, 1, 1), 4))
         runner.add_component(RunnerAi(Vec3(10.0, 2.0, -100.0), manager), self.physics)

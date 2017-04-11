@@ -9,7 +9,9 @@
 #include "windows.h"
 #include "Xinput.h"
 
+#include "Events.h"
 #include "Component.h"
+
 #include "Controller.h"
 #include "aiController.h"
 
@@ -88,6 +90,10 @@ public:
 
 	void SetActive(bool active) { active_ = active; }
 	void SetFriction(float friction);
+
+	void getSource(Events::Sound event);
+
+
 protected:
 	void RegisterHandlers() override;
 
@@ -108,5 +114,14 @@ private:
 	PxVehicleDrivableSurfaceToTireFrictionPairs *frictionpairs_;
 	bool active_;
 	float mass_;
+
+	bool changeSound = false;
+	int prevSoundChoice;
+	ALuint source;
+	int soundChoice;
+	int prevChoice;
+	bool player = false;
+	vec3 soundPosition;
+	std::function<void(Events::Sound)> handler_;
 };
 
