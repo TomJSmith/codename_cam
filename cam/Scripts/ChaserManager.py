@@ -37,11 +37,10 @@ class ChaserManager:
                 self.runnerPos.pop(i)
                 break
 
-
     def runnercreated(self, event):
-        self.runner_e.append(event.get_runner())
+        self.runner_e.append(event.runner)
         self.runnerXZ.append(self.astar.findCurrentNode(
-            (event.get_runner().transform().global_position().x, event.get_runner().transform().global_position().z)))
+            (event.runner.transform().global_position().x, event.runner.transform().global_position().z)))
         self.runnerPos.append(
             (event.runner.global_position.x, event.runner.global_position.z))
 

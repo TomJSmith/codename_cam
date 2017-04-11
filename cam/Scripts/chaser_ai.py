@@ -123,8 +123,6 @@ class ChaserAi:
         right.y = 0
         forward.y = 0
         distanceToGoal = direction.length()
-        if self.frame_count % 60 == 0:
-            print(distanceToGoal)
 
         if direction.length() == 0:
             return

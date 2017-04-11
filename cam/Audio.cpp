@@ -295,7 +295,7 @@ ALenum Audio::formatWav(wavFile wav)
 	}
 	if (wav.bitsPerSample == 16)
 	{
-		if (wav.channels == 1)
+		if (wav.channels == 1) 
 			format = AL_FORMAT_MONO16;
 		else if (wav.channels == 2)
 			format = AL_FORMAT_STEREO16;
