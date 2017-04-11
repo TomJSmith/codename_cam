@@ -157,9 +157,9 @@ BOOST_PYTHON_MODULE(aicontroller) {
 		.def("setAccel", &aiController::setAccel);
 }
 
-BOOST_PYTHON_MODULE(runner) {
-	python::class_<Runner, std::shared_ptr<Runner>>("Runner", python::init<>());
-}
+//BOOST_PYTHON_MODULE(runner) {
+	////python::class_<Runner, std::shared_ptr<Runner>>("Runner", python::init<>());
+//}
 
 
 BOOST_PYTHON_MODULE(navmesh) {
@@ -185,12 +185,12 @@ BOOST_PYTHON_MODULE(ui) {
 // This makes sure Python doesn't try to delete the object on us after the script is
 // done with it.
 template <class T>
-void AddComponent(Entity &e, std::shared_ptr<T> c) {
-	e.AddComponent(std::shared_ptr<Component>(c));
+std::weak_ptr<Component> AddComponent(Entity &e, std::shared_ptr<T> c) {
+	return e.AddComponent(std::shared_ptr<Component>(c));
 }
 
-void AddScriptComponent(Entity &e, boost::python::object component, Physics &physics) {
-	e.AddComponent(std::make_shared<ScriptComponent>(component, physics));
+std::weak_ptr<Component> AddScriptComponent(Entity &e, boost::python::object component, Physics &physics) {
+	return e.AddComponent(std::make_shared<ScriptComponent>(component, physics));
 }
 
 // For this, we just need a template so we can pass a Python function (as python::object)
@@ -242,8 +242,8 @@ void FireScriptEvent(Entity &e, python::object event) {
 }
 
 BOOST_PYTHON_MODULE(events) {
-	python::class_<Events::RunnerCreated>("RunnerCreated")
-		.def("get_runner", &Events::RunnerCreated::GetRunner, python::return_internal_reference<>());
+	//python::class_<Events::RunnerCreated>("RunnerCreated")
+	//	.def("get_runner", &Events::RunnerCreated::GetRunner, python::return_internal_reference<>());
 	python::class_<Events::Infected>("Infected")
 		.def_readwrite("other", &Events::Infected::other)
 		.def("getother", &Events::Infected::GetOther, python::return_internal_reference<>());
@@ -255,9 +255,9 @@ BOOST_PYTHON_MODULE(events) {
 		.def("entity", &Events::TriggerEnter::GetEntity, python::return_internal_reference<>());
 	python::class_<Events::TriggerExit>("TriggerExit")
 		.def("entity", &Events::TriggerExit::GetEntity, python::return_internal_reference<>());
-	python::class_<Events::RunnerDestroyed>("RunnerDestroyed")
-		.def_readwrite("other", &Events::RunnerDestroyed::other)
-		.def("getother", &Events::RunnerDestroyed::GetOther, python::return_internal_reference<>());
+	//python::class_<Events::RunnerDestroyed>("RunnerDestroyed")
+	//	.def_readwrite("other", &Events::RunnerDestroyed::other)
+	//	.def("getother", &Events::RunnerDestroyed::GetOther, python::return_internal_reference<>());
 	python::class_<Events::Revived>("Revived");
 
 }
@@ -274,7 +274,7 @@ BOOST_PYTHON_MODULE(entity) {
 		.def("get_parent", &Entity::GetParent, python::return_internal_reference<>())
 		.def("add_component", AddComponent<Vehicle>)
 		.def("add_component", AddComponent<Camera>)
-		.def("add_component", AddComponent<Runner>)
+		//.def("add_component", AddComponent<Runner>)
 		.def("add_component", AddComponent<Image>)
 		.def("add_component", AddComponent<Mesh>)
 		.def("add_component", AddComponent<RigidBody>)
@@ -285,31 +285,31 @@ BOOST_PYTHON_MODULE(entity) {
 		.def("fire_event", &Entity::FireEvent<Events::Infected>)
 		.def("fire_event", &Entity::FireEvent<Events::Destroyed>)
 		.def("fire_event", &Entity::FireEvent<Events::Collided>)
-		.def("fire_event", &Entity::FireEvent<Events::RunnerDestroyed>)
-		.def("fire_event", &Entity::FireEvent<Events::RunnerCreated>)
+		//.def("fire_event", &Entity::FireEvent<Events::RunnerDestroyed>)
+		//.def("fire_event", &Entity::FireEvent<Events::RunnerCreated>)
 		.def("fire_event", &Entity::FireEvent<Events::TriggerEnter>)
 		.def("fire_event", &Entity::FireEvent<Events::TriggerExit>)
 		.def("fire_event", &Entity::FireEvent<Events::Revived>)
 //		.def("fire_event", &Entity::FireEvent<Events::StartGame>)
 		.def("fire_event", FireScriptEvent)
-		.def("broadcast_event", &Entity::BroadcastEvent<Events::RunnerCreated>)
+		//.def("broadcast_event", &Entity::BroadcastEvent<Events::RunnerCreated>)
 		.def("broadcast_event", &Entity::BroadcastEvent<Events::Infected>)
 		.def("broadcast_event", &Entity::BroadcastEvent<Events::Destroyed>)
 		.def("broadcast_event", &Entity::BroadcastEvent<Events::Collided>)
 		.def("broadcast_event", &Entity::BroadcastEvent<Events::TriggerEnter>)
 		.def("broadcast_event", &Entity::BroadcastEvent<Events::TriggerExit>)
-		.def("broadcast_event", &Entity::BroadcastEvent<Events::RunnerDestroyed>)
+		//.def("broadcast_event", &Entity::BroadcastEvent<Events::RunnerDestroyed>)
 		.def("broadcast_event", &Entity::BroadcastEvent<Events::Revived>)
 //		.def("broadcast_event", &Entity::BroadcastEvent<Events::StartGame>)
 		.def("broadcast_event", BroadcastScriptEvent)
-		.def("register_runnercreated_handler", RegisterEventHandler<Events::RunnerCreated>)
+		//.def("register_runnercreated_handler", RegisterEventHandler<Events::RunnerCreated>)
 		.def("register_infected_handler", RegisterEventHandler<Events::Infected>)
 		.def("register_destroyed_handler", RegisterEventHandler<Events::Destroyed>)
 		.def("register_collided_handler", RegisterEventHandler<Events::Collided>)
 		.def("register_triggerenter_handler", RegisterEventHandler<Events::TriggerEnter>)
 		.def("register_triggerexit_handler", RegisterEventHandler<Events::TriggerExit>)
-		.def("register_runnerdestroyed_handler", RegisterEventHandler<Events::RunnerDestroyed>)
-		.def("register_runnerdestroyed_handler", RegisterEventHandler<Events::Revived>)
+		//.def("register_runnerdestroyed_handler", RegisterEventHandler<Events::RunnerDestroyed>)
+		//.def("register_runnerdestroyed_handler", RegisterEventHandler<Events::Revived>)
 //		.def("register_start_game_handler", RegisterEventHandler<Events::StartGame>)
 		.def("register_handler", RegisterScriptEventHandler)
 		.def("destroy", &Entity::Destroy)
@@ -321,10 +321,13 @@ BOOST_PYTHON_MODULE(entity) {
 
 	python::class_<std::weak_ptr<Entity>>("EntityPtr")
 		.def("lock", &std::weak_ptr<Entity>::lock);
+
+	python::class_<std::weak_ptr<Component>>("ComponentPtr")
+		.def("lock", &std::weak_ptr<Component>::lock);
 }
 
 BOOST_PYTHON_MODULE(component) {
-	python::class_<Component>("Component");
+	python::class_<Component, std::shared_ptr<Component>>("Component");
 
 	python::class_<ModelShader, std::shared_ptr<ModelShader>>("ModelShader")
 		.def(python::init<const char *>());
@@ -406,6 +409,10 @@ void ScriptComponent::Update(seconds dt)
 	Call("update", dt.count());
 }
 
+void ScriptComponent::Destroy()
+{
+}
+
 void ScriptComponent::InitPython()
 {
 	static bool initialized = false;
@@ -424,7 +431,7 @@ void ScriptComponent::InitPython()
 			initevents();
 			initcamera();
 			initnavmesh();
-			initrunner();
+			//initrunner();
 			initui();
 
 			initialized = true;
@@ -471,12 +478,12 @@ namespace boost {
 		return c;
 	}
 
-	template <>
-	Runner const volatile * get_pointer<class Runner const volatile>(
-		class Runner const volatile *c
-		) {
-		return c;
-	}
+	//template <>
+	//Runner const volatile * get_pointer<class Runner const volatile>(
+	//	class Runner const volatile *c
+	//	) {
+	//	return c;
+	//}
 
 	template <>
 	ScriptComponent const volatile * get_pointer<class ScriptComponent const volatile>(

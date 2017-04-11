@@ -1,4 +1,5 @@
 from physics import *
+from component import *
 from events import *
 import controller
 import aicontroller
@@ -12,23 +13,36 @@ import os
 sys.path.insert(0, os.getcwd() + "\\Scripts")
 from start_game import *
 from a_star import *
-
-v = None
-
+from vehicle_script import *
+from chaser import *
+import runner
 
 class ChaserAi:
-    def __init__(self, position, manager, start=False):
-        self.startingPosition = position
+    # def __init__(self, position, manager, start=False):
+    def __init__(self, manager, start=False):
+        # self.startingPosition = position
         self.started = start
         self.manager = manager
+        self.controller = aicontroller.aiController(4)
 
     def start_game(self, event):
+        print "chaser started"
         self.started = True
 
-    def runnerdestroyed(self, event):
-        self.targetRunner = self.closestRunner()
+    # def runnerdestroyed(self, event):
+    #     self.targetRunner = self.closestRunner()
+
+    # def runnercreated(self, event):
+    #     print "runner created"
+    #     self.manager.runner_e.append(event.runner)
+    #     self.manager.targetNodeXZ.append(self.astar.findCurrentNode(
+    #         (event.runner.global_position.x, event.runner.global_position.y)))
+    #     self.manager.runnerPos.append(
+    #         (event.runner.global_position.x, event.runner.global_position.y))
 
     def start(self):
+        self.entity.add_component(Chaser(), self.physics)
+        self.startingPosition = self.entity.global_position
         self.reachedGoal = False
         self.backUp = False
 
@@ -43,31 +57,33 @@ class ChaserAi:
         self.frame_count = -1
         self.stuck = False
         self.stuck_flag = False
+        # self.runner_e = []
 
-        self.controller = aicontroller.aiController(4)
-        config = vehicle.Configuration()
+        # config = vehicle.Configuration()
         self.map = self.create_nav_mesh()
         self.astar = A_star(self.map)
 
-        dims = PxVec3(3, 1, 5)
-        config.position = PxVec3(self.startingPosition.x, self.startingPosition.y, self.startingPosition.z)
-        config.rotation = PxQuat(0, 1, 0, 0)
-        config.chassis_dimensions = dims
-        config.steer_angle = math.pi * .18
-        config.torque = 10000
-        config.wheel_radius = 0.5
-        config.wheel_width = 0.4
-        config.wheel_mass = 10
-        config.omega = 100
-        config.chassis_mass = 1000
-        config.wheel_moi = 20
-        config.chassis_moi = PxVec3(config.chassis_mass, config.chassis_mass / 10, config.chassis_mass)
-        config.chassis_offset = PxVec3(0, -dims.y, 0)
+        # dims = PxVec3(3, 1, 5)
+        # config.position = PxVec3(self.startingPosition.x, self.startingPosition.y, self.startingPosition.z)
+        # config.rotation = PxQuat(0, 1, 0, 0)
+        # config.chassis_dimensions = dims
+        # config.steer_angle = math.pi * .18
+        # config.torque = 10000
+        # config.wheel_radius = 0.5
+        # config.wheel_width = 0.4
+        # config.wheel_mass = 10
+        # config.omega = 100
+        # config.chassis_mass = 1000
+        # config.wheel_moi = 20
+        # config.chassis_moi = PxVec3(config.chassis_mass, config.chassis_mass / 10, config.chassis_mass)
+        # config.chassis_offset = PxVec3(0, -dims.y, 0)
 
-        self.vehicle = vehicle.Vehicle(self.physics, self.controller, config)
-        self.entity.add_component(self.vehicle)
+        # self.vehicle = vehicle.Vehicle(self.physics, self.controller, config)
+        # self.entity.add_component(self.vehicle)
+        self.entity.add_component(VehicleScript(self.startingPosition, self.controller), self.physics)
         self.entity.register_handler(GameStarted, self.start_game)
-        self.entity.register_handler(RunnerDestroyed, self.runnerdestroyed)
+        # self.entity.register_handler(runner.RunnerDestroyed, self.runnerdestroyed)
+        # self.entity.register_handler(runner.RunnerCreated, self.runnercreated)
         self.currentNodeXZ = self.astar.findCurrentNode(
             (self.entity.transform().global_position().x, self.entity.transform().global_position().z))
 

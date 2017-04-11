@@ -190,7 +190,7 @@ void Audio::playAudio(int choice, ALuint source, int prevChoice, bool isPlayer, 
 		toPlay = horn;
 		break;
 	default:
-		cout << "Invalid song choice" << endl;
+		//cout << "Invalid song choice" << endl;
 		return;
 
 	}
@@ -456,7 +456,7 @@ void Audio::playSounds(Entity &entity)
 	//	alSourcePause(e.sources[i]); 
 		if (isPlayer[i])
 		{
-			cout << "Number of players"<< count << endl;
+			//cout << "Number of players"<< count << endl;
 			count++;
 		}
 		playAudio(e.choice[i], e.sources[i], prevChoices[i], isPlayer[i], soundPos[i], forwardVecs[i]);	

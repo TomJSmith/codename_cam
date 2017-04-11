@@ -90,6 +90,9 @@ void Entity::DeleteDestroyed() {
 	// if a reference is held afterwards, the entity will remain alive until that reference is
 	// destroyed. watchers worried about the entity being destroyed can listen for
 	// Entity::DestroyEvent.
+	if (!destroyed_.empty()) {
+		std::cout << "hmmm...\n";
+	}
 	destroyed_.clear();
 }
 
