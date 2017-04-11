@@ -39,9 +39,15 @@ class VehicleScript:
     def infected(self, event):
         thisEvent = RunnerDestroyed()
         thisEvent.other = self.entity
-        event.getother().fire_event(thisEvent)
-        print("infected me")
         self.killed_by = event.getother()
+        print("Infected Player")
+        e = self.entity
+        while e.get_parent():
+            e = e.get_parent()
+
+        e.broadcast_event(thisEvent)
+
+    def revived(self, event):
         e = self.entity
         while e.get_parent():
             e = e.get_parent()
@@ -49,11 +55,6 @@ class VehicleScript:
         self.entity.destroy()
         e = Entity.create(e).lock()
         self.create_vehicle(e, Vec3(self.entity.transform().global_position().x, 15.0, self.entity.transform().global_position().z), True)
-
-    def runnerdestroyed(self, event):
-        thisEvent = RunnerDestroyed()
-        thisEvent.other = event.getother()
-        self.killed_by.fire_event(thisEvent)
 
     def create_vehicle(self, entity, position, chaser = False):
         c = vehicle.Configuration()
@@ -80,9 +81,9 @@ class VehicleScript:
         entity.add_component(cam)
         entity.add_component(mesh)
         if chaser:
-            entity.register_handler(RunnerDestroyed, self.runnerdestroyed)
             chaser = ScriptComponent("chaser", self.physics)
             entity.add_component(chaser)
         else:
             r = runner.Runner()
             entity.add_component(r)
+            entity.register_handler(Revived, self.revived)
