@@ -15,6 +15,7 @@ namespace Events {
 		Entity* other;
 		Entity* GetOther() { return other; }
 	};
+	struct Revived {};
 	struct Destroyed {};
 	struct RunnerCreated {
 		Entity *runner;
@@ -66,5 +67,6 @@ using EventSystem = EventSystem_<
 	Events::ScriptEvent,
 	Events::TriggerEnter,
 	Events::TriggerExit,
-	Events::RunnerDestroyed
+	Events::RunnerDestroyed,
+	Events::Revived
 >;

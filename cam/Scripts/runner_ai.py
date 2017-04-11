@@ -11,6 +11,7 @@ import runner
 import random
 from entity import *
 from component import *
+from chaser_ai import *
 
 # there might be a better way to do this... needed a_star in path but dont know where to tell Visual Studio that
 sys.path.insert(0, os.getcwd() + "\..\..\cam\Scripts")
@@ -19,20 +20,32 @@ from a_star import *
 from start_game import *
 
 class RunnerAi:
-    def __init__(self, position):
+    def __init__(self, position, manager):
         self.startingPosition = position
-
-    def runnercreated(self, event):
-        self.runner_e = event.get_runner()
-        self.targetNodeXZ = self.astar.findCurrentNode(
-            (self.runner_e.transform().global_position().x, self.runner_e.transform().global_position().z))
+        self.manager = manager
 
     def infected(self, event):
         thisEvent = RunnerDestroyed()
         thisEvent.other = self.entity
-        event.getother().fire_event(thisEvent)
-        print("infected yo")
+        print("infected AI")
+        e = self.entity
+        while e.get_parent():
+            e = e.get_parent()
+        e.broadcast_event(thisEvent)
+
+    def revived(self, event):
+        e = self.entity
+        while e.get_parent():
+            e = e.get_parent()
+
         self.entity.destroy()
+        ai = Entity.create(e).lock()
+        mesh = Mesh(ModelShader("chaser_texture.jpg"), "chaser_mesh.fbx", Vec3(1.0, 0.84, 0.0), Vec3(1, 1, 1), 4)
+        chaser = ScriptComponent("chaser", self.physics)
+        ai.add_component(mesh)
+        ai.add_component(ChaserAi(Vec3(self.entity.transform().global_position().x, 20.0, self.entity.transform().global_position().z), self.manager, start=True), self.physics)
+        ai.add_component(chaser)
+
 
 
     def start_game(self, event):
@@ -61,10 +74,9 @@ class RunnerAi:
         self.closeNodeSelf = None
         self.closeNodeTarget = None
         self.currentNodeIndex = 0
-        self.runner_e = None
 
         dims = PxVec3(3, 1, 5)
-        config.position = PxVec3(self.startingPosition.x, 2, self.startingPosition.z)
+        config.position = PxVec3(self.startingPosition.x, self.startingPosition.y, self.startingPosition.z)
         config.rotation = PxQuat(0, 1, 0, 0)
         config.chassis_dimensions = dims
         config.steer_angle = math.pi * .12
@@ -84,6 +96,7 @@ class RunnerAi:
         self.entity.add_component(r)
         self.entity.register_handler(Infected, self.infected)
         self.entity.register_handler(GameStarted, self.start_game)
+        self.entity.register_handler(Revived, self.revived)
 
         self.currentNodeXZ = self.astar.findCurrentNode(
             (self.entity.transform().global_position().x, self.entity.transform().global_position().z))

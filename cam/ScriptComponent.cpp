@@ -230,6 +230,7 @@ BOOST_PYTHON_MODULE(events) {
 	python::class_<Events::RunnerDestroyed>("RunnerDestroyed")
 		.def_readwrite("other", &Events::RunnerDestroyed::other)
 		.def("getother", &Events::RunnerDestroyed::GetOther, python::return_internal_reference<>());
+	python::class_<Events::Revived>("Revived");
 
 }
 
@@ -260,6 +261,7 @@ BOOST_PYTHON_MODULE(entity) {
 		.def("fire_event", &Entity::FireEvent<Events::RunnerCreated>)
 		.def("fire_event", &Entity::FireEvent<Events::TriggerEnter>)
 		.def("fire_event", &Entity::FireEvent<Events::TriggerExit>)
+		.def("fire_event", &Entity::FireEvent<Events::Revived>)
 //		.def("fire_event", &Entity::FireEvent<Events::StartGame>)
 		.def("fire_event", FireScriptEvent)
 		.def("broadcast_event", &Entity::BroadcastEvent<Events::RunnerCreated>)
@@ -269,6 +271,7 @@ BOOST_PYTHON_MODULE(entity) {
 		.def("broadcast_event", &Entity::BroadcastEvent<Events::TriggerEnter>)
 		.def("broadcast_event", &Entity::BroadcastEvent<Events::TriggerExit>)
 		.def("broadcast_event", &Entity::BroadcastEvent<Events::RunnerDestroyed>)
+		.def("broadcast_event", &Entity::BroadcastEvent<Events::Revived>)
 //		.def("broadcast_event", &Entity::BroadcastEvent<Events::StartGame>)
 		.def("broadcast_event", BroadcastScriptEvent)
 		.def("register_runnercreated_handler", RegisterEventHandler<Events::RunnerCreated>)
@@ -278,6 +281,7 @@ BOOST_PYTHON_MODULE(entity) {
 		.def("register_triggerenter_handler", RegisterEventHandler<Events::TriggerEnter>)
 		.def("register_triggerexit_handler", RegisterEventHandler<Events::TriggerExit>)
 		.def("register_runnerdestroyed_handler", RegisterEventHandler<Events::RunnerDestroyed>)
+		.def("register_runnerdestroyed_handler", RegisterEventHandler<Events::Revived>)
 //		.def("register_start_game_handler", RegisterEventHandler<Events::StartGame>)
 		.def("register_handler", RegisterScriptEventHandler)
 		.def("destroy", &Entity::Destroy)
