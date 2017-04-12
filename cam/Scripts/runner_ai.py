@@ -103,6 +103,9 @@ class RunnerAi:
         distanceToGoal = direction.length()
 
 
+        if direction.length() == 0:
+            return
+
         direction.x = direction.x / direction.length()
         direction.y = direction.y / direction.length()
         direction.z = direction.z / direction.length()
@@ -177,8 +180,10 @@ class RunnerAi:
 
             randomTarget = random.choice(rndNodes)
 
+            self.currentNodeIndex = 0
             self.currentPath = self.getNodePathToVec(
-            self.manager.astar.find_path(self.manager.map[self.currentNodeXZ], self.manager.map[randomTarget]))
+            self.manager.astar.find_path(self.manager.map[randomTarget], self.manager.map[self.currentNodeXZ]))
+
             self.reachedGoal = False
 
         if (self.frame_count + 350) % 360 == 0:
