@@ -12,4 +12,7 @@ namespace Util
 	const static std::string ScriptDirectory = "Scripts/";
 	const static std::string AudioDirectory = "\\Audio/";
 	const static std::string FontDirectory = "Fonts/";
+
+	class EndGameException : public std::exception {};
+	void EndGame();
 }

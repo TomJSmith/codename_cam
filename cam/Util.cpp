@@ -14,3 +14,5 @@ std::string Util::ReadFile(const std::string &filename)
 
 	return source;
 }
+
+void Util::EndGame() { throw EndGameException(); } // greasy greasy greasy

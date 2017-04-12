@@ -12,7 +12,7 @@
 
     template <BOOST_PP_ENUM_PARAMS_Z(1, N, class A)>
     typename detail::dependent<object, A0>::type
-    operator()(BOOST_PP_ENUM_BINARY_PARAMS_Z(1, N, A, const& a)) const
+    operator()(BOOST_PP_ENUM_BINARY_PARAMS_Z(1, N, A, const& a)) const 
     {
         typedef typename detail::dependent<object, A0>::type obj;
         U const& self = *static_cast<U const*>(this);

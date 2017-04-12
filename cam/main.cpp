@@ -18,6 +18,7 @@
 #include "Shader.h"
 #include "Text.h"
 #include "Vehicle.h"
+#include "Util.h"
 /*Not sure where to put this afterwards just for testing*/
 #include "drawAiPath.h"
 #include "NavNode.h"
@@ -47,7 +48,7 @@ int main() {
 		source = audio.sourceSetup(source, 0.2f, glm::vec3(0.0f, 0.0f, 0.0f), true);
 
 		{
-			std::shared_ptr<Component> menu(std::make_shared<ScriptComponent>("main_menu", physics));
+			std::shared_ptr<Component> menu(std::make_shared<ScriptComponent>("main_menu", physics, renderer));
 			auto e = Entity::Create(root.get()).lock();
 			e->AddComponent(std::move(menu));
 		}
@@ -76,6 +77,9 @@ int main() {
 		}
 
 		return 0;
+	}
+	catch (const Util::EndGameException & /* unused */) {
+		return 0; // greasy greasy greasy
 	}
 	catch (const std::runtime_error &e) {
 		std::cout << "Fatal error: " << e.what() << "\n";

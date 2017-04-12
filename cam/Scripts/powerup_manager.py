@@ -1,5 +1,6 @@
 from physics import *
 from entity import *
+from end_screen import *
 from controller import *
 from oil_slick_powerup import *
 from oil_slick import *
@@ -21,6 +22,11 @@ class PowerupManager:
             self.image = Entity.create(self.entity)
             self.image.lock().add_component(Image(event.ui, Vec2(-1.0, 0.8), Vec2(0.2, 0.2), 1))
 
+    def game_ended(self, event):
+        print "game ended"
+        if self.image and self.image.lock():
+            self.image.lock().destroy()
+
     def update(self, dt):
         self.controller.update()
         if self.controller.secondary and self.powerup:
@@ -39,3 +45,4 @@ class PowerupManager:
         self.powerup = None
         self.image = None
         self.entity.register_handler(PickedUpPowerup, self.pickup)
+        self.entity.register_handler(GameEnded, self.game_ended)
