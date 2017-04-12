@@ -49,26 +49,37 @@ void NavMesh::process()
 		nodeGraph.push_back(NavNode((xSum / navFace.mNumIndices), (zSum / navFace.mNumIndices), &navFace, mNavMesh->mVertices, &scale));
 
 	}
+	// for every node in the graph
 	for (int i = 0; i < nodeGraph.size(); i++)
 	{
 		NavNode& aNode = nodeGraph[i];
+		// for all other nodes not yet looked at
 		for (int j = i + 1; j < nodeGraph.size(); j++)
 		{
 			NavNode& possibleNeighbour = nodeGraph[j];
-			for (int k = 0; k < aNode.vertIndices.size(); k++)
+			// for each vert of the first node
+			int sharedPointCount = 0;
+			for(int k = 0; k < aNode.vertIndices.size(); k++)
 			{
-				bool isNeighbour = std::any_of(std::begin(possibleNeighbour.vertIndices), std::end(possibleNeighbour.vertIndices), [&](uint32_t i)
+				bool isShared = std::any_of(std::begin(possibleNeighbour.vertIndices), std::end(possibleNeighbour.vertIndices), [&](uint32_t i)
 				{
 					return i == aNode.vertIndices[k];
 				});
-				if (isNeighbour)
+				if (isShared)
 				{
-					aNode.addNeighbour(&possibleNeighbour);
-					possibleNeighbour.addNeighbour(&aNode);
-					break;
+					sharedPointCount++;
 				}
 			}
+			if (sharedPointCount > 1)
+			{
+				aNode.addNeighbour(&possibleNeighbour);
+				possibleNeighbour.addNeighbour(&aNode);
+			}
 		}
+	}
+	for (int i = 0; i < nodeGraph.size(); i++)
+	{
+		std::cout << nodeGraph[i].neighbours.size() << std::endl;
 	}
 }
 
