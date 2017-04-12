@@ -14,10 +14,9 @@ sys.path.insert(0, os.getcwd() + "\\Scripts")
 from start_game import *
 from a_star import *
 from vehicle_script import *
-from chaser import *
-from powerup_manager import *
 import runner
 import chaser
+import powerup_manager
 
 class ChaserAi:
     def __init__(self, manager, start=False):
@@ -34,8 +33,8 @@ class ChaserAi:
 
 
     def start(self):
-        self.entity.add_component(Chaser(self.manager), self.physics)
-        self.entity.add_component(PowerupManager(self.controller, False), self.physics)
+        self.entity.add_component(chaser.Chaser(self.manager), self.physics)
+        self.entity.add_component(powerup_manager.PowerupManager(self.controller, False), self.physics)
         self.startingPosition = self.entity.global_position
         self.reachedGoal = False
         self.backUp = False

@@ -17,7 +17,8 @@ from camera_control import *
 from chaser_ai import *
 from vehicle_script import *
 from ChaserManager import *
-from end_screen import *
+# from end_screen import *
+import end_screen
 
 def set_position(marker, item):
     marker.position = item.position + Vec2(-0.2, 0.0)
@@ -26,6 +27,7 @@ def set_position(marker, item):
 class MainMenu:
     def __init__(self, renderer):
         self.renderer = renderer
+        self.first_press = True
 
     def create_powerups(self):
         e = self.entity
@@ -87,7 +89,7 @@ class MainMenu:
         manager_entity.add_component(manager, self.physics)
 
         end_entity = Entity.create(e).lock()
-        endScreen = EndScreen(manager)
+        endScreen = end_screen.EndScreen(manager, self.renderer)
         end_entity.add_component(endScreen, self.physics)
 
         ai = Entity.create(e).lock()
@@ -161,7 +163,10 @@ class MainMenu:
                 self.selected = self.startgame
                 set_position(self.marker, self.startgame)
 
-        if self.control.select:
+        if not self.control.select:
+            self.first_press = False
+
+        if self.control.select and not self.first_press:
             if self.selected == self.startgame:
                 self.start_game()
             else:
