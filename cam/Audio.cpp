@@ -199,7 +199,6 @@ void Audio::playAudio(int choice, ALuint source, int prevChoice, bool isPlayer, 
 	ALint source_state;
 	if (isPlayer)
 	{	
-		
 		forwardVec = forwardVec / glm::length(forwardVec);
 		ALfloat oriLis[] = {forwardVec.x, forwardVec.y, forwardVec.z, 0.0f, 1.0f, 0.0f};
 		alListenerfv(AL_ORIENTATION, oriLis);

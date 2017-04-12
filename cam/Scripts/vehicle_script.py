@@ -61,13 +61,13 @@ class VehicleScript:
             c.wheel_moi = 20
             c.torque = 4000
             c.max_speed = 1.0
-            c.steer_angle = math.pi * .15
+            c.steer_angle = math.pi * .16
             c.max_omega = 1900
         else:
             c.wheel_moi = 20
             c.torque = 3000
             c.max_speed = 1.0
-            c.steer_angle = math.pi * .10
+            c.steer_angle = math.pi * .15
             c.max_omega = 1600
 
         self.vehicle = entity.add_component(vehicle.Vehicle(self.physics, self.controller, c))

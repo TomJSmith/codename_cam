@@ -92,36 +92,46 @@ class MainMenu:
         endScreen = end_screen.EndScreen(manager, self.renderer)
         end_entity.add_component(endScreen, self.physics)
 
-        ai = Entity.create(e).lock()
-        ai.global_position += Vec3(10.0, 2.0, 100.0)
-        ai.add_component(ChaserAi(manager), self.physics)
+        chaser1 = Entity.create(e).lock()
+        chaser1.global_position += Vec3(20.0, 2.0, 0.0)
+        chaser1.add_component(ChaserAi(manager), self.physics)
 
-        ai2 = Entity.create(e).lock()
-        ai2.global_position += Vec3(0.0, 2.0, 0.0)
-        ai2.add_component(ChaserAi(manager), self.physics)
+        chaser2 = Entity.create(e).lock()
+        chaser2.global_position += Vec3(0.0, 2.0, -20.0)
+        chaser2.add_component(ChaserAi(manager), self.physics)
 
-        ai2 = Entity.create(e).lock()
-        ai2.global_position += Vec3(-10.0, 2.0, -100.0)
-        ai2.add_component(ChaserAi(manager), self.physics)
+        player1 = Entity.create(e).lock()
+        player1.global_position += Vec3(211.0, 2.0, 2.0)
+        player1.add_component(Player(manager), self.physics)
 
-        player = Entity.create(e).lock()
-        player.add_component(Player(manager), self.physics)
-
-        runner = Entity.create(e).lock()
-        runner.global_position = Vec3(10.0, 2.0, -100.0)
-        runner.add_component(RunnerAi(manager), self.physics)
+        runner1 = Entity.create(e).lock()
+        runner1.global_position = Vec3(228.0, 2.0, 207.0)
+        runner1.add_component(RunnerAi(manager), self.physics)
 
         runner2 = Entity.create(e).lock()
-        runner2.global_position = Vec3(-5.0, 2.0, 100.0)
+        runner2.global_position = Vec3(214.0, 2.0, -225.0)
         runner2.add_component(RunnerAi(manager), self.physics)
 
         runner3 = Entity.create(e).lock()
-        runner3.global_position = Vec3(90.0, 2.0, -10.0)
+        runner3.global_position = Vec3(-39.0, 2.0, -200.0)
         runner3.add_component(RunnerAi(manager), self.physics)
 
         runner4 = Entity.create(e).lock()
-        runner4.global_position = Vec3(0.0, 2.0, -90.0)
+        runner4.global_position = Vec3(-204.0, 2.0, -222.0)
         runner4.add_component(RunnerAi(manager), self.physics)
+
+        runner5 = Entity.create(e).lock()
+        runner5.global_position = Vec3(-228.0, 2.0, 15.0)
+        runner5.add_component(RunnerAi(manager), self.physics)
+
+        runner6 = Entity.create(e).lock()
+        runner6.global_position = Vec3(-230.0, 2.0, 211.0)
+        runner6.add_component(RunnerAi(manager), self.physics)
+
+        runner7 = Entity.create(e).lock()
+        runner7.global_position = Vec3(-1.0, 2.0, 218.0)
+        runner7.add_component(RunnerAi(manager), self.physics)
+
 
         # o = Entity.create(e).lock()
         # o.transform().position = Vec3(0.0, 0.0, 60)

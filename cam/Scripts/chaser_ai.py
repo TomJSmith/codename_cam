@@ -130,7 +130,7 @@ class ChaserAi:
             dot = 1
 
         if self.stuck:
-            self.controller.setDirection(-.80 * dot)
+            self.controller.setDirection(-1*dot)
             self.controller.setBrake(0)
             self.controller.setReverse(1)
             self.controller.setAccel(1)
