@@ -25,15 +25,13 @@ class Player:
 
     def start(self):
         print "starting player..."
-        self.entity.add_component(VehicleScript(Vec3(-20.0, 2.0, -90.0), self.controller), self.physics)
-        self.entity.add_component(PowerupManager(self.controller), self.physics)
         if self.runner:
             self.entity.add_component(VehicleScript(Vec3(-20.0, 2.0, -90.0), self.controller), self.physics)
-            self.entity.add_component(PowerupManager(), self.physics)
+            self.entity.add_component(PowerupManager(self.controller), self.physics)
             self.entity.add_component(runner.Runner(self.manager, self.controller, True), self.physics)
         else:
             self.entity.add_component(VehicleScript(Vec3(-20.0, 2.0, -90.0), self.controller, True), self.physics)
-            self.entity.add_component(PowerupManager(), self.physics)
+            self.entity.add_component(PowerupManager(self.controller), self.physics)
             self.entity.add_component(Chaser(self.manager), self.physics)
 
         self.entity.register_destroyed_handler(self.destroyed)

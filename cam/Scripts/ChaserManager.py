@@ -7,6 +7,7 @@ import runner
 
 sys.path.insert(0, os.getcwd() + "\\Scripts")
 from a_star import *
+import chaser
 class ChaserManager:
     def __init__(self):
         self.runner_e = []
@@ -41,7 +42,7 @@ class ChaserManager:
         e = self.entity
         while e.get_parent():
             e = e.get_parent()
-        e.broadcast_event(Destroyed())
+        e.broadcast_event(chaser.UpdateTarget())
         other.fire_event(Revived())
 
 

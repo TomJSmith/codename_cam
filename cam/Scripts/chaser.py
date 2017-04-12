@@ -2,6 +2,11 @@ from events import *
 from component import *
 from physics import *
 
+class UpdateTarget:
+    def __init__(self):
+        self.entity = None
+
+
 class Chaser:
     def __init__(self, manager):
         self.manager = manager

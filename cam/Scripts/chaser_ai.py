@@ -17,6 +17,7 @@ from vehicle_script import *
 from chaser import *
 from powerup_manager import *
 import runner
+import chaser
 
 class ChaserAi:
     def __init__(self, manager, start=False):
@@ -28,8 +29,7 @@ class ChaserAi:
         print "chaser started"
         self.started = True
 
-    def destroyed(self, event):
-        print "runner destroyed"
+    def update_target(self, event):
         self.targetRunner = self.closestRunner()
 
 
@@ -52,7 +52,7 @@ class ChaserAi:
 
         self.entity.add_component(VehicleScript(self.startingPosition, self.controller, True), self.physics)
         self.entity.register_handler(GameStarted, self.start_game)
-        self.entity.register_handler(Destroyed, self.destroyed)
+        self.entity.register_handler(chaser.UpdateTarget, self.update_target)
         self.currentNodeXZ = self.manager.astar.findCurrentNode(
             (self.entity.transform().global_position().x, self.entity.transform().global_position().z))
 
