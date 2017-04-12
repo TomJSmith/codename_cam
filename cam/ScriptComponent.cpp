@@ -6,6 +6,8 @@
 #include <locale>
 #include <string>
 
+#include "System.h"
+
 #include "Camera.h"
 #include "Controller.h"
 #include "Entity.h"
@@ -144,6 +146,7 @@ BOOST_PYTHON_MODULE(controller) {
 		.add_property("acceleration", &Controller::getAcceleration)
 		.add_property("brake", &Controller::getBrake)
 		.add_property("direction", &Controller::getDirectional)
+		.add_property("updown", &Controller::getUpDown)
 		.add_property("select", &Controller::getSelect)
 		.add_property("secondary", &Controller::getSecondary)
 		.def("update", &Controller::UpdateState);
@@ -167,6 +170,10 @@ BOOST_PYTHON_MODULE(navmesh) {
 		.def("getSimpleGraph", &NavMesh::getSimpleGraph);
 }
 
+void CloseGLFWWindow(Renderer &renderer) {
+	glfwSetWindowShouldClose(renderer.getWindow(), 1);
+}
+
 BOOST_PYTHON_MODULE(ui) {
 	python::class_<Image, python::bases<Component>, std::shared_ptr<Image>>("Image", python::init<const char *, const vec2 &, const vec2 &, size_t>())
 		.add_property("size", &Image::GetSize, &Image::SetSize)
@@ -176,6 +183,9 @@ BOOST_PYTHON_MODULE(ui) {
 	python::class_<Text, python::bases<Component>, std::shared_ptr<Text>>("Text", python::init<std::string, const std::string &, vec2, size_t>())
 		.add_property("position", &Text::GetPosition, &Text::SetPosition)
 		.add_property("text", &Text::GetText, &Text::SetText);
+
+	python::class_<Renderer>("Renderer", python::no_init)
+		.def("close_window", &CloseGLFWWindow);
 }
 
 // boost::python won't let us use shared_ptr<Component> for subclasses of Component by
@@ -268,7 +278,6 @@ BOOST_PYTHON_MODULE(events) {
 	//	.def_readwrite("other", &Events::RunnerDestroyed::other)
 	//	.def("getother", &Events::RunnerDestroyed::GetOther, python::return_internal_reference<>());
 	python::class_<Events::Revived>("Revived");
-
 }
 
 std::weak_ptr<Entity> Create(Entity *parent) {
@@ -405,6 +414,10 @@ BOOST_PYTHON_MODULE(camera) {
 	python::class_<Camera, std::shared_ptr<Camera>, python::bases<Component>>("Camera", python::init<Physics &>());
 }
 
+BOOST_PYTHON_MODULE(util) {
+	python::def("end_game", &Util::EndGame);
+}
+
 ScriptComponent::~ScriptComponent()
 {
 }
@@ -445,6 +458,7 @@ void ScriptComponent::InitPython()
 			initnavmesh();
 			//initrunner();
 			initui();
+			initutil();
 
 			initialized = true;
 		} catch (const python::error_already_set &) {

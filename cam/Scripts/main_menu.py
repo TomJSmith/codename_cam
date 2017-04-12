@@ -2,6 +2,7 @@ from component import *
 from controller import *
 from physics import *
 from ui import *
+from util import *
 from entity import *
 import sys
 import os
@@ -16,13 +17,18 @@ from camera_control import *
 from chaser_ai import *
 from vehicle_script import *
 from ChaserManager import *
-from end_screen import *
+# from end_screen import *
+import end_screen
 
 def set_position(marker, item):
     marker.position = item.position + Vec2(-0.2, 0.0)
 
 
 class MainMenu:
+    def __init__(self, renderer):
+        self.renderer = renderer
+        self.first_press = True
+
     def create_powerups(self):
         e = self.entity
         while e.get_parent():
@@ -83,7 +89,7 @@ class MainMenu:
         manager_entity.add_component(manager, self.physics)
 
         end_entity = Entity.create(e).lock()
-        endScreen = EndScreen(manager)
+        endScreen = end_screen.EndScreen(manager, self.renderer)
         end_entity.add_component(endScreen, self.physics)
 
         chaser1 = Entity.create(e).lock()
@@ -158,15 +164,20 @@ class MainMenu:
 
     def update(self, dt):
         self.control.update()
-        if self.control.direction == 7:  # down - probably shouldn't hardcode these...
+        if self.control.updown > 0:  # down - probably shouldn't hardcode these...
             if self.selected != self.quitgame:
                 self.selected = self.quitgame
                 set_position(self.marker, self.quitgame)
-        elif self.control.direction == 6:
+        elif self.control.updown < 0:
             if self.selected != self.startgame:
                 self.selected = self.startgame
                 set_position(self.marker, self.startgame)
 
-        if self.control.select:
+        if not self.control.select:
+            self.first_press = False
+
+        if self.control.select and not self.first_press:
             if self.selected == self.startgame:
                 self.start_game()
+            else:
+                self.renderer.close_window()

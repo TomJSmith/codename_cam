@@ -18,9 +18,8 @@ import positionSetter
 from chaser_ai import *
 from a_star import *
 from start_game import *
-from runner import *
-from chaser import *
-from powerup_manager import *
+import runner
+import powerup_manager
 
 class RunnerAi:
     def __init__(self, manager):
@@ -51,8 +50,8 @@ class RunnerAi:
         self.closeNodeTarget = None
         self.currentNodeIndex = 0
 
-        self.entity.add_component(Runner(self.manager, self.controller), self.physics)
-        self.entity.add_component(PowerupManager(self.controller, False), self.physics)
+        self.entity.add_component(runner.Runner(self.manager, self.controller), self.physics)
+        self.entity.add_component(powerup_manager.PowerupManager(self.controller, False), self.physics)
 
         self.vehicle = self.entity.add_component(VehicleScript(self.startingPosition, self.controller), self.physics)
         self.entity.register_handler(GameStarted, self.start_game)
