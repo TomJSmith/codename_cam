@@ -21,6 +21,7 @@ class ChaserManager:
         self.frame_count = -1
 
     def start(self):
+        print("chaser manager started")
         self.entity.register_handler(runner.RunnerCreated, self.runnercreated)
         self.entity.register_handler(runner.RunnerDestroyed, self.runnerdestroyed)
 

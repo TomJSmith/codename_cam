@@ -10,8 +10,9 @@ class RunnerCreated:
         self.runner = entity
 
 class RunnerDestroyed:
-    def __init__(self, entity):
+    def __init__(self, entity, player):
         self.runner = entity
+        self.player = player
 
 class UpdateRunner:
     def __init__(self, entity):
@@ -26,7 +27,7 @@ class Runner:
 
     def start(self):
         self.starting_position = self.entity.global_position
-        self.entity.add_component(Mesh(ModelShader("runner_texture_green.jpg"), "runner_mesh.fbx", Vec3(1.0, 0.84, 0.0), Vec3(1, 1, 1), 4))
+        self.entity.add_component(Mesh(ModelShader("runner_texture.jpg"), "runner_mesh.fbx", Vec3(1.0, 0.84, 0.0), Vec3(1, 1, 1), 4))
         self.entity.register_infected_handler(self.infected)
         self.entity.register_handler(Infected, self.infected)
         self.entity.register_handler(Revived, self.revived)
@@ -38,7 +39,8 @@ class Runner:
         while e.get_parent():
             e = e.get_parent()
 
-        e.broadcast_event(RunnerDestroyed(self.entity))
+        e.broadcast_event(RunnerDestroyed(self.entity, self.player))
+        self.needs_revive = True
 
     def update(self, dt):
         if self.needs_revive:

@@ -17,6 +17,7 @@ from camera_control import *
 from chaser_ai import *
 from vehicle_script import *
 from ChaserManager import *
+from end_screen import *
 
 def set_position(marker, item):
     marker.position = item.position + Vec2(-0.2, 0.0)
@@ -84,6 +85,10 @@ class MainMenu:
         manager_entity = Entity.create(e).lock()
         manager = ChaserManager()
         manager_entity.add_component(manager, self.physics)
+
+        end_entity = Entity.create(e).lock()
+        endScreen = EndScreen(manager)
+        end_entity.add_component(endScreen, self.physics)
 
         ai = Entity.create(e).lock()
         ai.global_position += Vec3(10.0, 2.0, 100.0)
