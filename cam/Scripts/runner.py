@@ -14,6 +14,10 @@ class RunnerDestroyed:
         self.runner = entity
         self.player = player
 
+class UpdateRunner:
+    def __init__(self, entity):
+        self.runner = entity
+
 class Runner:
     def __init__(self, manager, controller, player = False):
         self.manager = manager
@@ -22,6 +26,7 @@ class Runner:
         self.needs_revive = False
 
     def start(self):
+        self.starting_position = self.entity.global_position
         self.entity.add_component(Mesh(ModelShader("runner_texture.jpg"), "runner_mesh.fbx", Vec3(1.0, 0.84, 0.0), Vec3(1, 1, 1), 4))
         self.entity.register_infected_handler(self.infected)
         self.entity.register_handler(Infected, self.infected)
@@ -46,11 +51,12 @@ class Runner:
                 e = e.get_parent()
 
             e = Entity.create(e).lock()
-            e.global_position = self.entity.global_position
+            e.global_position = self.starting_position
 
             if self.player:
                 e.add_component(Player(self.manager, False), self.physics)
             else:
+                e.global_position += Vec3(0.0, 2.0, 0.0)
                 e.add_component(ChaserAi(self.manager), self.physics)
 
             e.fire_event(GameStarted())
@@ -58,7 +64,7 @@ class Runner:
             self.entity.destroy()
 
     def revived(self, event):
-        pass
+        self.needs_revive = True
         # self.needs_revive = True
         # e = self.entity
         # while e.get_parent():

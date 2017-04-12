@@ -399,7 +399,7 @@ void Audio::checkError()
 	}
 	case AL_INVALID_VALUE:
 	{
-		cout << "INVALID VALUE" << endl;
+		//cout << "INVALID VALUE" << endl;
 		break;
 	}
 	case AL_INVALID_OPERATION:

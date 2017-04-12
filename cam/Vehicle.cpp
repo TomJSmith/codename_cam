@@ -139,7 +139,7 @@ static PxVehicleDriveSimData4W SetupDrive(const Vehicle::Configuration &config)
 	ret.setEngineData(engine);
 
 	PxVehicleGearsData gears;
-	gears.mSwitchTime = 0.5f;
+	gears.mSwitchTime = 0.2f;
 	ret.setGearsData(gears);
 
 	PxVehicleClutchData clutch;
@@ -298,6 +298,30 @@ void Vehicle::SetFriction(float friction)
 {
 	if (frictionpairs_) frictionpairs_->release();
 	frictionpairs_ = CreateFrictionPairs(physics_.GetPhysics(), mass_, friction);
+}
+
+float Vehicle::GetOmega()
+{
+	return vehicle_->mDriveSimData.getEngineData().mMaxOmega;
+}
+
+float Vehicle::GetTorque()
+{
+	return vehicle_->mDriveSimData.getEngineData().mPeakTorque;
+}
+
+void Vehicle::SetOmega(float omega)
+{
+	auto engine = vehicle_->mDriveSimData.getEngineData();
+	engine.mMaxOmega = omega;
+	vehicle_->mDriveSimData.setEngineData(engine);
+}
+
+void Vehicle::SetTorque(float torque)
+{
+	auto engine = vehicle_->mDriveSimData.getEngineData();
+	engine.mPeakTorque = torque;
+	vehicle_->mDriveSimData.setEngineData(engine);
 }
 
 Vehicle::Vehicle(Physics &physics, std::shared_ptr<Controller> controller, Configuration &config) :

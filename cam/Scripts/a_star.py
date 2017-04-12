@@ -14,6 +14,7 @@ class Node():
         self.z = z
         self.vertices = vertices
         self.neighbors = []
+        self.weight = 0
 
     def __hash__(self):
         return hash((self.x, self.z))
@@ -156,7 +157,7 @@ class A_star():
                 if neighbor in closed_set:
                     continue
                 distance = current.distance(neighbor)
-                tentative_G_score = G_score[current] + distance
+                tentative_G_score = G_score[current] + distance + neighbor.weight
                 if neighbor not in open_set:
                     open_set.append(neighbor)
                 elif tentative_G_score >= G_score[neighbor]:

@@ -26,8 +26,9 @@ Mesh::Mesh(std::shared_ptr<Shader> shader,
 	{
 		std::cerr << "could not load file " << fullobjfilename << ": " << importer.GetErrorString() << std::endl;
 	}
-	std::cout << fullobjfilename << std::endl;
-	/*std::cout << "num of textures: " << objFile->mNumMaterials << std::endl;
+
+	/*std::cout << fullobjfilename << std::endl;
+	std::cout << "num of textures: " << objFile->mNumMaterials << std::endl;
 	std::cout << "num of meshes: " << objFile->mNumMeshes << std::endl;*/
 	std::vector<aiVector3D> vertices;
 	std::vector<aiVector3D> normals;
@@ -65,7 +66,7 @@ Mesh::Mesh(std::shared_ptr<Shader> shader,
 		if (m_material->GetTexture(aiTextureType_DIFFUSE, 0, &relTexPath, NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS)
 		{
 			
-			std::cout << "success!" << std::endl;
+			//std::cout << "success!" << std::endl;
 		}
 	}
 
