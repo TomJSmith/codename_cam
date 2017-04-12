@@ -69,25 +69,24 @@ class ChaserManager:
         return self.map
 
     def update(self, dt):
-        if self.frame_count % 6 == 0:
-            for i in range(0, len(self.runnerPos)):
-                self.runnerPos[i] = (self.runner_e[i].transform().global_position().x, self.runner_e[i].transform().global_position().z)
+        if len(self.runner_e) > 0:
+            if self.frame_count % 6 == 0:
+                for i in range(0, len(self.runnerPos)):
+                    self.runnerPos[i] = (self.runner_e[i].transform().global_position().x, self.runner_e[i].transform().global_position().z)
 
-            for i in range(0, len(self.chaserPos)):
-                self.chaserPos[i] = (self.chaser_e[i].transform().global_position().x, self.chaser_e[i].transform().global_position().z)
+                for i in range(0, len(self.chaserPos)):
+                    self.chaserPos[i] = (self.chaser_e[i].transform().global_position().x, self.chaser_e[i].transform().global_position().z)
 
-        if self.frame_count % 30 == 0 or self.frame_count == -1:
-            for i in range(0, len(self.runnerXZ)):
-                if not self.map[self.runnerXZ[i]].inNode(self.runnerPos[i]):
-                    self.runnerXZ[i] = self.astar.findNextNode(self.map[self.runnerXZ[i]], self.runnerPos[i])
-            for i in range(0, len(self.chaserXZ)):
-                if not self.map[self.chaserXZ[i]].inNode(self.chaserPos[i]):
-                    self.map[self.chaserXZ[i]].weight -= 50
-                    self.chaserXZ[i] = self.astar.findNextNode(self.map[self.chaserXZ[i]], self.chaserPos[i])
-                    self.map[self.chaserXZ[i]].weight += 50
+            if self.frame_count % 30 == 0 or self.frame_count == -1:
+                for i in range(0, len(self.runnerXZ)):
+                    if not self.map[self.runnerXZ[i]].inNode(self.runnerPos[i]):
+                        self.runnerXZ[i] = self.astar.findNextNode(self.map[self.runnerXZ[i]], self.runnerPos[i])
+                for i in range(0, len(self.chaserXZ)):
+                    if not self.map[self.chaserXZ[i]].inNode(self.chaserPos[i]):
+                        self.map[self.chaserXZ[i]].weight -= 50
+                        self.chaserXZ[i] = self.astar.findNextNode(self.map[self.chaserXZ[i]], self.chaserPos[i])
+                        self.map[self.chaserXZ[i]].weight += 50
 
-
-
-        self.frame_count += 1
-        if self.frame_count > 60000:
-            self.frame_count = 0
+            self.frame_count += 1
+            if self.frame_count > 60000:
+                self.frame_count = 0

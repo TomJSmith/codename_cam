@@ -7,11 +7,11 @@ from entity import *
 import sys
 import os
 
-sys.path.insert(0, os.getcwd() + "\..\..\cam\Scripts")
+sys.path.insert(0, os.getcwd() + "\Scripts")
 
 from chaser import *
 from runner import *
-from player import *
+import player
 from runner_ai import *
 from camera_control import *
 from chaser_ai import *
@@ -84,7 +84,7 @@ class MainMenu:
         level.add_component(mesh)
         level.add_component(body)
 
-        ## uncomment this block to see the verts of the nav mesh 
+        ## uncomment this block to see the verts of the nav mesh
         # navMesh = Entity.create(e).lock()
         # aMesh = Mesh(ModelShader("nav_mesh.jpg"), "nav_mesh.fbx", Vec3(0.2, 0.4, 0.2), Vec3(3.0, 3.0, 3.0),
         #             0)
@@ -99,43 +99,43 @@ class MainMenu:
         end_entity.add_component(endScreen, self.physics)
 
         chaser1 = Entity.create(e).lock()
-        chaser1.global_position += Vec3(20.0, 2.0, 0.0)
+        chaser1.global_position += Vec3(30.0, 2.0, 0.0)
         chaser1.add_component(ChaserAi(manager), self.physics)
 
         chaser2 = Entity.create(e).lock()
-        chaser2.global_position += Vec3(0.0, 2.0, -20.0)
+        chaser2.global_position += Vec3(0.0, 2.0, -30.0)
         chaser2.add_component(ChaserAi(manager), self.physics)
 
         player1 = Entity.create(e).lock()
-        player1.global_position += Vec3(211.0, 2.0, 2.0)
-        player1.add_component(Player(manager), self.physics)
+        player1.global_position += Vec3(318.0, 2.0, 6.0)
+        player1.add_component(player.Player(manager), self.physics)
 
         runner1 = Entity.create(e).lock()
-        runner1.global_position = Vec3(228.0, 2.0, 207.0)
+        runner1.global_position = Vec3(342.0, 2.0, 309.0)
         runner1.add_component(RunnerAi(manager), self.physics)
 
         runner2 = Entity.create(e).lock()
-        runner2.global_position = Vec3(214.0, 2.0, -225.0)
+        runner2.global_position = Vec3(336.0, 2.0, -337.0)
         runner2.add_component(RunnerAi(manager), self.physics)
 
         runner3 = Entity.create(e).lock()
-        runner3.global_position = Vec3(-39.0, 2.0, -200.0)
+        runner3.global_position = Vec3(-127.0, 2.0, -300.0)
         runner3.add_component(RunnerAi(manager), self.physics)
 
         runner4 = Entity.create(e).lock()
-        runner4.global_position = Vec3(-204.0, 2.0, -222.0)
+        runner4.global_position = Vec3(-306.0, 2.0, -333.0)
         runner4.add_component(RunnerAi(manager), self.physics)
 
         runner5 = Entity.create(e).lock()
-        runner5.global_position = Vec3(-228.0, 2.0, 15.0)
+        runner5.global_position = Vec3(-342.0, 2.0, 45.0)
         runner5.add_component(RunnerAi(manager), self.physics)
 
         runner6 = Entity.create(e).lock()
-        runner6.global_position = Vec3(-230.0, 2.0, 211.0)
+        runner6.global_position = Vec3(-345.0, 2.0, 316.0)
         runner6.add_component(RunnerAi(manager), self.physics)
 
         runner7 = Entity.create(e).lock()
-        runner7.global_position = Vec3(-1.0, 2.0, 218.0)
+        runner7.global_position = Vec3(-1.0, 2.0, 327.0)
         runner7.add_component(RunnerAi(manager), self.physics)
 
 
