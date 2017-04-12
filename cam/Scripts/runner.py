@@ -45,6 +45,7 @@ class Runner:
                 e = e.get_parent()
 
             e = Entity.create(e).lock()
+            e.global_position = self.entity.global_position
 
             if self.player:
                 e.add_component(Player(self.manager, False), self.physics)

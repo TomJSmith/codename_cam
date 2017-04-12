@@ -57,6 +57,9 @@ class ChaserAi:
         self.entity.register_handler(runner.RunnerDestroyed, self.runnerdestroyed)
         self.currentNodeXZ = self.astar.findCurrentNode(
             (self.entity.transform().global_position().x, self.entity.transform().global_position().z))
+        self.manager.chaserXZ.append(self.currentNodeXZ)
+        self.manager.chaserPos.append((self.entity.transform().global_position().x, self.entity.transform().global_position().z))
+        self.manager.chaser_e.append(self.entity)
 
     def create_nav_mesh(self):
         _navmesh = navmesh.NavMesh('nav_mesh.fbx', Vec3(2.0, 2.0, 2.0))
@@ -183,7 +186,7 @@ class ChaserAi:
             if self.frame_count % 1200 == 0 or self.frame_count == -1:
                 self.targetRunner = self.closestRunner()
                 self.currentNodeIndex = 0
-                self.currentPath = self.getNodePathToVec(self.astar.find_path(self.map[self.manager.targetNodeXZ[self.targetRunner]], self.map[self.currentNodeXZ]))
+                self.currentPath = self.getNodePathToVec(self.astar.find_path(self.map[self.manager.runnerXZ[self.targetRunner]], self.map[self.currentNodeXZ]))
                 self.reachedGoal = False
 
             self.drive()
