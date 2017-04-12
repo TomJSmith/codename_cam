@@ -21,7 +21,7 @@ class Runner:
         self.needs_revive = False
 
     def start(self):
-        self.entity.add_component(Mesh(ModelShader("runner_texture_green.jpg"), "runner_mesh.fbx", Vec3(1.0, 0.84, 0.0), Vec3(1, 1, 1), 4))
+        self.entity.add_component(Mesh(ModelShader("runner_texture.jpg"), "runner_mesh.fbx", Vec3(1.0, 0.84, 0.0), Vec3(1, 1, 1), 4))
         self.entity.register_infected_handler(self.infected)
         self.entity.register_handler(Infected, self.infected)
         self.entity.register_handler(Revived, self.revived)
