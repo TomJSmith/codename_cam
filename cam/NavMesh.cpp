@@ -47,8 +47,10 @@ void NavMesh::process()
 		}
 
 		nodeGraph.push_back(NavNode((xSum / navFace.mNumIndices), (zSum / navFace.mNumIndices), &navFace, mNavMesh->mVertices, &scale));
-
 	}
+
+	std::cout << nodeGraph.size() << "!!!!!!!!!!!" << std::endl;
+
 	// for every node in the graph
 	for (int i = 0; i < nodeGraph.size(); i++)
 	{
@@ -76,10 +78,6 @@ void NavMesh::process()
 				possibleNeighbour.addNeighbour(&aNode);
 			}
 		}
-	}
-	for (int i = 0; i < nodeGraph.size(); i++)
-	{
-		std::cout << nodeGraph[i].neighbours.size() << std::endl;
 	}
 }
 

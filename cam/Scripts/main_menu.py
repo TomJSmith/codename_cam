@@ -78,11 +78,17 @@ class MainMenu:
             e = e.get_parent()
 
         level = Entity.create(e).lock()
-        mesh = Mesh(ModelShader("map_texture.jpg"), "map_mesh.fbx", Vec3(0.2, 0.4, 0.2), Vec3(2.0, 2.0, 2.0),
+        mesh = Mesh(ModelShader("map_texture.jpg"), "map_mesh.fbx", Vec3(0.2, 0.4, 0.2), Vec3(3.0, 3.0, 3.0),
                     4)  # TODO hacky hacky hardcoded opengl constant, 4 is GL_TRIANGLES
-        body = RigidBody(self.physics, "map_mesh.fbx", 2.0, False)
+        body = RigidBody(self.physics, "map_mesh.fbx", 3.0, False)
         level.add_component(mesh)
         level.add_component(body)
+
+        ## uncomment this block to see the verts of the nav mesh 
+        # navMesh = Entity.create(e).lock()
+        # aMesh = Mesh(ModelShader("nav_mesh.jpg"), "nav_mesh.fbx", Vec3(0.2, 0.4, 0.2), Vec3(3.0, 3.0, 3.0),
+        #             0)
+        # navMesh.add_component(aMesh)
 
         manager_entity = Entity.create(e).lock()
         manager = ChaserManager()
