@@ -10,8 +10,11 @@ from a_star import *
 class ChaserManager:
     def __init__(self):
         self.runner_e = []
-        self.targetNodeXZ = []
+        self.runnerXZ = []
         self.runnerPos = []
+        self.chaserXZ = []
+        self.chaserPos = []
+        self.chaser_e = []
         self.map = self.create_nav_mesh()
         self.astar = A_star(self.map)
         self.frame_count = -1
@@ -30,15 +33,14 @@ class ChaserManager:
             if self.runner_e[i].id == other.id:
                 print("Infected runner. Runners Left: " + str(len(self.runner_e) - 1))
                 self.runner_e.pop(i)
-                self.targetNodeXZ.pop(i)
+                self.runnerXZ.pop(i)
                 self.runnerPos.pop(i)
                 break
 
-
     def runnercreated(self, event):
         self.runner_e.append(event.runner)
-        self.targetNodeXZ.append(self.astar.findCurrentNode(
-            (event.runner.global_position.x, event.runner.global_position.z)))
+        self.runnerXZ.append(self.astar.findCurrentNode(
+            (event.runner.transform().global_position().x, event.runner.transform().global_position().z)))
         self.runnerPos.append(
             (event.runner.global_position.x, event.runner.global_position.z))
 
@@ -58,10 +60,16 @@ class ChaserManager:
         for i in range(0, len(self.runnerPos)):
             self.runnerPos[i] = (self.runner_e[i].transform().global_position().x, self.runner_e[i].transform().global_position().z)
 
+        for i in range(0, len(self.chaserPos)):
+            self.chaserPos[i] = (self.chaser_e[i].transform().global_position().x, self.chaser_e[i].transform().global_position().z)
+
         if self.frame_count % 30 == 0 or self.frame_count == -1:
-            for i in range(0, len(self.targetNodeXZ)):
-                if not self.map[self.targetNodeXZ[i]].inNode(self.runnerPos[i]):
-                    self.targetNodeXZ[i] = self.astar.findNextNode(self.map[self.targetNodeXZ[i]], self.runnerPos[i])
+            for i in range(0, len(self.runnerXZ)):
+                if not self.map[self.runnerXZ[i]].inNode(self.runnerPos[i]):
+                    self.runnerXZ[i] = self.astar.findNextNode(self.map[self.runnerXZ[i]], self.runnerPos[i])
+            for i in range(0, len(self.chaserXZ)):
+                if not self.map[self.chaserXZ[i]].inNode(self.chaserPos[i]):
+                    self.chaserXZ[i] = self.astar.findNextNode(self.map[self.chaserXZ[i]], self.chaserPos[i])
 
         self.frame_count += 1
         if self.frame_count > 60000:

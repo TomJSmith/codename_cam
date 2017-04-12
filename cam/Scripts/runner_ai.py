@@ -115,6 +115,7 @@ class RunnerAi:
         forward.y = 0
         distanceToGoal = direction.length()
 
+
         direction.x = direction.x / direction.length()
         direction.y = direction.y / direction.length()
         direction.z = direction.z / direction.length()
