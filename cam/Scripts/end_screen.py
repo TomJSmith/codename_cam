@@ -19,13 +19,12 @@ from ChaserManager import *
 
 
 class EndScreen:
-	def start(self):
-		self.control = Controller(0)
-		self.background = Image("background.png", Vec2(-1.0, -1.0), Vec2(2.0, 2.0), 3)
-		self.gameOver = Text("Game Over", "GROBOLD", Vec2(-0.3, 0.0), 12)
+    def start(self):
+        self.control = Controller(0)
+        self.background = Image("background.png", Vec2(-1.0, -1.0), Vec2(2.0, 2.0), 3)
+        self.gameOver = Text("Game Over", "GROBOLD", Vec2(-0.3, 0.0), 12)
         self.entity.add_component(self.background)
         self.entity.add_component(self.gameOver)
 
-	def update(self, dt):
-		self.control.update()
-		print('end screen')
+    def update(self, dt):
+        self.control.update()

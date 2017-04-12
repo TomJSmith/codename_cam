@@ -47,9 +47,9 @@ int main() {
 		source = audio.sourceSetup(source, 0.2f, glm::vec3(0.0f, 0.0f, 0.0f), true);
 
 		{
-			std::shared_ptr<Component> menu(std::make_shared<ScriptComponent>("main_menu", physics));
+			/*std::shared_ptr<Component> menu(std::make_shared<ScriptComponent>("main_menu", physics));
 			auto e = Entity::Create(root.get()).lock();
-			e->AddComponent(std::move(menu));
+			e->AddComponent(std::move(menu));*/
 		}
 		{
 			std::shared_ptr<Component> endScreen(std::make_shared<ScriptComponent>("end_screen", physics));
