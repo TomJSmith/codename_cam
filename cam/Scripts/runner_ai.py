@@ -65,7 +65,7 @@ class RunnerAi:
         currPos = self.entity.transform().global_position()
 
         if self.prevPos is not None:
-            if (math.sqrt((currPos.x - self.prevPos.x) ** 2.0 + (currPos.z - self.prevPos.z) ** 2.0) < 1):
+            if (math.sqrt((currPos.x - self.prevPos.x) ** 2.0 + (currPos.z - self.prevPos.z) ** 2.0) < .5):
                 self.prevPos = currPos
                 self.stuck_flag = True
                 return True
@@ -116,14 +116,13 @@ class RunnerAi:
         right.z = right.z / right.length()
 
         dot = Vec3.dot(right, direction)
-        dot = dot * .9
         if dot < -1:
             dot = -1
         if dot > 1:
             dot = 1
 
         if self.stuck:
-            self.controller.setDirection(-.7 * dot)
+            self.controller.setDirection(-1*dot)
             self.controller.setBrake(0)
             self.controller.setReverse(1)
             self.controller.setAccel(1)
@@ -149,7 +148,7 @@ class RunnerAi:
             if not self.manager.map[self.currentNodeXZ].inNode(myPos):
                 self.currentNodeXZ = self.manager.astar.findNextNode(self.manager.map[self.currentNodeXZ], myPos)
 
-        if (self.frame_count + self.seed) % 3600 == 0 or self.reachedGoal:
+        if (self.frame_count + self.seed) % 1500 == 0 or self.reachedGoal:
             if self.reachedGoal:
                 self.frame_count = self.seed + 1
             rndNodes = list(self.manager.map.keys())

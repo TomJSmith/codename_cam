@@ -79,14 +79,13 @@ class Runner:
 
             randomTarget = random.choice(rndNodes)
 
-            e.global_position = Vec3(randomTarget[0], 2.0, randomTarget[1])
+            e.global_position = Vec3(randomTarget[0], 15.0, randomTarget[1])
 
 
             if self.player:
                 e.add_component(Player(self.manager, False), self.physics)
             else:
-                e.global_position += Vec3(0.0, 2.0, 0.0)
-                e.add_component(ChaserAi(self.manager), self.physics)
+                e.add_component(ChaserAi(self.manager, True), self.physics)
 
             e.fire_event(GameStarted())
 
