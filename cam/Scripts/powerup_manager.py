@@ -28,7 +28,7 @@ class PowerupManager:
 
             entity.transform().position = self.entity.transform().position
             entity.transform().position.y = 0.01
-            entity.transform().position -= self.entity.transform().forward() * 15.0
+            entity.transform().position -= self.entity.transform().forward() * 25.0
 
             entity.add_component(self.powerup, self.physics)
             self.powerup = None

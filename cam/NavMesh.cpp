@@ -22,9 +22,9 @@ NavMesh::NavMesh(const char* navMeshFileName, glm::vec3 aScale)
 		std::cerr << "could not load nav mesh: " << navMeshFileName << "\n" << importer.GetErrorString() << std::endl;
 	}
 	mNavMesh = navMeshScene->mMeshes[0];
-	std::cout << "imported file " << navMeshFileName << std::endl;
+	/*std::cout << "imported file " << navMeshFileName << std::endl;
 	std::cout << "num of faces: " << mNavMesh->mNumFaces << std::endl;
-	std::cout << "num of verts: " << mNavMesh->mNumVertices << std::endl;
+	std::cout << "num of verts: " << mNavMesh->mNumVertices << std::endl;*/
 	process();
 }
 

@@ -51,6 +51,11 @@ int main() {
 			auto e = Entity::Create(root.get()).lock();
 			e->AddComponent(std::move(menu));
 		}
+		{
+			/*std::shared_ptr<Component> endScreen(std::make_shared<ScriptComponent>("end_screen", physics));
+			auto e = Entity::Create(root.get()).lock();
+			e->AddComponent(std::move(endScreen));*/
+		}
 	
 		auto lastTime = timer::now();
 

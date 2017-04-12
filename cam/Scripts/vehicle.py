@@ -11,7 +11,7 @@ def init(self):
 	_controller = controller.Controller(0)
 	c = vehicle.Configuration()
 
-	dims = physics.PxVec3(3, 1, 5)
+	dims = physics.PxVec3(10, 2, 12)
 
 	c.position = physics.PxVec3(-30, 2, -120)
 	c.chassis_dimensions = dims
