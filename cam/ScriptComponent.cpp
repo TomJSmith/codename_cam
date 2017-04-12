@@ -150,7 +150,7 @@ BOOST_PYTHON_MODULE(controller) {
 }
 
 BOOST_PYTHON_MODULE(aicontroller) {
-	python::class_<aiController, std::shared_ptr<aiController>>("aiController", python::init<int>())
+	python::class_<aiController, python::bases<Controller>, std::shared_ptr<aiController>>("aiController", python::init<int>())
 		.def("setDirection", &aiController::setDirection)
 		.def("setBrake", &aiController::setBrake)
 		.def("setReverse", &aiController::setReverse)
@@ -361,7 +361,9 @@ BOOST_PYTHON_MODULE(vehicle) {
 		("Vehicle", python::init<Physics &, std::shared_ptr<Controller>, Vehicle::Configuration &>())
 		.def(python::init<Physics &, std::shared_ptr<aiController>, Vehicle::Configuration &>())
 		.def("set_active", &Vehicle::SetActive)
-		.def("set_friction", &Vehicle::SetFriction);
+		.def("set_friction", &Vehicle::SetFriction)
+		.add_property("omega", &Vehicle::GetOmega, &Vehicle::SetOmega)
+		.add_property("torque", &Vehicle::GetTorque, &Vehicle::SetTorque);
 
 	python::class_<Vehicle::Configuration>("Configuration")
 		.def_readwrite("max_speed", &Vehicle::Configuration::maxSpeed)
@@ -386,6 +388,7 @@ BOOST_PYTHON_MODULE(vehicle) {
 		.def_readwrite("camber_at_max_droop", &Vehicle::Configuration::camberAtMaxDroop)
 		.def_readwrite("camber_at_max_compression", &Vehicle::Configuration::camberAtMaxCompression)
 		.def_readwrite("torque", &Vehicle::Configuration::torque)
+		.def_readwrite("max_speed", &Vehicle::Configuration::maxSpeed)
 		.def_readwrite("max_omega", &Vehicle::Configuration::maxOmega);
 }
 

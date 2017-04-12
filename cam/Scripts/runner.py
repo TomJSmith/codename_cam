@@ -49,6 +49,7 @@ class Runner:
             if self.player:
                 e.add_component(Player(self.manager, False), self.physics)
             else:
+                e.global_position += Vec3(0.0, 2.0, 0.0)
                 e.add_component(ChaserAi(self.manager), self.physics)
 
             e.fire_event(GameStarted())

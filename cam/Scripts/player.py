@@ -14,7 +14,7 @@ from camera_control import *
 import runner
 from chaser import *
 
-CAMERA_OFFSET = Vec3(0.0, 10.0, -30.0)
+CAMERA_OFFSET = Vec3(0.0, 15.0, -45.0)
 
 class Player:
     def __init__(self, manager, r = True):
@@ -25,7 +25,7 @@ class Player:
     def start(self):
         print "starting player..."
         self.entity.add_component(VehicleScript(Vec3(-20.0, 2.0, -90.0), self.controller), self.physics)
-        self.entity.add_component(PowerupManager(), self.physics)
+        self.entity.add_component(PowerupManager(self.controller), self.physics)
         if self.runner:
             self.entity.add_component(runner.Runner(self.manager, self.controller, True), self.physics)
         else:

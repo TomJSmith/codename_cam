@@ -20,6 +20,7 @@ from a_star import *
 from start_game import *
 from runner import *
 from chaser import *
+from powerup_manager import *
 
 class RunnerAi:
     def __init__(self, manager):
@@ -53,6 +54,7 @@ class RunnerAi:
         self.currentNodeIndex = 0
 
         self.entity.add_component(Runner(self.manager, self.controller), self.physics)
+        self.entity.add_component(PowerupManager(self.controller, False), self.physics)
 
         self.vehicle = self.entity.add_component(VehicleScript(self.startingPosition, self.controller), self.physics)
         self.entity.register_handler(GameStarted, self.start_game)

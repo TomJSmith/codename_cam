@@ -90,6 +90,11 @@ public:
 
 	void SetActive(bool active) { active_ = active; }
 	void SetFriction(float friction);
+	void SetOmega(float omega);
+	void SetTorque(float torque);
+
+	float GetOmega();
+	float GetTorque();
 
 	void getSource(Events::Sound event);
 
