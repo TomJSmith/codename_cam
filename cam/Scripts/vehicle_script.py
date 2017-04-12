@@ -25,11 +25,18 @@ class VehicleScript:
 
         self.entity.register_handler(GameStarted, self.start_game)
         self.entity.register_handler(ChangeSurface, self.change_surface)
+        self.entity.register_handler(ChangeSpeed, self.change_speed)
 
     def change_surface(self, event):
         v = self.vehicle.lock()
         if v:
             v.set_friction(event.friction)
+
+    def change_speed(self, event):
+        v = self.vehicle.lock()
+        if v:
+            v.omega *= event.mod
+            v.torque *= event.mod
 
     def start_game(self, event):
         v = self.vehicle.lock()
@@ -46,6 +53,7 @@ class VehicleScript:
         c.wheel_radius = 0.5
         c.wheel_width = 0.4
         c.wheel_mass = 10
+
         c.chassis_mass = 1000
         c.chassis_moi = physics.PxVec3(c.chassis_mass, c.chassis_mass / 2, c.chassis_mass)
         c.chassis_offset = physics.PxVec3(0, -dims.y, 0)

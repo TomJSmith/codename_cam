@@ -72,6 +72,7 @@ class ScriptComponent : public Component {
 	{
 		try {
 			if (!self_.is_none() && PyObject_HasAttrString(self_.ptr(), fn.c_str())) {
+				//std::cout << "calling " << boost::python::extract<std::string>(self_.attr("__class__").attr("__name__"))() << "." << fn << " on component " << id_ << "\n";
 				self_.attr(fn.c_str())(args...);
 			}
 		}

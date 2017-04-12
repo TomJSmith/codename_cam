@@ -300,6 +300,30 @@ void Vehicle::SetFriction(float friction)
 	frictionpairs_ = CreateFrictionPairs(physics_.GetPhysics(), mass_, friction);
 }
 
+float Vehicle::GetOmega()
+{
+	return vehicle_->mDriveSimData.getEngineData().mMaxOmega;
+}
+
+float Vehicle::GetTorque()
+{
+	return vehicle_->mDriveSimData.getEngineData().mPeakTorque;
+}
+
+void Vehicle::SetOmega(float omega)
+{
+	auto engine = vehicle_->mDriveSimData.getEngineData();
+	engine.mMaxOmega = omega;
+	vehicle_->mDriveSimData.setEngineData(engine);
+}
+
+void Vehicle::SetTorque(float torque)
+{
+	auto engine = vehicle_->mDriveSimData.getEngineData();
+	engine.mPeakTorque = torque;
+	vehicle_->mDriveSimData.setEngineData(engine);
+}
+
 Vehicle::Vehicle(Physics &physics, std::shared_ptr<Controller> controller, Configuration &config) :
 	physics_(physics),
 	controller_(controller),

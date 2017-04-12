@@ -15,6 +15,7 @@ from start_game import *
 from a_star import *
 from vehicle_script import *
 from chaser import *
+from powerup_manager import *
 import runner
 
 class ChaserAi:
@@ -34,6 +35,7 @@ class ChaserAi:
 
     def start(self):
         self.entity.add_component(Chaser(self.manager), self.physics)
+        self.entity.add_component(PowerupManager(self.controller, False), self.physics)
         self.startingPosition = self.entity.global_position
         self.reachedGoal = False
         self.backUp = False
