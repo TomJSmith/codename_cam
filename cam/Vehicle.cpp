@@ -139,7 +139,7 @@ static PxVehicleDriveSimData4W SetupDrive(const Vehicle::Configuration &config)
 	ret.setEngineData(engine);
 
 	PxVehicleGearsData gears;
-	gears.mSwitchTime = 0.5f;
+	gears.mSwitchTime = 0.2f;
 	ret.setGearsData(gears);
 
 	PxVehicleClutchData clutch;

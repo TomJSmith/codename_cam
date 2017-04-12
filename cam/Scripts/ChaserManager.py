@@ -26,7 +26,7 @@ class ChaserManager:
     def runnerdestroyed(self, event):
         print("Removing runner")
         self.remove_runner(event.runner)
-        event.runner.fire_event(Revived())
+        self.frame_count = 1
 
     def remove_runner(self, other):
         for i in range(len(self.runner_e)):
@@ -36,6 +36,14 @@ class ChaserManager:
                 self.runnerXZ.pop(i)
                 self.runnerPos.pop(i)
                 break
+
+        e = self.entity
+        while e.get_parent():
+            e = e.get_parent()
+        e.broadcast_event(Destroyed())
+        other.fire_event(Revived())
+
+
 
     def runnercreated(self, event):
         self.runner_e.append(event.runner)
@@ -57,11 +65,12 @@ class ChaserManager:
         return self.map
 
     def update(self, dt):
-        for i in range(0, len(self.runnerPos)):
-            self.runnerPos[i] = (self.runner_e[i].transform().global_position().x, self.runner_e[i].transform().global_position().z)
+        if self.frame_count % 6 == 0:
+            for i in range(0, len(self.runnerPos)):
+                self.runnerPos[i] = (self.runner_e[i].transform().global_position().x, self.runner_e[i].transform().global_position().z)
 
-        for i in range(0, len(self.chaserPos)):
-            self.chaserPos[i] = (self.chaser_e[i].transform().global_position().x, self.chaser_e[i].transform().global_position().z)
+            for i in range(0, len(self.chaserPos)):
+                self.chaserPos[i] = (self.chaser_e[i].transform().global_position().x, self.chaser_e[i].transform().global_position().z)
 
         if self.frame_count % 30 == 0 or self.frame_count == -1:
             for i in range(0, len(self.runnerXZ)):
@@ -69,7 +78,11 @@ class ChaserManager:
                     self.runnerXZ[i] = self.astar.findNextNode(self.map[self.runnerXZ[i]], self.runnerPos[i])
             for i in range(0, len(self.chaserXZ)):
                 if not self.map[self.chaserXZ[i]].inNode(self.chaserPos[i]):
+                    self.map[self.chaserXZ[i]].weight -= 50
                     self.chaserXZ[i] = self.astar.findNextNode(self.map[self.chaserXZ[i]], self.chaserPos[i])
+                    self.map[self.chaserXZ[i]].weight += 50
+
+
 
         self.frame_count += 1
         if self.frame_count > 60000:

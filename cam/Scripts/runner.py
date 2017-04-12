@@ -13,6 +13,10 @@ class RunnerDestroyed:
     def __init__(self, entity):
         self.runner = entity
 
+class UpdateRunner:
+    def __init__(self, entity):
+        self.runner = entity
+
 class Runner:
     def __init__(self, manager, controller, player = False):
         self.manager = manager
@@ -34,7 +38,6 @@ class Runner:
             e = e.get_parent()
 
         e.broadcast_event(RunnerDestroyed(self.entity))
-        self.needs_revive = True
 
     def update(self, dt):
         if self.needs_revive:
@@ -45,7 +48,7 @@ class Runner:
                 e = e.get_parent()
 
             e = Entity.create(e).lock()
-            e.global_position = self.entity.global_position
+            e.global_position = Vec3(self.entity.global_position.x, 15.0, self.entity.global_position.z)
 
             if self.player:
                 e.add_component(Player(self.manager, False), self.physics)
@@ -57,6 +60,7 @@ class Runner:
             self.entity.destroy()
 
     def revived(self, event):
+        self.needs_revive = True
         pass
         # self.needs_revive = True
         # e = self.entity

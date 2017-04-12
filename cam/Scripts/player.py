@@ -24,12 +24,14 @@ class Player:
 
     def start(self):
         print "starting player..."
-        self.entity.add_component(VehicleScript(Vec3(-20.0, 2.0, -90.0), self.controller), self.physics)
-        self.entity.add_component(PowerupManager(), self.physics)
         if self.runner:
+            self.entity.add_component(VehicleScript(Vec3(-20.0, 2.0, -90.0), self.controller), self.physics)
+            self.entity.add_component(PowerupManager(), self.physics)
             self.entity.add_component(runner.Runner(self.manager, self.controller, True), self.physics)
         else:
-            self.entity.add_component(Chaser(), self.physics)
+            self.entity.add_component(VehicleScript(Vec3(-20.0, 2.0, -90.0), self.controller, True), self.physics)
+            self.entity.add_component(PowerupManager(), self.physics)
+            self.entity.add_component(Chaser(self.manager), self.physics)
 
         cam = Entity.create(self.entity.get_parent()).lock()
         cam.global_position = self.entity.global_position + CAMERA_OFFSET

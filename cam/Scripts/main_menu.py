@@ -40,8 +40,16 @@ class MainMenu:
         manager_entity.add_component(manager, self.physics)
 
         ai = Entity.create(e).lock()
-        ai.global_position += Vec3(0.0, 2.0, 0.0)
+        ai.global_position += Vec3(10.0, 2.0, 100.0)
         ai.add_component(ChaserAi(manager), self.physics)
+
+        ai2 = Entity.create(e).lock()
+        ai2.global_position += Vec3(0.0, 2.0, 0.0)
+        ai2.add_component(ChaserAi(manager), self.physics)
+
+        ai2 = Entity.create(e).lock()
+        ai2.global_position += Vec3(-10.0, 2.0, -100.0)
+        ai2.add_component(ChaserAi(manager), self.physics)
 
         player = Entity.create(e).lock()
         player.add_component(Player(manager), self.physics)
@@ -61,6 +69,38 @@ class MainMenu:
         runner4 = Entity.create(e).lock()
         runner4.global_position = Vec3(0.0, 2.0, -90.0)
         runner4.add_component(RunnerAi(manager), self.physics)
+
+        runner5 = Entity.create(e).lock()
+        runner5.global_position = Vec3(10.0, 2.0, -20.0)
+        runner5.add_component(RunnerAi(manager), self.physics)
+
+        runner6 = Entity.create(e).lock()
+        runner6.global_position = Vec3(-10.0, 2.0, -40.0)
+        runner6.add_component(RunnerAi(manager), self.physics)
+
+        runner7 = Entity.create(e).lock()
+        runner7.global_position = Vec3(10.0, 2.0, -60.0)
+        runner7.add_component(RunnerAi(manager), self.physics)
+
+        runner7 = Entity.create(e).lock()
+        runner7.global_position = Vec3(20.0, 2.0, -60.0)
+        runner7.add_component(RunnerAi(manager), self.physics)
+        runner7 = Entity.create(e).lock()
+        runner7.global_position = Vec3(-20.0, 2.0, -60.0)
+        runner7.add_component(RunnerAi(manager), self.physics)
+        runner7 = Entity.create(e).lock()
+        runner7.global_position = Vec3(10.0, 2.0, 60.0)
+        runner7.add_component(RunnerAi(manager), self.physics)
+        runner7 = Entity.create(e).lock()
+        runner7.global_position = Vec3(-10.0, 2.0, 60.0)
+        runner7.add_component(RunnerAi(manager), self.physics)
+        runner7 = Entity.create(e).lock()
+        runner7.global_position = Vec3(20.0, 2.0, 60.0)
+        runner7.add_component(RunnerAi(manager), self.physics)
+        runner7 = Entity.create(e).lock()
+        runner7.global_position = Vec3(-20.0, 2.0, 60.0)
+        runner7.add_component(RunnerAi(manager), self.physics)
+
 
         o = Entity.create(e).lock()
         o.transform().position = Vec3(0.0, 0.0, 60)

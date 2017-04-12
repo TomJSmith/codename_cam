@@ -27,19 +27,18 @@ class ChaserAi:
         print "chaser started"
         self.started = True
 
-    def runnerdestroyed(self, event):
+    def destroyed(self, event):
         print "runner destroyed"
         self.targetRunner = self.closestRunner()
 
+
     def start(self):
-        self.entity.add_component(Chaser(), self.physics)
+        self.entity.add_component(Chaser(self.manager), self.physics)
         self.startingPosition = self.entity.global_position
         self.reachedGoal = False
         self.backUp = False
 
         self.prevPos = None
-
-        self.map = None
 
         self.closeNodeSelf = None
         self.closeNodeTarget = None
@@ -49,28 +48,12 @@ class ChaserAi:
         self.stuck = False
         self.stuck_flag = False
 
-        self.map = self.create_nav_mesh()
-        self.astar = A_star(self.map)
-
-        self.entity.add_component(VehicleScript(self.startingPosition, self.controller), self.physics)
+        self.entity.add_component(VehicleScript(self.startingPosition, self.controller, True), self.physics)
         self.entity.register_handler(GameStarted, self.start_game)
-        self.entity.register_handler(runner.RunnerDestroyed, self.runnerdestroyed)
-        self.currentNodeXZ = self.astar.findCurrentNode(
+        self.entity.register_handler(Destroyed, self.destroyed)
+        self.currentNodeXZ = self.manager.astar.findCurrentNode(
             (self.entity.transform().global_position().x, self.entity.transform().global_position().z))
-        self.manager.chaserXZ.append(self.currentNodeXZ)
-        self.manager.chaserPos.append((self.entity.transform().global_position().x, self.entity.transform().global_position().z))
-        self.manager.chaser_e.append(self.entity)
 
-    def create_nav_mesh(self):
-        _navmesh = navmesh.NavMesh('nav_mesh.fbx', Vec3(2.0, 2.0, 2.0))
-        graph = _navmesh.getSimpleGraph()
-        self.map = {}
-        for node in graph:
-            self.map[(node[0], node[1])] = Node(node[0], node[1], node[3])
-        for node in graph:
-            for neighbor in node[2]:
-                self.map[(node[0], node[1])].add_neighbor(self.map[neighbor])
-        return self.map
 
     def checkStuck(self):
         currPos = self.entity.transform().global_position()
@@ -152,7 +135,7 @@ class ChaserAi:
             self.controller.setAccel(1)
         else:
             self.controller.setReverse(0)
-            if self.reachedGoal or not self.astar.map[(currTarget.x, currTarget.z)].inNode((self.currPosition.x, self.currPosition.z)):
+            if self.reachedGoal or not self.manager.map[(currTarget.x, currTarget.z)].inNode((self.currPosition.x, self.currPosition.z)):
                 self.controller.setAccel(1)
                 self.controller.setBrake(0)
                 self.controller.setDirection(dot)
@@ -173,20 +156,20 @@ class ChaserAi:
         if len(self.manager.runner_e) > 0:
             chaserPos = (self.entity.transform().global_position().x, self.entity.transform().global_position().z)
             if self.frame_count % 30 == 0 or self.frame_count == -1:
-                if not self.map[self.currentNodeXZ].inNode(chaserPos):
-                    self.currentNodeXZ = self.astar.findNextNode(self.map[self.currentNodeXZ], chaserPos)
+                if not self.manager.map[self.currentNodeXZ].inNode(chaserPos):
+                    self.currentNodeXZ = self.manager.astar.findNextNode(self.manager.map[self.currentNodeXZ], chaserPos)
 
-            if (self.frame_count + 50) % 360 == 0:
+            if (self.frame_count + 50) % 240 == 0:
                 if self.stuck_flag:
                     self.stuck = True
                     self.stuck_flag = False
                 else:
                     self.stuck = self.checkStuck()
 
-            if self.frame_count % 1200 == 0 or self.frame_count == -1:
+            if self.frame_count % 900 == 0 or self.frame_count == -1:
                 self.targetRunner = self.closestRunner()
                 self.currentNodeIndex = 0
-                self.currentPath = self.getNodePathToVec(self.astar.find_path(self.map[self.manager.runnerXZ[self.targetRunner]], self.map[self.currentNodeXZ]))
+                self.currentPath = self.getNodePathToVec(self.manager.astar.find_path(self.manager.map[self.manager.runnerXZ[self.targetRunner]], self.manager.map[self.currentNodeXZ]))
                 self.reachedGoal = False
 
             self.drive()

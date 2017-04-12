@@ -33,8 +33,6 @@ class RunnerAi:
         self.startingPosition = self.entity.global_position
         self.dead = False
         self.started = False
-        self.map = self.create_nav_mesh()
-        self.astar = A_star(self.map)
         self.count = 0
         self.reachedGoal = True
         self.backUp = False
@@ -57,20 +55,9 @@ class RunnerAi:
         self.vehicle = self.entity.add_component(VehicleScript(self.startingPosition, self.controller), self.physics)
         self.entity.register_handler(GameStarted, self.start_game)
 
-        self.currentNodeXZ = self.astar.findCurrentNode(
+        self.currentNodeXZ = self.manager.astar.findCurrentNode(
             (self.entity.transform().global_position().x, self.entity.transform().global_position().z))
 
-
-    def create_nav_mesh(self):
-        _navmesh = navmesh.NavMesh('nav_mesh.fbx', Vec3(2.0, 2.0, 2.0))
-        graph = _navmesh.getSimpleGraph()
-        map = {}
-        for node in graph:
-            map[(node[0], node[1])] = Node(node[0], node[1], node[3])
-        for node in graph:
-            for neighbor in node[2]:
-                map[(node[0], node[1])].add_neighbor(map[neighbor])
-        return map
 
     def checkStuck(self):
         currPos = self.entity.transform().global_position()
@@ -127,20 +114,21 @@ class RunnerAi:
         right.z = right.z / right.length()
 
         dot = Vec3.dot(right, direction)
+        dot = dot * .9
         if dot < -1:
             dot = -1
         if dot > 1:
             dot = 1
 
         if self.stuck:
-            self.controller.setDirection(-.8 * dot)
+            self.controller.setDirection(-.7 * dot)
             self.controller.setBrake(0)
             self.controller.setReverse(1)
             self.controller.setAccel(1)
 
         else:
             self.controller.setReverse(0)
-            if self.astar.map[(currTarget.x, currTarget.z)].inNode((self.currPosition.x, self.currPosition.z)):
+            if self.manager.map[(currTarget.x, currTarget.z)].inNode((self.currPosition.x, self.currPosition.z)):
                 if (self.currentNodeIndex+1) >= len(self.currentPath):
                     self.reachedGoal = True
                 else:
@@ -156,22 +144,36 @@ class RunnerAi:
 
         myPos = (self.entity.transform().global_position().x, self.entity.transform().global_position().z)
         if self.frame_count % 30 == 0 or self.frame_count == -1:
-            if not self.map[self.currentNodeXZ].inNode(myPos):
-                self.currentNodeXZ = self.astar.findNextNode(self.map[self.currentNodeXZ], myPos)
+            if not self.manager.map[self.currentNodeXZ].inNode(myPos):
+                self.currentNodeXZ = self.manager.astar.findNextNode(self.manager.map[self.currentNodeXZ], myPos)
 
-        if (self.frame_count + self.seed) % 4800 == 0 or self.reachedGoal:
+        if (self.frame_count + self.seed) % 3600 == 0 or self.reachedGoal:
             if self.reachedGoal:
                 self.frame_count = self.seed + 1
-            rndNodes = list(self.map.keys())
-            rndNodes.remove(self.currentNodeXZ)
+            rndNodes = list(self.manager.map.keys())
+            for chaserXZ in self.manager.chaserXZ:
+                if chaserXZ in rndNodes:
+                    rndNodes.remove(chaserXZ)
+                for neighbor in self.manager.map[chaserXZ].neighbors:
+                    node = (neighbor.x, neighbor.z)
+                    if node in rndNodes:
+                        rndNodes.remove(node)
+
+            if self.currentNodeXZ in rndNodes:
+                rndNodes.remove(self.currentNodeXZ)
+
+            for neighbor in self.manager.map[self.currentNodeXZ].neighbors:
+                node = (neighbor.x, neighbor.z)
+                if node in rndNodes:
+                    rndNodes.remove(node)
+
             randomTarget = random.choice(rndNodes)
-            while self.map[randomTarget] in self.map[self.currentNodeXZ].neighbors:
-                randomTarget = random.choice(rndNodes)
+
             self.currentPath = self.getNodePathToVec(
-            self.astar.find_path(self.map[self.currentNodeXZ], self.map[randomTarget]))
+            self.manager.astar.find_path(self.manager.map[self.currentNodeXZ], self.manager.map[randomTarget]))
             self.reachedGoal = False
 
-        if (self.frame_count) % 360 == 0:
+        if (self.frame_count + 50) % 360 == 0:
             if self.stuck_flag:
                 self.stuck = True
                 self.stuck_flag = False
