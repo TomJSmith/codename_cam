@@ -27,6 +27,7 @@ Mesh::Mesh(std::shared_ptr<Shader> shader,
 		std::cerr << "could not load file " << fullobjfilename << ": " << importer.GetErrorString() << std::endl;
 	}
 
+
 	/*std::cout << fullobjfilename << std::endl;
 	std::cout << "num of textures: " << objFile->mNumMaterials << std::endl;
 	std::cout << "num of meshes: " << objFile->mNumMeshes << std::endl;*/

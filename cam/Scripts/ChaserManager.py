@@ -58,7 +58,7 @@ class ChaserManager:
 
 
     def create_nav_mesh(self):
-        _navmesh = navmesh.NavMesh('nav_mesh.fbx', Vec3(2.0, 2.0, 2.0))
+        _navmesh = navmesh.NavMesh('nav_mesh.fbx', Vec3(3.0, 3.0, 3.0))
         graph = _navmesh.getSimpleGraph()
         self.map = {}
         for node in graph:
