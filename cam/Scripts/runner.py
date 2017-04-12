@@ -25,6 +25,7 @@ class Runner:
         self.needs_revive = False
 
     def start(self):
+        self.starting_position = self.entity.global_position
         self.entity.add_component(Mesh(ModelShader("runner_texture_green.jpg"), "runner_mesh.fbx", Vec3(1.0, 0.84, 0.0), Vec3(1, 1, 1), 4))
         self.entity.register_infected_handler(self.infected)
         self.entity.register_handler(Infected, self.infected)
@@ -48,7 +49,7 @@ class Runner:
                 e = e.get_parent()
 
             e = Entity.create(e).lock()
-            e.global_position = Vec3(self.entity.global_position.x, 15.0, self.entity.global_position.z)
+            e.global_position = self.starting_position
 
             if self.player:
                 e.add_component(Player(self.manager, False), self.physics)

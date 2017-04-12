@@ -46,7 +46,7 @@ class VehicleScript:
     def create_vehicle(self, entity, position, chaser = False):
         c = vehicle.Configuration()
 
-        dims = physics.PxVec3(3, 1, 5)
+        dims = physics.PxVec3(6, 2, 12)
 
         c.position = physics.PxVec3(position.x, position.y, position.z)
         c.chassis_dimensions = dims
