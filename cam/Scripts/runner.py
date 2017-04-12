@@ -10,8 +10,9 @@ class RunnerCreated:
         self.runner = entity
 
 class RunnerDestroyed:
-    def __init__(self, entity):
+    def __init__(self, entity, player):
         self.runner = entity
+        self.player = player
 
 class Runner:
     def __init__(self, manager, controller, player = False):
@@ -33,7 +34,7 @@ class Runner:
         while e.get_parent():
             e = e.get_parent()
 
-        e.broadcast_event(RunnerDestroyed(self.entity))
+        e.broadcast_event(RunnerDestroyed(self.entity, self.player))
         self.needs_revive = True
 
     def update(self, dt):
