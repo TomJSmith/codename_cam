@@ -161,7 +161,7 @@ class ChaserAi:
                 if not self.manager.map[self.currentNodeXZ].inNode(chaserPos):
                     self.currentNodeXZ = self.manager.astar.findNextNode(self.manager.map[self.currentNodeXZ], chaserPos)
 
-            if (self.frame_count + 50) % 240 == 0:
+            if (self.frame_count + 200) % 240 == 0:
                 if self.stuck_flag:
                     self.stuck = True
                     self.stuck_flag = False

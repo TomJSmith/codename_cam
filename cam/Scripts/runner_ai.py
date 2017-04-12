@@ -89,7 +89,8 @@ class RunnerAi:
         if len(self.currentPath) > self.currentNodeIndex:
             currTarget = self.currentPath[self.currentNodeIndex]
         else:
-            currTarget = Vec3(self.currentNodeXZ[0], 0, self.currentNodeXZ[1])
+            self.reachedGoal = True
+            return
         self.currPosition = self.entity.transform().global_position()
         direction = currTarget - self.currPosition  # transform().position
         forward = self.entity.transform().forward()
@@ -142,7 +143,6 @@ class RunnerAi:
         if not self.started:
             return
 
-
         myPos = (self.entity.transform().global_position().x, self.entity.transform().global_position().z)
         if self.frame_count % 30 == 0 or self.frame_count == -1:
             if not self.manager.map[self.currentNodeXZ].inNode(myPos):
@@ -182,7 +182,7 @@ class RunnerAi:
             self.manager.astar.find_path(self.manager.map[self.currentNodeXZ], self.manager.map[randomTarget]))
             self.reachedGoal = False
 
-        if (self.frame_count + 50) % 360 == 0:
+        if (self.frame_count + 350) % 360 == 0:
             if self.stuck_flag:
                 self.stuck = True
                 self.stuck_flag = False
