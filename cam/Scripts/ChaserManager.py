@@ -31,13 +31,15 @@ class ChaserManager:
     def remove_runner(self, other):
         for i in range(len(self.runner_e)):
             if self.runner_e[i].id == other.id:
-                print("Infected runner. Runners Left: " + str(len(self.runner_e) - 1))
                 self.runner_e.pop(i)
                 self.runnerXZ.pop(i)
                 self.runnerPos.pop(i)
+                print("Infected runner. Runners Left: " + str(len(self.runner_e)))
+                print("lengths: " + str(len(self.runnerXZ)) + ", " + str(len(self.runnerPos)))
                 break
 
     def runnercreated(self, event):
+        print "runner created"
         self.runner_e.append(event.runner)
         self.runnerXZ.append(self.astar.findCurrentNode(
             (event.runner.transform().global_position().x, event.runner.transform().global_position().z)))

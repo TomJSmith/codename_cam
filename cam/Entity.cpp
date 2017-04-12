@@ -62,7 +62,7 @@ void Entity::SetParent(Entity *parent) {
 }
 
 void Entity::Destroy() {
-	BroadcastEvent(Events::Destroyed {});
+	FireEvent(Events::Destroyed {});
 
 	auto children = children_;
 	auto components = components_;

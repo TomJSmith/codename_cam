@@ -199,6 +199,7 @@ template <class T>
 void RegisterEventHandler(Entity &e, python::object pyhandler) {
 	auto handler = [=](T event) {
 		try {
+			//std::cout << "handling event with handler " << python::extract<std::string>(pyhandler.attr("__name__"))() << "\n";
 			pyhandler(event);
 		}
 		catch (const python::error_already_set &) {
@@ -216,6 +217,7 @@ void RegisterScriptEventHandler(Entity &e, python::object type, python::object p
 	auto handler = [=](Events::ScriptEvent event) {
 		if (event.pyevent.attr("__class__").attr("__name__") == name) {
 			try {
+				//std::cout << "handling " << python::extract<std::string>(name)() << "event with handler " << python::extract<std::string>(pyhandler.attr("__name__"))() << "\n";
 				pyhandler(event.pyevent);
 			}
 			catch (const python::error_already_set &) {
@@ -230,6 +232,7 @@ void RegisterScriptEventHandler(Entity &e, python::object type, python::object p
 
 void BroadcastScriptEvent(Entity &e, python::object event) {
 	try {
+		//std::cout << "broadcasting event " << python::extract<std::string>(event.attr("__class__").attr("__name__"))() << "\n";
 		e.BroadcastEvent(Events::ScriptEvent{ event });
 	}
 	catch (const python::error_already_set &) {
@@ -238,7 +241,13 @@ void BroadcastScriptEvent(Entity &e, python::object event) {
 }
 
 void FireScriptEvent(Entity &e, python::object event) {
-	e.FireEvent(Events::ScriptEvent{ event });
+	try {
+		//std::cout << "firing event " << python::extract<std::string>(event.attr("__class__").attr("__name__"))() << "\n";
+		e.FireEvent(Events::ScriptEvent{ event });
+	}
+	catch (const python::error_already_set &) {
+		PyErr_Print();
+	}
 }
 
 BOOST_PYTHON_MODULE(events) {

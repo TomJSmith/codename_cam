@@ -34,7 +34,6 @@ class Runner:
             e = e.get_parent()
 
         e.broadcast_event(RunnerDestroyed(self.entity))
-        self.needs_revive = True
 
     def update(self, dt):
         if self.needs_revive:
@@ -58,7 +57,7 @@ class Runner:
             self.entity.destroy()
 
     def revived(self, event):
-        pass
+        self.needs_revive = True
         # self.needs_revive = True
         # e = self.entity
         # while e.get_parent():

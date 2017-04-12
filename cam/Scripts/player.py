@@ -1,6 +1,7 @@
 from component import *
 from controller import *
 from entity import *
+from events import *
 from physics import *
 
 import sys
@@ -31,6 +32,13 @@ class Player:
         else:
             self.entity.add_component(Chaser(), self.physics)
 
-        cam = Entity.create(self.entity.get_parent()).lock()
-        cam.global_position = self.entity.global_position + CAMERA_OFFSET
+        self.entity.register_destroyed_handler(self.destroyed)
+        self.entity.register_handler(Destroyed, self.destroyed)
+        self.cam = Entity.create(self.entity.get_parent())
+        cam = self.cam.lock()
+        cam.global_position = self.entity.global_position + self.entity.global_rotation * CAMERA_OFFSET
         cam.add_component(CameraControl(self.entity), self.physics)
+
+    def destroyed(self, event):
+        print "player destroyed"
+        self.cam.lock().destroy()

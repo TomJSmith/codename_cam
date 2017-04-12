@@ -14,6 +14,7 @@ class CameraControl:
     def runnerdestroyed(self, event):
         if self.target == event.runner:
             self.target = None
+            # self.entity.destroy()
 
     def update(self, dt):
         # t = self.target.lock()

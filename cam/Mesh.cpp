@@ -26,18 +26,18 @@ Mesh::Mesh(std::shared_ptr<Shader> shader,
 	{
 		std::cerr << "could not load file " << fullobjfilename << ": " << importer.GetErrorString() << std::endl;
 	}
-	std::cout << fullobjfilename << std::endl;
-	std::cout << "num of textures: " << objFile->mNumMaterials << std::endl;
-	std::cout << "num of meshes: " << objFile->mNumMeshes << std::endl;
+	//std::cout << fullobjfilename << std::endl;
+	//std::cout << "num of textures: " << objFile->mNumMaterials << std::endl;
+	//std::cout << "num of meshes: " << objFile->mNumMeshes << std::endl;
 	std::vector<aiVector3D> vertices;
 	std::vector<aiVector3D> normals;
 	std::vector<aiVector2D> texCoords;
 	std::vector<glm::vec3> colours;
 	aiMesh* objMesh = objFile->mMeshes[0];
 	aiMaterial* objMaterial = objFile->mMaterials[objMesh->mMaterialIndex];
-	std::cout << "num of faces: " << objMesh->mNumFaces << std::endl;
-	std::cout << "num of verts: " << objMesh->mNumVertices << std::endl;
-	std::cout << "num materials: " << objFile->mNumMaterials << std::endl;
+	//std::cout << "num of faces: " << objMesh->mNumFaces << std::endl;
+	//std::cout << "num of verts: " << objMesh->mNumVertices << std::endl;
+	//std::cout << "num materials: " << objFile->mNumMaterials << std::endl;
 	for (std::uint32_t i = 0u; i < objMesh->mNumFaces; i++)
 	{
 		const aiFace& face = objMesh->mFaces[i];
@@ -65,7 +65,7 @@ Mesh::Mesh(std::shared_ptr<Shader> shader,
 		if (m_material->GetTexture(aiTextureType_DIFFUSE, 0, &relTexPath, NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS)
 		{
 			
-			std::cout << "success!" << std::endl;
+			//std::cout << "success!" << std::endl;
 		}
 	}
 

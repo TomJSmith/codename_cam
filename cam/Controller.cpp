@@ -11,13 +11,13 @@ Controller::Controller(int currContIndex) {
 	//for (int i = 0; i < MAX_NUM_CONTROL; i++)
 	i = currContIndex;
 	//{
-	if (XInputGetState(i, &state) == ERROR_SUCCESS) {
-		std::cout << "Controller is connected" << std::endl;
-	}
-	else
-	{
-		std::cout << "Controller is not connected" << std::endl;
-	}
+	//if (XInputGetState(i, &state) == ERROR_SUCCESS) {
+	//	std::cout << "Controller is connected" << std::endl;
+	//}
+	//else
+	//{
+	//	std::cout << "Controller is not connected" << std::endl;
+	//}
 	//}
 }
 
