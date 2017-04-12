@@ -2,6 +2,7 @@ from component import *
 from controller import *
 from physics import *
 from ui import *
+from util import *
 from entity import *
 import sys
 import os
@@ -22,6 +23,9 @@ def set_position(marker, item):
 
 
 class MainMenu:
+    def __init__(self, renderer):
+        self.renderer = renderer
+
     def create_powerups(self):
         e = self.entity
         while e.get_parent():
@@ -143,11 +147,11 @@ class MainMenu:
 
     def update(self, dt):
         self.control.update()
-        if self.control.direction == 7:  # down - probably shouldn't hardcode these...
+        if self.control.updown > 0:  # down - probably shouldn't hardcode these...
             if self.selected != self.quitgame:
                 self.selected = self.quitgame
                 set_position(self.marker, self.quitgame)
-        elif self.control.direction == 6:
+        elif self.control.updown < 0:
             if self.selected != self.startgame:
                 self.selected = self.startgame
                 set_position(self.marker, self.startgame)
@@ -155,3 +159,5 @@ class MainMenu:
         if self.control.select:
             if self.selected == self.startgame:
                 self.start_game()
+            else:
+                self.renderer.close_window()

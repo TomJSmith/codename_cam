@@ -73,3 +73,13 @@ float Controller::getDirectional() {
 		return (analog / 32800.0f * -1.0f);
 	}	
 }
+
+float Controller::getUpDown() {
+	float analog = state.Gamepad.sThumbLY;
+	if (analog < 5000 && analog > -5000) {
+		return 0.0f;
+	}
+	else {
+		return (analog / 32800.0f * -1.0f);
+	}
+}
