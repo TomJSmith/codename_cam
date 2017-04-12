@@ -4,6 +4,8 @@ from vehicle_script import *
 from chaser import *
 from player import *
 from chaser_ai import *
+import random
+
 
 class RunnerCreated:
     def __init__(self, entity):
@@ -48,7 +50,32 @@ class Runner:
                 e = e.get_parent()
 
             e = Entity.create(e).lock()
-            e.global_position = Vec3(self.entity.global_position.x, 15.0, self.entity.global_position.z)
+            rndNodes = list(self.manager.map.keys())
+
+            for runners in self.manager.runnerXZ:
+                if runners in rndNodes:
+                    rndNodes.remove(runners)
+                for neighbor in self.manager.map[runners].neighbors:
+                    node = (neighbor.x, neighbor.z)
+                    if node in rndNodes:
+                        rndNodes.remove(node)
+                    for neighbor2 in neighbor.neighbors:
+                        node2 = (neighbor2.x, neighbor2.z)
+                        if node2 in rndNodes:
+                            rndNodes.remove(node2)
+                        for neighbor3 in neighbor2.neighbors:
+                            node3 = (neighbor3.x, neighbor3.z)
+                            if node3 in rndNodes:
+                                rndNodes.remove(node3)
+
+
+            for chasers in self.manager.chaserXZ:
+                if chasers in rndNodes:
+                    rndNodes.remove(chasers)
+
+            randomTarget = random.choice(rndNodes)
+
+            e.global_position = Vec3(randomTarget[0], 2.0, randomTarget[1])
 
             if self.player:
                 e.add_component(Player(self.manager, False), self.physics)

@@ -160,6 +160,14 @@ class RunnerAi:
                     node = (neighbor.x, neighbor.z)
                     if node in rndNodes:
                         rndNodes.remove(node)
+                    for neighbor2 in neighbor.neighbors:
+                        node2 = (neighbor2.x, neighbor2.z)
+                        if node2 in rndNodes:
+                            rndNodes.remove(node2)
+                        for neighbor3 in neighbor2.neighbors:
+                            node3 = (neighbor3.x, neighbor3.z)
+                            if node3 in rndNodes:
+                                rndNodes.remove(node3)
 
             if self.currentNodeXZ in rndNodes:
                 rndNodes.remove(self.currentNodeXZ)
