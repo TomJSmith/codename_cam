@@ -59,13 +59,13 @@ class VehicleScript:
         c.chassis_offset = physics.PxVec3(0, -dims.y, 0)
         if chaser:
             c.wheel_moi = 20
-            c.torque = 4000
+            c.torque = 4500
             c.max_speed = 1.0
             c.steer_angle = math.pi * .15
-            c.max_omega = 2400
+            c.max_omega = 2600
         else:
             c.wheel_moi = 20
-            c.torque = 3200
+            c.torque = 3700
             c.max_speed = 1.0
             c.steer_angle = math.pi * .15
             c.max_omega = 1800
